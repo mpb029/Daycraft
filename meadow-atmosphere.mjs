@@ -47,13 +47,13 @@ export function createAtmosphere({mobile=false}={}) {
  const positions=new Float32Array(drops*6),rainGeometry=new T.BufferGeometry();rainGeometry.setAttribute('position',new T.BufferAttribute(positions,3).setUsage(T.DynamicDrawUsage));
  const rain=new T.LineSegments(rainGeometry,new T.LineBasicMaterial({color:'#cfdee2',transparent:true,opacity:.45,depthWrite:false}));rain.name='Gentle rain';rain.frustumCulled=false;root.add(rain);
  const direction=new T.Vector3(),right=new T.Vector3(),center=new T.Vector3(),dummy=new T.Object3D();
- function update(seconds,{camera,motion=true,breeze=true,raining=false,editing=false}={}) {
+ function update(seconds,{camera,motion=true,breeze=true,raining=false,editing=false,daytime=true}={}) {
   for(let i=0;i<balloons.length;i++){
-   const pass=motion&&!raining&&!editing?balloonPass(seconds,i):null,b=balloons[i];b.visible=!!pass;
+   const pass=daytime&&motion&&!raining&&!editing?balloonPass(seconds,i):null,b=balloons[i];b.visible=!!pass;
    if(pass){b.position.set(pass.x,pass.y,pass.z);b.rotation.z=Math.sin(seconds*.09+i)*.025;b.traverse(o=>{if(o.material)o.material.opacity=pass.opacity;});}
   }
   camera.getWorldDirection(direction);direction.y=0;if(direction.lengthSq()<.001)direction.set(0,0,-1);direction.normalize();right.crossVectors(direction,T.Object3D.DEFAULT_UP).normalize();
-  leaves.visible=motion&&breeze&&!editing;
+  leaves.visible=daytime&&motion&&breeze&&!editing;
   if(leaves.visible){
    for(let i=0;i<count;i++){
     const phase=leafPass(seconds,i),seed=seeds[i];

@@ -18,6 +18,16 @@ html,body{height:100%;overflow:hidden;background:#b7ced2}
 .glass-button[aria-pressed=true]{background:#f2f7e9ec;border-color:#8aa487}
 .glass-button .icon{width:17px;height:17px}
 .motion-note{position:absolute;top:48px;right:0;color:#304b3b;font-size:10px;white-space:nowrap;background:#f4f7e3d6;padding:4px 9px;border-radius:7px}
+.sky-clock{position:absolute;right:0;top:49px;white-space:nowrap;font-size:11px;letter-spacing:.02em;color:#294b3c;text-shadow:0 1px 10px #f5faef}
+.atmosphere-controls .motion-note{top:70px}
+.night-sky .meadow-header{text-shadow:0 1px 14px #0009}
+.night-sky .meadow-header .brand,.night-sky .meadow-name,.night-sky .sky-clock{color:#e5edfa;text-shadow:0 1px 10px #000b}
+.night-sky .meadow-name{border-color:#b1c6df66}
+.night-sky .meadow-panel.content{background:#edf2e8ed;box-shadow:0 16px 55px #02081455}
+.sky-reading{padding:12px;border-radius:10px;background:#e5ebdd;color:#345240;font-size:12px;line-height:1.7}
+.sky-location-label{font-size:13px}.sky-location-label span{font-size:11px;color:#596b59}
+#sky-location-form{padding-top:14px}
+.sky-camera-tools{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:15px}.sky-camera-tools .btn{font-size:11px;padding:9px 10px}
 .meadow-panel.content{position:fixed;top:91px;bottom:101px;left:26px;width:430px;max-width:calc(100vw - 52px);max-height:calc(100dvh - 192px);margin:0;padding:23px;overflow:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#a5b89d transparent;border:1px solid #fffff8bd;border-radius:22px;background:#f7faefec;backdrop-filter:blur(17px);box-shadow:0 16px 55px #29442f24;outline-offset:4px}
 .meadow-panel[data-panel=world],.meadow-panel[data-panel=progress],.meadow-panel[data-panel=settings]{width:490px}
 .meadow-panel .page-heading{display:block;margin:0 0 20px}

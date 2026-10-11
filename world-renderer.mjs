@@ -3,38 +3,56 @@ import {OrbitControls} from './vendor/OrbitControls.js';
 import {createItem,createLights,disposeGroup,onItemAssetsChanged} from './world-models.mjs';
 import {createMeadow,createMeadowLights,terrainHeight} from './meadow-terrain.mjs';
 import {createAtmosphere} from './meadow-atmosphere.mjs';
+import {createNightSky} from './meadow-night.mjs';
+import {currentSky,smoothRange} from './sky-time.mjs';
 import {footprint,BUILD_RADIUS} from './world-rules.mjs';
 let main=null,previewRenderer=null,previewFailed=false;
 const previews=new Map();
 function newRenderer(extra={}){const r=new T.WebGLRenderer({antialias:true,alpha:true,powerPreference:'low-power',...extra});r.setPixelRatio(Math.min(globalThis.devicePixelRatio||1,1.5));r.outputColorSpace=T.SRGBColorSpace;r.toneMapping=T.ACESFilmicToneMapping;r.toneMappingExposure=1.06;return r;}
+export function applySkyLighting(m,sky,wet){
+ const {sun,field,scene}=m,ambient=sun.userData.ambient,moon=sun.userData.moon,p=field.palette,d=sky.daylight;
+ field.setRain(wet);field.setSky(sky);
+ sun.position.fromArray(sky.sun.direction).multiplyScalar(75);sun.intensity=1.9*smoothRange(-2,6,sky.sun.geometricAltitude)*(wet?.38:1);sun.castShadow=sky.daytime;
+ sun.color.set('#ffc495').lerp(new T.Color('#fff3d6'),smoothRange(0,20,sky.sun.altitude));
+ // A small ambient floor keeps tasks' earned objects usable on moonless nights.
+ ambient.intensity=(.22+1.23*d)*(wet?.78:1);ambient.color.set('#b9cdf6').lerp(new T.Color('#e5f2ff'),d);ambient.groundColor.set('#243853').lerp(new T.Color('#405c23'),d);
+ moon.position.fromArray(sky.moon.direction).multiplyScalar(75);moon.intensity=.3*sky.moon.fraction*smoothRange(-1,20,sky.moon.altitude)*(1-d)*(wet?.1:1);
+ scene.fog.color.set(wet?'#112132':'#14263b').lerp(new T.Color(wet?'#b3c5c9':p.fog),d);scene.fog.near=wet?65:p.fogNear;scene.fog.far=wet?310:p.fogFar;scene.background.copy(scene.fog.color);
+}
 export function previewImage(id){if(previews.has(id))return previews.get(id);if(previewFailed)return null;let scene;
  try{previewRenderer??=newRenderer({preserveDrawingBuffer:true});previewRenderer.setPixelRatio(1);previewRenderer.setSize(280,210,false);previewRenderer.setClearColor('#e9eee1',0);scene=new T.Scene();createLights(scene,false);const model=createItem(id);scene.add(model);const bounds=new T.Box3().setFromObject(model),center=bounds.getCenter(new T.Vector3()),size=bounds.getSize(new T.Vector3());const span=Math.max(size.x,size.z,size.y)*.84+.35;const camera=new T.OrthographicCamera(-span*4/3,span*4/3,span,-span,.1,100);camera.position.set(center.x+8,center.y+6,center.z+10);camera.lookAt(center);previewRenderer.render(scene,camera);const url=previewRenderer.domElement.toDataURL('image/png');previews.set(id,url);return url;}catch{previewFailed=true;return null;}finally{if(scene)disposeGroup(scene);}
 }
 function grid(){const points=[];for(let n=-13;n<=13;n++){const reach=Math.sqrt(BUILD_RADIUS**2-n*n);points.push(n,.014,-reach,n,.014,reach,-reach,.014,n,reach,.014,n);}const geom=new T.BufferGeometry();geom.setAttribute('position',new T.Float32BufferAttribute(points,3));return new T.LineSegments(geom,new T.LineBasicMaterial({color:'#466553',transparent:true,opacity:.2}));}
 function preset(m,mode='field'){
- m.mode=mode;m.camera.zoom=1;m.controls.target.set(0,mode==='field'?1.4:0,0);
+ m.mode=mode;m.camera.zoom=1;m.controls.maxPolarAngle=Math.PI*.49;m.controls.target.set(0,mode==='field'?1.4:0,0);
  if(mode==='field')m.camera.position.set(15,6.8,28);
  if(mode==='arrange')m.camera.position.set(24,33,34);
  if(mode==='top')m.camera.position.set(.1,43,.1);
  m.camera.updateProjectionMatrix();m.controls.update();m.draw?.();
 }
+export function pointCameraAtSky(m,direction){
+ m.mode='sky';m.controls.maxPolarAngle=Math.PI-.04;m.controls.target.copy(m.camera.position).addScaledVector(new T.Vector3(...direction).normalize(),30);m.controls.update();m.camera.lookAt(m.controls.target);m.draw?.();
+}
 function createMain(){
  const renderer=newRenderer();renderer.shadowMap.enabled=true;renderer.shadowMap.type=T.PCFSoftShadowMap;
- const scene=new T.Scene(),sun=createMeadowLights(scene),atmosphere=createAtmosphere({mobile:(globalThis.innerWidth||1000)<720});scene.add(atmosphere.root);
+ const scene=new T.Scene(),sun=createMeadowLights(scene),mobile=(globalThis.innerWidth||1000)<720,atmosphere=createAtmosphere({mobile}),nightSky=createNightSky({mobile});scene.add(atmosphere.root,nightSky.root);
  const camera=new T.PerspectiveCamera(54,1,.1,1800);
  const controls=new OrbitControls(camera,renderer.domElement);controls.enableDamping=false;controls.enablePan=false;controls.minPolarAngle=.04;controls.maxPolarAngle=Math.PI*.49;controls.minDistance=8;controls.maxDistance=90;
  const raycaster=new T.Raycaster(),plane=new T.Plane(new T.Vector3(0,1,0),0),pointer=new T.Vector2();
- const state={renderer,scene,camera,controls,sun,atmosphere,elapsed:0,root:null,field:null,fieldKey:'',host:null,config:null,frame:0,dirty:true,lastFrame:0,inView:true,lost:false,observer:null,intersection:null,pointers:new Map(),multi:false,lastIsland:null,lastDraft:false,lastEditable:false,mode:'field'};
+ const state={renderer,scene,camera,controls,sun,atmosphere,nightSky,sky:null,wet:null,skyField:null,placed:[],elapsed:0,root:null,field:null,fieldKey:'',host:null,config:null,frame:0,dirty:true,lastFrame:0,inView:true,lost:false,observer:null,intersection:null,pointers:new Map(),multi:false,lastIsland:null,lastDraft:false,lastEditable:false,mode:'field'};
  const reduced=globalThis.matchMedia?.('(prefers-reduced-motion: reduce)');
  const visible=()=>state.host?.isConnected&&state.inView&&!document.hidden&&!state.lost;
  const moving=()=>!!state.config&&!state.config.state.settings.calm&&!reduced?.matches;
+ state.refreshSky=()=>{if(!state.field||!state.config)return;const sky=currentSky(state.config.state.settings.skyLocation),wet=!!state.config.state.settings.rain;if(state.sky!==sky||state.wet!==wet||state.skyField!==state.field){applySkyLighting(state,sky,wet);state.sky=sky;state.wet=wet;state.skyField=state.field;}};
  function tick(now){
   state.frame=0;if(!visible()){state.lastFrame=0;return;}
   const motion=moving();
   if(state.dirty||now-state.lastFrame>=1000/24){
+   state.refreshSky();state.field?.dome.position.copy(camera.position);
    if(motion&&state.lastFrame)state.elapsed+=Math.min(.15,(now-state.lastFrame)/1000);
    state.field?.grass.update(state.elapsed,motion&&state.config.breeze,!!state.config?.draft);
-   state.atmosphere.update(state.elapsed,{camera,motion,breeze:state.config.breeze,raining:!!state.config.state.settings.rain,editing:!!state.config.draft});
+   state.atmosphere.update(state.elapsed,{camera,motion,breeze:state.config.breeze,raining:!!state.config.state.settings.rain,editing:!!state.config.draft,daytime:state.sky.daytime});
+   state.nightSky.update(state.elapsed,{camera,sky:state.sky,motion,raining:!!state.config.state.settings.rain,editing:!!state.config.draft,placed:state.placed});
    renderer.render(scene,camera);state.dirty=false;state.lastFrame=now;
   }
   if(motion)state.frame=requestAnimationFrame(tick);
@@ -42,6 +60,9 @@ function createMain(){
 
  state.draw=()=>{state.dirty=true;if(!state.frame&&visible())state.frame=requestAnimationFrame(tick);};
  state.stop=()=>{if(state.frame)cancelAnimationFrame(state.frame);state.frame=0;state.lastFrame=0;};
+ // Real time is independent of animation time: Calm mode and reduced motion
+ // still get changing sunlight, moon phase and star positions every 20 seconds.
+ state.skyTimer=setInterval(()=>{if(visible())state.draw();},20000);
  onItemAssetsChanged(message=>{state.config?.onAssetStatus?.(message);state.draw();});
  controls.addEventListener('change',()=>{const floor=terrainHeight(camera.position.x,camera.position.z)+1.9;if(camera.position.y<floor){camera.position.y=floor;camera.lookAt(controls.target);}state.draw();});
  preset(state);
@@ -49,7 +70,7 @@ function createMain(){
  state.resize=resize;state.observer=new ResizeObserver(resize);
  if(typeof IntersectionObserver==='function')state.intersection=new IntersectionObserver(entries=>{state.inView=entries.some(e=>e.isIntersecting);if(state.inView)state.draw();else state.stop();});
  document.addEventListener('visibilitychange',()=>{if(document.hidden)state.stop();else state.draw();});reduced?.addEventListener?.('change',()=>state.draw());
- const canvas=renderer.domElement;canvas.setAttribute('aria-label','3D green meadow with rolling hills and long grass. Drag to look around, pinch or scroll to zoom. Use Arrange for placement.');canvas.setAttribute('role','img');
+ const canvas=renderer.domElement;canvas.setAttribute('aria-label','3D meadow with rolling hills and long grass, following the real time and saved location. At night, stars, the moon when above the horizon, and fireflies appear. Drag to look around, pinch or scroll to zoom. Use Arrange for placement.');canvas.setAttribute('role','img');
  renderer.debug.onShaderError=()=>state.config?.onError('This device could not draw the 3D meadow. Tasks, inventory and coordinate placement are still available.');
  canvas.addEventListener('webglcontextlost',ev=>{ev.preventDefault();state.lost=true;state.stop();state.config?.onError('The 3D view paused. Reload to restore it. Your saved world is safe.');});
  canvas.addEventListener('webglcontextrestored',()=>{state.lost=false;state.draw();});
@@ -67,9 +88,10 @@ export function mountScene(host,config){
  if(!host){if(main){main.stop();main.host=null;main.observer.disconnect();main.intersection?.disconnect();}return;}
  try{main??=createMain();const m=main;m.observer.disconnect();m.intersection?.disconnect();m.host=host;m.config=config;m.inView=true;host.replaceChildren(m.renderer.domElement);m.observer.observe(host);m.intersection?.observe(host);m.controls.enabled=true;
   const placed=config.state.builds.filter(b=>b.placement?.islandId===config.island.id);
+  m.placed=placed;
   const fieldKey=JSON.stringify([config.island.id,config.island.theme,placed.map(b=>[b.id,b.placement])]);
   if(m.fieldKey!==fieldKey){if(m.field){m.scene.remove(m.field.root);disposeGroup(m.field.root);}m.field=createMeadow({theme:config.island.theme,placed,grassCount:(globalThis.innerWidth||1000)<720?46000:78000});m.scene.add(m.field.root);m.fieldKey=fieldKey;const p=m.field.palette;m.scene.background=new T.Color(p.horizon);m.scene.fog=new T.Fog(p.fog,p.fogNear,p.fogFar);}
-  const wet=!!config.state.settings.rain;m.field.setRain(wet);m.sun.intensity=wet?.75:1.9;const palette=m.field.palette;m.scene.fog.color.set(wet?'#b3c5c9':palette.fog);m.scene.fog.near=wet?65:palette.fogNear;m.scene.fog.far=wet?310:palette.fogFar;
+  m.refreshSky();
   if(m.root){m.scene.remove(m.root);disposeGroup(m.root);}m.root=new T.Group();m.scene.add(m.root);
   if(m.lastIsland!==config.island.id)preset(m,'field');
   if(config.draft&&!m.lastDraft)preset(m,'arrange');m.lastDraft=!!config.draft;m.lastIsland=config.island.id;m.lastEditable=!!config.editable;
@@ -78,4 +100,4 @@ export function mountScene(host,config){
   m.resize();m.draw();return true;
  }catch{config.onError?.('The 3D meadow could not open on this device. Tasks and coordinate placement still work. Try an up-to-date browser with WebGL 2 and graphics acceleration.');return false;}
 }
-export function cameraAction(action){if(!main)return;const {controls,camera}=main;if(['field','arrange','top','reset'].includes(action)){preset(main,action==='reset'?'field':action);return;}if(action==='left'||action==='right')camera.position.sub(controls.target).applyAxisAngle(T.Object3D.DEFAULT_UP,action==='left'?Math.PI/8:-Math.PI/8).add(controls.target);if(action==='in'||action==='out'){camera.position.sub(controls.target).multiplyScalar(action==='in'?.82:1.22).add(controls.target);}controls.update();main.draw();}
+export function cameraAction(action){if(!main)return false;const {controls,camera}=main;if(action==='moon'){main.refreshSky();if(main.sky.moon.altitude<=0)return false;pointCameraAtSky(main,main.sky.moon.direction);return true;}if(action==='sky'){const d=camera.getWorldDirection(new T.Vector3());d.y=0;if(d.lengthSq()<.001)d.set(0,0,-1);d.normalize().multiplyScalar(Math.cos(Math.PI/5));d.y=Math.sin(Math.PI/5);pointCameraAtSky(main,d.toArray());return true;}if(['field','arrange','top','reset'].includes(action)){preset(main,action==='reset'?'field':action);return true;}if(action==='left'||action==='right')camera.position.sub(controls.target).applyAxisAngle(T.Object3D.DEFAULT_UP,action==='left'?Math.PI/8:-Math.PI/8).add(controls.target);if(action==='in'||action==='out'){camera.position.sub(controls.target).multiplyScalar(action==='in'?.82:1.22).add(controls.target);}controls.update();main.draw();return true;}
