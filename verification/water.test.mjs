@@ -4,7 +4,7 @@ import * as T from '../vendor/three.module.js';
 import {BACKGROUNDS,normaliseBackground} from '../backgrounds.mjs';
 import {tideAt,waveMotion,sampleWater,waterCameraPose,createTideClock,WAVE_PERIOD,EYE_HEIGHT} from '../water-cycle.mjs';
 import {createWaterPlanet,WATER_RADIUS} from '../water-world.mjs';
-import {WATER_MOON} from '../water-lighting.mjs';
+import {WATER_MOON,WATER_SKY_SCALE} from '../water-lighting.mjs';
 import {createWaterLook} from '../water-controls.mjs';
 import {createNightSky} from '../meadow-night.mjs';
 import {skyAt} from '../sky-time.mjs';
@@ -22,11 +22,40 @@ test('Background preferences migrate and round-trip without changing tasks, mate
 });
 
 test('The first crest reaches the origin after 20 active minutes, repeating every 20 minutes',()=>{
- assert.equal(WAVE_PERIOD,1200);assert.ok(tideAt(0).centre<-2600);assert.equal(tideAt(0).strength,1);
+ assert.equal(WAVE_PERIOD,1200);assert.ok(tideAt(0).centre<-7000);assert.equal(tideAt(0).strength,1);
  for(const second of [1200,2400,3600,120000]){const s=tideAt(second);assert.equal(s.centre,0);assert.equal(s.strength,1);assert.equal(s.stage,'crest');assert.ok(sampleWater(0,0,0,s).large>600);}
  for(let t=0;t<1325;t+=.5){assert.ok(tideAt(t+.5).centre>=tideAt(t).centre||t+ .5===1325);}
  for(const t of [200,700,1400,1800])assert.ok(sampleWater(0,0,0,tideAt(t)).large<.001);
- assert.equal(tideAt(1325).strength,0);assert.ok(tideAt(1324.999).strength<1e-8);
+ assert.equal(tideAt(1325).waves.find(w=>w.cycle===1).strength,1,'The departing wave must remain visible after focus moves to the next wave');
+});
+
+test('The approaching wall grows throughout all 20 minutes and the departing wall shrinks into the opposite horizon',()=>{
+ function projectedHeight(seconds,yaw){
+  const tide=tideAt(seconds),wave=tide.waves.find(w=>w.cycle===1),pose=waterCameraPose(tide,seconds,yaw,-.025);
+  const camera=new T.PerspectiveCamera(58,16/9,.1,18000);camera.position.set(pose.x,pose.y,pose.z);camera.lookAt(camera.position.clone().add(new T.Vector3(...pose.direction)));camera.updateMatrixWorld();
+  const peak=new T.Vector3(0,sampleWater(0,wave.centre,seconds,tide).height,wave.centre).project(camera),base=new T.Vector3(0,0,wave.centre).project(camera);
+  return peak.y-base.y;
+ }
+ const heights=[0,120,300,600,900,1140].map(t=>projectedHeight(t,0));
+ assert.ok(heights[0]>.015&&heights[0]<.04,'The first ridge must be small but visible at the far horizon');
+ for(let i=1;i<heights.length;i++)assert.ok(heights[i]>heights[i-1]*1.2,'Each approach interval should show a visibly larger wave');
+ for(let t=0;t<1020;t+=60)assert.ok(tideAt(t+60).centre-tideAt(t).centre>150,'The wall must travel instead of hovering at the horizon');
+ const departing=[1230,1320,1500,1800,2100,2340].map(t=>projectedHeight(t,Math.PI));
+ for(let i=1;i<departing.length;i++)assert.ok(departing[i]<departing[i-1]*.95);
+ assert.ok(departing.at(-1)>0&&departing.at(-1)<.02);
+});
+
+test('Outgoing and incoming waves coexist without popping at crest, focus or repeat-cycle boundaries',()=>{
+ for(const t of [1500,1800,2100]){const waves=tideAt(t).waves;assert.equal(waves.length,2);assert.ok(waves[0].centre>0&&waves[1].centre<0);assert.equal(waves[0].strength,1);assert.equal(waves[1].strength,1);}
+ const h=.001;
+ for(const boundary of [1200,1325,2400,2525,3600]){
+  const left=tideAt(boundary-h),right=tideAt(boundary+h),locations=new Set([...left.waves,...right.waves].map(w=>w.centre));
+  for(const z of locations)assert.ok(Math.abs(sampleWater(0,z,0,left).height-sampleWater(0,z,0,right).height)<.02,'Changing the primary cycle must not reset visible water');
+  const p=waterCameraPose(left,boundary-h),q=waterCameraPose(right,boundary+h);assert.ok(Math.abs(p.y-q.y)<.01);assert.ok(Math.abs(p.z-q.z)<.1);
+ }
+ assert.ok(tideAt(2399.999).waves.find(w=>w.cycle===1).strength<1e-10);
+ assert.equal(tideAt(2400).waves.some(w=>w.cycle===1),false);
+ for(let t=0;t<36000;t+=17)assert.ok(tideAt(t).waves.length<=2,'Retired waves must not accumulate');
 });
 
 test('The wave has a smooth crest and join; sampled slopes agree with independent finite differences',()=>{
@@ -60,12 +89,13 @@ test('The ride climbs over 600 metres rapidly, remains above the water and rolls
 test('The wave accelerates near the eye and its position, speed and acceleration remain continuous',()=>{
  assert.ok(waveMotion(-120).speed<4);assert.ok(waveMotion(-30).speed>50);assert.ok(waveMotion(-12).speed>80);assert.ok(waveMotion(60).speed<30);
  const h=.001;
- for(const t of [-120,-30,-12,-11.9,0,9.9,10,20,60]){
+ for(const t of [-1200,-180,-150,-120,-90,-30,-12,-11.9,0,9.9,10,20,60,90,120,150,180,1200]){
   const m=waveMotion(t),left=waveMotion(t-h),right=waveMotion(t+h);
   assert.ok(Math.abs((right.centre-left.centre)/(2*h)-m.speed)<.0001);
   assert.ok(Math.abs((right.speed-left.speed)/(2*h)-m.acceleration)<.001);
  }
- for(const join of [-12,10]){const left=waveMotion(join-h),right=waveMotion(join+h);assert.ok(Math.abs(left.speed-right.speed)<.0001);assert.ok(Math.abs(left.acceleration-right.acceleration)<.001);}
+ for(const join of [-180,-90,-12,10,90,180]){const left=waveMotion(join-h),right=waveMotion(join+h);assert.ok(Math.abs(left.speed-right.speed)<.001);assert.ok(Math.abs(left.acceleration-right.acceleration)<.001);}
+ for(let t=-1200;t<=1200;t+=.5)assert.ok(waveMotion(t).speed>0,'The wave must never reverse while crossing a transition');
 });
 
 test('The active-view clock pauses without catch-up; preview has no initial jump and preserves the ride',()=>{
@@ -80,7 +110,7 @@ test('The active-view clock pauses without catch-up; preview has no initial jump
 test('Calm water covers every heading and the far edge stays hidden beyond the fog',()=>{
  const desktop=createWaterPlanet(),phone=createWaterPlanet({mobile:true});
  try{
-  assert.ok(phone.water.geometry.attributes.position.count<desktop.water.geometry.attributes.position.count);assert.ok(phone.water.geometry.attributes.position.count<30000);assert.ok(desktop.water.geometry.attributes.position.count<71000);
+  assert.ok(phone.water.geometry.attributes.position.count<desktop.water.geometry.attributes.position.count);assert.ok(phone.water.geometry.attributes.position.count<35000);assert.ok(desktop.water.geometry.attributes.position.count<85000);
   assert.ok(WATER_RADIUS>desktop.palette.fogFar+1000);assert.equal(desktop.water.frustumCulled,false);
   for(const object of [desktop,phone]){const p=object.water.geometry.attributes.position,indices=object.water.geometry.index;let max=0;for(let i=0;i<p.count;i++){assert.ok(Number.isFinite(p.getX(i)));max=Math.max(max,Math.hypot(p.getX(i),p.getZ(i)));}assert.ok(Math.abs(max-WATER_RADIUS)<.002);for(const index of indices.array)assert.ok(index<p.count);}
   for(let t=0;t<100;t++)assert.ok(Math.abs(sampleWater(0,0,t,tideAt(0)).height)<.156);
@@ -92,7 +122,7 @@ test('The distant wave is visible in the initial phone and desktop view and rise
  for(const aspect of [16/9,390/844]){
   const c=new T.PerspectiveCamera(58,aspect,.1,18000);c.position.set(pose.x,pose.y,pose.z);c.lookAt(...pose.direction.map((d,i)=>d+[pose.x,pose.y,pose.z][i]));c.updateMatrixWorld();
   const peak=new T.Vector3(0,sampleWater(0,tide.centre,0,tide).height,tide.centre).project(c),base=new T.Vector3(0,0,tide.centre).project(c);
-  assert.ok(Math.abs(peak.x)<1&&Math.abs(peak.y)<1&&peak.z<1);assert.ok(peak.y-base.y>.25,'The larger distant wave must visibly tower above the water');
+  assert.ok(Math.abs(peak.x)<1&&Math.abs(peak.y)<1&&peak.z<1);assert.ok(peak.y-base.y>.015&&peak.y-base.y<.04,'The initial wave should be a small visible ridge, far away');
   for(const relative of [-10,-8,-6,-4,-2]){
    const time=1200+relative,t=tideAt(time),p=waterCameraPose(t,time,0,-.025);c.position.set(p.x,p.y,p.z);c.lookAt(c.position.clone().add(new T.Vector3(...p.direction)));c.updateMatrixWorld();
    const crest=new T.Vector3(0,sampleWater(0,t.centre,time,t).height,t.centre).project(c);
@@ -107,8 +137,10 @@ test('Water supports day/night and rain; meadow fireflies never leak into the oc
  try{
   const geometry=w.water.geometry;w.setSky(day);const dayColour=w.water.material.uniforms.waterBody.value.clone();w.setSky(night);assert.notDeepEqual(w.water.material.uniforms.waterBody.value,dayColour);assert.ok(w.water.material.uniforms.moonPower.value>0);
   w.setRain(true);assert.equal(w.water.material.uniforms.rainMood.value,1);assert.equal(w.dome.material.uniforms.rainMood.value,1);w.setRain(false);
-  const tide=tideAt(1200);w.update(8,tide);assert.equal(w.water.material.uniforms.waveCentre.value,0);assert.equal(w.water.geometry,geometry);
-  n.update(10,{camera:c,sky:night,environment:'water',skyScale:5});assert.equal(n.fireflies.visible,false);assert.equal(n.fireflies.geometry.drawRange.count,0);assert.equal(n.stars.visible,true);assert.equal(n.stars.parent.scale.x,5);
+  const tide=tideAt(1200);w.update(8,tide);assert.equal(w.water.material.uniforms.waveCentres.value.x,0);assert.ok(w.water.material.uniforms.waveCentres.value.y<-7000);assert.equal(w.water.material.uniforms.waveStrengths.value.y,0);assert.equal(w.water.geometry,geometry);
+  const overlap=tideAt(1800);w.update(9,overlap);assert.deepEqual(w.water.material.uniforms.waveCentres.value.toArray(),overlap.waves.map(w=>w.centre));assert.deepEqual(w.water.material.uniforms.waveScales.value.toArray(),overlap.waves.map(w=>w.scale));assert.deepEqual(w.water.material.uniforms.waveStrengths.value.toArray(),[1,1]);
+  n.update(10,{camera:c,sky:night,environment:'water',skyScale:WATER_SKY_SCALE});assert.equal(n.fireflies.visible,false);assert.equal(n.fireflies.geometry.drawRange.count,0);assert.equal(n.stars.visible,true);assert.equal(n.stars.parent.scale.x,WATER_SKY_SCALE);
+  assert.ok(n.stars.geometry.attributes.position.count>0);assert.ok(new T.Vector3().fromBufferAttribute(n.stars.geometry.attributes.position,0).length()*WATER_SKY_SCALE>WATER_RADIUS,'Stars must stay behind the distant water');
  }finally{disposeGroup(w.root);disposeGroup(n.root);}
 });
 
@@ -130,10 +162,10 @@ test('The reported moonless evening still has a visible water moon and matching 
   assert.ok(uniforms.moonPower.value>.85);assert.deepEqual(uniforms.moonDirection.value.toArray(),WATER_MOON.direction);
   for(const aspect of [16/9,390/844]){
    const c=new T.PerspectiveCamera(58,aspect,.1,18000),pose=waterCameraPose(tideAt(0),0,0,-.025);c.position.set(pose.x,pose.y,pose.z);c.lookAt(c.position.clone().add(new T.Vector3(...pose.direction)));c.updateMatrixWorld();
-   n.update(0,{camera:c,sky,environment:'water',skyScale:5});n.root.updateMatrixWorld(true);
+   n.update(0,{camera:c,sky,environment:'water',skyScale:WATER_SKY_SCALE});n.root.updateMatrixWorld(true);
    const onScreen=n.moon.getWorldPosition(new T.Vector3()).project(c);assert.ok(Math.abs(onScreen.x)<.9&&Math.abs(onScreen.y)<.9&&onScreen.z<1);
    assert.equal(n.moon.visible,true);assert.ok(n.moon.material.uniforms.visibility.value>.98);assert.ok(n.moon.position.clone().normalize().distanceTo(uniforms.moonDirection.value)<1e-9);
-   n.update(0,{camera:c,sky,environment:'water',skyScale:5,raining:true});assert.ok(n.moon.material.uniforms.visibility.value>.45);assert.equal(n.stars.visible,false);
+   n.update(0,{camera:c,sky,environment:'water',skyScale:WATER_SKY_SCALE,raining:true});assert.ok(n.moon.material.uniforms.visibility.value>.45);assert.equal(n.stars.visible,false);
    // The same sky timestamp must still rebuild the moon when changing worlds.
    n.update(0,{camera:c,sky,environment:'meadow'});assert.equal(n.moon.visible,false);assert.equal(n.moon.scale.x,1);assert.ok(n.moon.position.clone().normalize().distanceTo(new T.Vector3(...sky.moon.direction))<1e-9);
   }

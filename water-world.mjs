@@ -3,11 +3,11 @@ import {createSkyDome} from './meadow-terrain.mjs';
 import {WATER_SURFACE_GLSL,tideAt} from './water-cycle.mjs';
 import {WATER_MOON,WATER_NIGHT} from './water-lighting.mjs';
 
-export const WATER_RADIUS=9000;
+export const WATER_RADIUS=16000;
 export const WATER_PALETTE={sky:'#9eafb8',horizon:'#dae1df',fog:'#dae1df',fogNear:3200,fogFar:7600};
 
 export function makeWaterGeometry({mobile=false}={}){
- const rings=mobile?176:272,sectors=mobile?160:256,positions=[],indices=[];
+ const rings=mobile?208:320,sectors=mobile?160:256,positions=[],indices=[];
  // Radial density is highest around the viewer and stretches towards the
  // horizon. Every distant ridge remains real geometry, from every heading.
  positions.push(0,0,0);
@@ -26,7 +26,7 @@ export function createWaterPlanet({mobile=false}={}){
  const root=new T.Group();root.name='Water planet';
  const dome=createSkyDome('meadow',WATER_PALETTE);dome.scale.setScalar(5);dome.name='Water planet sky';root.add(dome);
  dome.material.uniforms.nightTop.value.set(WATER_NIGHT.top);dome.material.uniforms.nightHorizon.value.set(WATER_NIGHT.horizon);
- const uniforms={waterTime:{value:0},waveCentre:{value:tideAt(0).centre},waveStrength:{value:1},daylight:{value:1},rainMood:{value:0},skyTop:{value:new T.Color(WATER_PALETTE.sky)},skyHorizon:{value:new T.Color(WATER_PALETTE.horizon)},waterBody:{value:new T.Color('#264449')},sunDirection:{value:new T.Vector3(0,1,0)},moonDirection:{value:new T.Vector3(0,-1,0)},moonPower:{value:0}};
+ const uniforms={waterTime:{value:0},waveCentres:{value:new T.Vector2(tideAt(0).centre,0)},waveStrengths:{value:new T.Vector2(1,0)},waveScales:{value:new T.Vector2(tideAt(0).scale,1)},daylight:{value:1},rainMood:{value:0},skyTop:{value:new T.Color(WATER_PALETTE.sky)},skyHorizon:{value:new T.Color(WATER_PALETTE.horizon)},waterBody:{value:new T.Color('#264449')},sunDirection:{value:new T.Vector3(0,1,0)},moonDirection:{value:new T.Vector3(0,-1,0)},moonPower:{value:0}};
  const material=new T.ShaderMaterial({side:T.DoubleSide,toneMapped:false,uniforms,vertexShader:`
  ${WATER_SURFACE_GLSL}
  varying vec3 surfacePosition;varying vec2 surfaceSlope;varying float ridge;
@@ -62,7 +62,10 @@ export function createWaterPlanet({mobile=false}={}){
   colour+=vec3(1.0,.92,.75)*sunGlint*.8*(1.0-rainMood*.87)+vec3(.53,.67,.88)*(moonGlint*.9+moonSheen*.13)*(1.0-rainMood*.55);
   float foam=smoothstep(.94,.992,ridge)*(.4+.6*noise(vec2(p.x*.042+waterTime*.08,p.y*.072-waterTime*.12)));
   vec3 foamColour=mix(vec3(.22,.32,.43),vec3(.72,.8,.8),daylight);colour=mix(colour,foamColour,foam*.78);
-  float haze=smoothstep(mix(3200.0,1500.0,rainMood),mix(7600.0,4600.0,rainMood),distance);colour=mix(colour,skyHorizon,haze);
+  float haze=smoothstep(mix(3200.0,1500.0,rainMood),mix(7600.0,4600.0,rainMood),distance);
+  float distantRidge=smoothstep(2800.0,4300.0,distance)*smoothstep(.05,.5,ridge);
+  float horizonHaze=.64+.36*smoothstep(10000.0,14000.0,distance);
+  haze=mix(haze,min(haze,horizonHaze),distantRidge);colour=mix(colour,skyHorizon,haze);
   gl_FragColor=vec4(colour,1.0);
   #include <colorspace_fragment>
  }
@@ -77,6 +80,6 @@ export function createWaterPlanet({mobile=false}={}){
  return {root,dome,water,palette:WATER_PALETTE,
   setRain(value){raining=!!value;uniforms.rainMood.value=raining?1:0;dome.material.uniforms.rainMood.value=raining?1:0;recolour();},
   setSky(info){lastSky=info;const u=dome.material.uniforms;u.daylight.value=info.daylight;u.dusk.value=Math.max(0,1-Math.abs(info.sun.geometricAltitude+1)/9);u.sunDirection.value.fromArray(info.sun.direction);uniforms.daylight.value=info.daylight;uniforms.sunDirection.value.fromArray(info.sun.direction);uniforms.moonDirection.value.fromArray(WATER_MOON.direction);uniforms.moonPower.value=WATER_MOON.fraction*(1-info.daylight);recolour();},
-  update(seconds,tide){uniforms.waterTime.value=seconds;uniforms.waveCentre.value=tide.centre;uniforms.waveStrength.value=tide.strength;}
+  update(seconds,tide){const [first,second]=tide.waves||[tide];uniforms.waterTime.value=seconds;uniforms.waveCentres.value.set(first.centre,second?.centre||0);uniforms.waveStrengths.value.set(first.strength,second?.strength||0);uniforms.waveScales.value.set(first.scale??1,second?.scale??1);}
  };
 }

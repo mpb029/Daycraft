@@ -8,4 +8,7 @@ export const WATER_MOON=Object.freeze({
  up:Object.freeze([-Math.sin(azimuth)*Math.sin(altitude),Math.cos(altitude),Math.cos(azimuth)*Math.sin(altitude)]),
  light:Object.freeze([-.6,0,.8])
 });
+// Keep celestial objects beyond the distant waves. Scaling their positions
+// and sizes together preserves the same moon and stars in the camera view.
+export const WATER_SKY_SCALE=13;
 export const WATER_NIGHT=Object.freeze({top:'#122138',horizon:'#435b74',body:'#284353'});

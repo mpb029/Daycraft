@@ -4,6 +4,7 @@ import {createWaterPlanet} from '../water-world.mjs';
 import {createNightSky} from '../meadow-night.mjs';
 import {tideAt,waterCameraPose} from '../water-cycle.mjs';
 import {skyAt} from '../sky-time.mjs';
+import {WATER_SKY_SCALE} from '../water-lighting.mjs';
 const directory='water-graphics-check';fs.mkdirSync(directory,{recursive:true});
 const desktop=createWaterPlanet(),phone=createWaterPlanet({mobile:true}),night=createNightSky(),frames=[],geometry=[],registered=new Map();
 function geometryId(o){
@@ -17,16 +18,14 @@ function geometryId(o){
  if(index)fs.writeFileSync(`${directory}/${file}`,Buffer.from(index.buffer));
  geometry.push({attributes,indices:index?file:null,count:index?index.length:g.attributes.position.count});registered.set(g,id);return id;
 }
-for(const [name,seconds,aspect,date,rain=false,yaw=0] of [
- ['calm',0,16/9,'2026-10-11T02:00Z'],['approach',1170,16/9,'2026-10-11T02:00Z'],
- ['night',0,16/9,'2026-10-11T09:12Z'],['night-approach',1180,16/9,'2026-10-11T09:12Z'],
- ['night-crest',1200,16/9,'2026-10-11T09:12Z'],['night-settling',1218,16/9,'2026-10-11T09:12Z'],
- ['night-lift',1196,16/9,'2026-10-11T09:12Z'],['night-descent',1206,16/9,'2026-10-11T09:12Z'],
- ['night-phone',0,390/844,'2026-10-11T09:12Z'],['night-rain',0,16/9,'2026-10-11T09:12Z',true],
- ['night-away',0,16/9,'2026-10-11T09:12Z',false,Math.PI],['full-moon',0,16/9,'2026-10-26T12:00Z']]){
+const scenarios=[];
+for(const minute of [0,2,5,10,15,19])scenarios.push([`in-${minute}`,minute*60,16/9,'2026-10-11T09:12Z']);
+for(const minute of [.5,2,5,10,15,19])scenarios.push([`out-${minute}`,1200+minute*60,16/9,'2026-10-11T09:12Z',false,Math.PI]);
+scenarios.push(['day-far',0,16/9,'2026-10-11T02:00Z'],['day-mid',600,16/9,'2026-10-11T02:00Z'],['phone-far',0,390/844,'2026-10-11T09:12Z'],['phone-mid',600,390/844,'2026-10-11T09:12Z'],['night-lift',1196,16/9,'2026-10-11T09:12Z'],['night-crest',1200,16/9,'2026-10-11T09:12Z'],['night-descent',1206,16/9,'2026-10-11T09:12Z'],['rain-far',0,16/9,'2026-10-11T09:12Z',true]);
+for(const [name,seconds,aspect,date,rain=false,yaw=0] of scenarios){
  const width=aspect<1?390:960,height=aspect<1?844:540,camera=new T.PerspectiveCamera(58,aspect,.1,18000),tide=tideAt(seconds),p=waterCameraPose(tide,seconds,yaw,-.025),w=aspect<1?phone:desktop,sky=skyAt(new Date(date));
  camera.position.set(p.x,p.y,p.z);camera.lookAt(p.x+p.direction[0],p.y+p.direction[1],p.z+p.direction[2]);camera.updateMatrixWorld();w.update(seconds,tide);w.setRain(rain);w.setSky(sky);w.dome.position.copy(camera.position);w.root.updateMatrixWorld(true);
- night.update(seconds,{camera,sky,raining:rain,environment:'water',skyScale:5});night.root.updateMatrixWorld(true);
+ night.update(seconds,{camera,sky,raining:rain,environment:'water',skyScale:WATER_SKY_SCALE});night.root.updateMatrixWorld(true);
  const objects=[w.dome,w.water,...[night.stars,night.moon,night.sun].filter(o=>o.visible)].map(o=>({
   name:o.name,geometry:geometryId(o),points:!!o.isPoints,depthWrite:o.material.depthWrite,transparent:o.material.transparent,additive:o.material.blending===T.AdditiveBlending,
   vertex:o.material.vertexShader,fragment:T.ShaderChunk.colorspace_pars_fragment+'\nvec4 linearToOutputTexel(vec4 value){return sRGBTransferOETF(value);}\n'+o.material.fragmentShader.replace('#include <colorspace_fragment>',T.ShaderChunk.colorspace_fragment),

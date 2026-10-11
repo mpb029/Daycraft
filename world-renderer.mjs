@@ -10,7 +10,7 @@ import {normaliseBackground} from './backgrounds.mjs';
 import {createWaterPlanet} from './water-world.mjs';
 import {createTideClock,waterCameraPose} from './water-cycle.mjs';
 import {createWaterLook} from './water-controls.mjs';
-import {WATER_MOON} from './water-lighting.mjs';
+import {WATER_MOON,WATER_SKY_SCALE} from './water-lighting.mjs';
 let main=null,previewRenderer=null,previewFailed=false;
 const previews=new Map();
 function newRenderer(extra={}){const r=new T.WebGLRenderer({antialias:true,alpha:true,powerPreference:'low-power',...extra});r.setPixelRatio(Math.min(globalThis.devicePixelRatio||1,1.5));r.outputColorSpace=T.SRGBColorSpace;r.toneMapping=T.ACESFilmicToneMapping;r.toneMappingExposure=1.06;return r;}
@@ -67,7 +67,7 @@ function createMain(){
    }else{state.tideRunning=false;state.field?.grass?.update(state.elapsed,motion&&state.config.breeze,!!state.config?.draft);}
    state.field?.dome.position.copy(camera.position);
    state.atmosphere.update(state.elapsed,{camera,motion,breeze:state.config.breeze,raining:!!state.config.state.settings.rain,editing:!!state.config.draft,daytime:!water&&state.sky.daytime});
-   state.nightSky.update(state.elapsed,{camera,sky:state.sky,motion,raining:!!state.config.state.settings.rain,editing:!!state.config.draft,placed:state.placed,environment:state.background,skyScale:water?5:1});
+   state.nightSky.update(state.elapsed,{camera,sky:state.sky,motion,raining:!!state.config.state.settings.rain,editing:!!state.config.draft,placed:state.placed,environment:state.background,skyScale:water?WATER_SKY_SCALE:1});
    renderer.render(scene,camera);state.dirty=false;state.lastFrame=now;
   }
   if(motion)state.frame=requestAnimationFrame(tick);
