@@ -52,6 +52,10 @@ export function createWaterPlanet({mobile=false}={}){
   float moonDiffuse=max(dot(normal,moonDirection),0.0);
   float moonThrough=pow(max(dot(normal,-moonDirection),0.0),2.0)*smoothstep(.12,.92,ridge);
   colour+=vec3(.025,.047,.074)*moonPower*(.24+.76*moonDiffuse+moonThrough*.6);
+  // Long surface streaks give the steep face a readable flow during the lift.
+  float face=smoothstep(.16,.65,length(surfaceSlope))*smoothstep(.005,.09,ridge);
+  float flow=noise(vec2(p.x*.09,p.y*.026-waterTime*.18))*.65+noise(vec2(p.x*.26,p.y*.07-waterTime*.48))*.35;
+  colour*=1.0+face*(flow-.5)*.24;
   float sunGlint=pow(max(dot(reflect(-sunDirection,normal),view),0.0),130.0)*daylight*smoothstep(-.02,.1,sunDirection.y);
   float moonGlint=pow(max(dot(reflect(-moonDirection,normal),view),0.0),110.0)*moonPower;
   float moonSheen=pow(max(dot(reflect(-moonDirection,normal),view),0.0),24.0)*moonPower;

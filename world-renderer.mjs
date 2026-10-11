@@ -52,12 +52,15 @@ function createMain(){
  function tick(now){
   state.frame=0;if(!visible()){state.lastFrame=0;return;}
   const motion=moving();
-  if(state.dirty||now-state.lastFrame>=1000/24){
+  const fastRide=state.background==='water'&&['approaching','rising','crest','settling'].includes(state.tide.snapshot.stage)&&motion&&state.config.state.settings.waterRide!==false;
+  // Use every display frame during the fast passage; the distant scene keeps
+  // its lower update rate. Camera and water advance together on every draw.
+  if(state.dirty||fastRide||now-state.lastFrame>=1000/24){
    state.refreshSky();
    const delta=state.lastFrame?Math.max(0,(now-state.lastFrame)/1000):0,water=state.background==='water';
    if(motion)state.elapsed+=Math.min(.15,delta);
    if(water){
-    state.waterMotion=motion;const running=motion&&state.config.state.settings.waterRide!==false,tide=state.tide.advance(delta,running&&!!state.tideRunning),view=state.waterLook.view;state.tideRunning=running;
+    state.waterMotion=motion;const running=motion&&state.config.state.settings.waterRide!==false,tide=state.tide.advance(Math.min(.1,delta),running&&!!state.tideRunning),view=state.waterLook.view;state.tideRunning=running;
     state.field.update(state.elapsed,tide);const pose=waterCameraPose(tide,state.elapsed,view.yaw,view.pitch);
     camera.position.set(pose.x,pose.y,pose.z);camera.up.set(0,1,0);camera.lookAt(pose.x+pose.direction[0],pose.y+pose.direction[1],pose.z+pose.direction[2]);
     if(camera.fov!==view.fov){camera.fov=view.fov;camera.updateProjectionMatrix();}
@@ -137,5 +140,5 @@ export function waterStatus(){
  if(!main.waterMotion||main.config.state.settings.waterRide===false)return 'Tidal wave paused';
  if(main.tide.previewing)return `Wave approaching · crest in ${Math.ceil(main.tide.secondsToCrest)}s`;
  const seconds=Math.ceil(main.tide.secondsToCrest),next=`Next crest in ${Math.floor(seconds/60)}:${String(seconds%60).padStart(2,'0')}`;
- return {calm:next,rising:'Rising with the wave',crest:'Over the crest',settling:'Settling into calm water'}[main.tide.snapshot.stage];
+ return {calm:next,approaching:'The wave is accelerating',rising:'Sweeping up the wave',crest:'Over the crest',settling:'Settling into calm water'}[main.tide.snapshot.stage];
 }

@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as T from '../vendor/three.module.js';
 import {BACKGROUNDS,normaliseBackground} from '../backgrounds.mjs';
-import {tideAt,sampleWater,waterCameraPose,createTideClock,WAVE_PERIOD,EYE_HEIGHT} from '../water-cycle.mjs';
+import {tideAt,waveMotion,sampleWater,waterCameraPose,createTideClock,WAVE_PERIOD,EYE_HEIGHT} from '../water-cycle.mjs';
 import {createWaterPlanet,WATER_RADIUS} from '../water-world.mjs';
 import {WATER_MOON} from '../water-lighting.mjs';
 import {createWaterLook} from '../water-controls.mjs';
@@ -23,7 +23,7 @@ test('Background preferences migrate and round-trip without changing tasks, mate
 
 test('The first crest reaches the origin after 20 active minutes, repeating every 20 minutes',()=>{
  assert.equal(WAVE_PERIOD,1200);assert.ok(tideAt(0).centre<-2600);assert.equal(tideAt(0).strength,1);
- for(const second of [1200,2400,3600,120000]){const s=tideAt(second);assert.equal(s.centre,0);assert.equal(s.strength,1);assert.equal(s.stage,'crest');assert.ok(sampleWater(0,0,0,s).large>150);}
+ for(const second of [1200,2400,3600,120000]){const s=tideAt(second);assert.equal(s.centre,0);assert.equal(s.strength,1);assert.equal(s.stage,'crest');assert.ok(sampleWater(0,0,0,s).large>600);}
  for(let t=0;t<1325;t+=.5){assert.ok(tideAt(t+.5).centre>=tideAt(t).centre||t+ .5===1325);}
  for(const t of [200,700,1400,1800])assert.ok(sampleWater(0,0,0,tideAt(t)).large<.001);
  assert.equal(tideAt(1325).strength,0);assert.ok(tideAt(1324.999).strength<1e-8);
@@ -35,20 +35,37 @@ test('The wave has a smooth crest and join; sampled slopes agree with independen
   const tide=tideAt(t),s=sampleWater(x,z,15,tide),dx=(sampleWater(x+h,z,15,tide).height-sampleWater(x-h,z,15,tide).height)/(2*h),dz=(sampleWater(x,z+h,15,tide).height-sampleWater(x,z-h,15,tide).height)/(2*h);
   assert.ok(Math.abs(s.dx-dx)<.00005);assert.ok(Math.abs(s.dz-dz)<.00005);
  }
- const join=1105,v1=(tideAt(join).centre-tideAt(join-h).centre)/h,v2=(tideAt(join+h).centre-tideAt(join).centre)/h;assert.ok(Math.abs(v1-v2)<.001);
  const crest=tideAt(1200);assert.ok(Math.abs(sampleWater(0,h,0,crest).large-sampleWater(0,-h,0,crest).large)<1e-6);
+ const left=(sampleWater(0,0,0,crest).largeDz-sampleWater(0,-h,0,crest).largeDz)/h,right=(sampleWater(0,h,0,crest).largeDz-sampleWater(0,0,0,crest).largeDz)/h;
+ assert.ok(Math.abs(left-right)<1e-6,'Crest curvature must join smoothly without a camera acceleration kink');
 });
 
-test('The ride rises over 150 metres, stays above the rendered surface and settles without a camera jump',()=>{
- let previous=null,maximum=0,minimum=Infinity,maxSpeed=0;
- for(let i=0;i<=240*24;i++){
-  const time=1090+i/24,tide=tideAt(time),p=waterCameraPose(tide,time,0,-.025),surface=sampleWater(p.x,p.z,time,tide);
-  assert.ok(Math.abs(p.y-surface.height-EYE_HEIGHT)<1e-9);assert.ok(Math.abs(p.pitch+.025)<.2);assert.ok(Math.abs(Math.hypot(...p.direction)-1)<1e-10);
-  if(previous)maxSpeed=Math.max(maxSpeed,Math.hypot(p.y-previous.y,p.z-previous.z)*24);previous=p;maximum=Math.max(maximum,p.y);minimum=Math.min(minimum,p.y);
+test('The ride climbs over 600 metres rapidly, remains above the water and rolls smoothly over the crest',()=>{
+ let previous=null,velocity=null,maximum=0,minimum=Infinity,maxSpeed=0,maxAcceleration=0,maxPitchRate=0,ten=null,ninety=null;
+ for(let i=0;i<=240*120;i++){
+  const time=1090+i/120,tide=tideAt(time),p=waterCameraPose(tide,time,0,-.025),surface=sampleWater(p.x,p.z,time,tide);
+  assert.ok(Math.abs(p.y-surface.height-EYE_HEIGHT)<1e-9);assert.ok(Math.abs(p.pitch+.025)<.8);assert.ok(Math.abs(Math.hypot(...p.direction)-1)<1e-10);
+  if(previous){const v=[(p.y-previous.y)*120,(p.z-previous.z)*120];maxSpeed=Math.max(maxSpeed,Math.hypot(...v));maxPitchRate=Math.max(maxPitchRate,Math.abs(p.pitch-previous.pitch)*120);if(velocity)maxAcceleration=Math.max(maxAcceleration,Math.hypot((v[0]-velocity[0])*120,(v[1]-velocity[1])*120));velocity=v;}
+  if(ten===null&&p.y>65)ten=time;if(ninety===null&&p.y>564)ninety=time;
+  previous=p;maximum=Math.max(maximum,p.y);minimum=Math.min(minimum,p.y);
  }
- assert.ok(maximum>150&&maximum<170);assert.ok(minimum>2.6&&minimum<3);assert.ok(maxSpeed<9);
+ assert.ok(maximum>600&&maximum<680);assert.ok(minimum>2.6&&minimum<3);assert.ok(maxSpeed>100&&maxSpeed<180);
+ assert.ok(ninety-ten>3&&ninety-ten<5,'The main lift should take a few seconds');assert.ok(maxAcceleration<100);assert.ok(maxPitchRate<.42,'Pitch must ease over the crest');
+ assert.ok(waterCameraPose(tideAt(1194),1194).z<-100,'The approach must draw the eye towards the wave');assert.equal(waterCameraPose(tideAt(1200),1200).z,0);
+ assert.ok(waterCameraPose(tideAt(1206),1206).z>100,'After the crest, the wave carries the eye through to the other side');
  const settled=waterCameraPose(tideAt(1325),1325);assert.ok(Math.abs(settled.y-EYE_HEIGHT)<.16);assert.ok(Math.abs(settled.z)<.0001);
- for(const yaw of [0,Math.PI/2,Math.PI,3*Math.PI/2])for(const t of [0,1180,1200,1230]){const p=waterCameraPose(tideAt(t),t,yaw,1.3);assert.ok(p.y>p.surface.height+2.7);for(const n of [p.y,p.pitch,...p.direction])assert.ok(Number.isFinite(n));}
+ for(const yaw of [0,Math.PI/2,Math.PI,3*Math.PI/2])for(const t of [0,1194,1198,1200,1206,1230]){const p=waterCameraPose(tideAt(t),t,yaw,1.3);assert.ok(p.y>p.surface.height+2.7);for(const n of [p.y,p.pitch,...p.direction])assert.ok(Number.isFinite(n));}
+});
+
+test('The wave accelerates near the eye and its position, speed and acceleration remain continuous',()=>{
+ assert.ok(waveMotion(-120).speed<4);assert.ok(waveMotion(-30).speed>50);assert.ok(waveMotion(-12).speed>80);assert.ok(waveMotion(60).speed<30);
+ const h=.001;
+ for(const t of [-120,-30,-12,-11.9,0,9.9,10,20,60]){
+  const m=waveMotion(t),left=waveMotion(t-h),right=waveMotion(t+h);
+  assert.ok(Math.abs((right.centre-left.centre)/(2*h)-m.speed)<.0001);
+  assert.ok(Math.abs((right.speed-left.speed)/(2*h)-m.acceleration)<.001);
+ }
+ for(const join of [-12,10]){const left=waveMotion(join-h),right=waveMotion(join+h);assert.ok(Math.abs(left.speed-right.speed)<.0001);assert.ok(Math.abs(left.acceleration-right.acceleration)<.001);}
 });
 
 test('The active-view clock pauses without catch-up; preview has no initial jump and preserves the ride',()=>{
@@ -75,7 +92,12 @@ test('The distant wave is visible in the initial phone and desktop view and rise
  for(const aspect of [16/9,390/844]){
   const c=new T.PerspectiveCamera(58,aspect,.1,18000);c.position.set(pose.x,pose.y,pose.z);c.lookAt(...pose.direction.map((d,i)=>d+[pose.x,pose.y,pose.z][i]));c.updateMatrixWorld();
   const peak=new T.Vector3(0,sampleWater(0,tide.centre,0,tide).height,tide.centre).project(c),base=new T.Vector3(0,0,tide.centre).project(c);
-  assert.ok(Math.abs(peak.x)<1&&Math.abs(peak.y)<1&&peak.z<1);assert.ok(peak.y-base.y>.09,'The distant wave must be a visible wall, not a subpixel line');
+  assert.ok(Math.abs(peak.x)<1&&Math.abs(peak.y)<1&&peak.z<1);assert.ok(peak.y-base.y>.25,'The larger distant wave must visibly tower above the water');
+  for(const relative of [-10,-8,-6,-4,-2]){
+   const time=1200+relative,t=tideAt(time),p=waterCameraPose(t,time,0,-.025);c.position.set(p.x,p.y,p.z);c.lookAt(c.position.clone().add(new T.Vector3(...p.direction)));c.updateMatrixWorld();
+   const crest=new T.Vector3(0,sampleWater(0,t.centre,time,t).height,t.centre).project(c);
+   assert.ok(Math.abs(crest.y)<.94&&crest.z<1,'The camera should keep the looming crest in view during the climb');
+  }
  }
 });
 

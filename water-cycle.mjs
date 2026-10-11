@@ -1,25 +1,29 @@
 // A cinematic travelling swell, in scene metres and seconds. This is an
 // authored landscape, not a fluid-dynamics or tsunami prediction model.
 export const WAVE_PERIOD=20*60;
-export const WAVE_HEIGHT=160,FRONT_WIDTH=160,BACK_WIDTH=240,WAVE_SPEED=8;
+export const WAVE_HEIGHT=640,FRONT_WIDTH=260,BACK_WIDTH=440,WAVE_SPEED=88;
 export const WAVE_TRAIL=125,EYE_HEIGHT=2.8;
+const CREST_BLEND=110,PULL_DISTANCE=140,PULL_TIME=4,DRIFT_WINDOW=14;
 const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
 const smooth=t=>{t=clamp(t,0,1);return t*t*(3-2*t);};
 const smoother=t=>{t=clamp(t,0,1);return t*t*t*(t*(t*6-15)+10);};
 
+export function waveMotion(relative){
+ // The arctangent tails approach a distant horizon slowly. Their position,
+ // speed and acceleration match the fast central passage at both joins.
+ const join=relative<-12?-12:relative>10?10:null;
+ if(join===null)return {centre:relative*WAVE_SPEED,speed:WAVE_SPEED,acceleration:0};
+ const duration=join<0?22:30,u=(relative-join)/duration,square=1+u*u;
+ return {centre:join*WAVE_SPEED+WAVE_SPEED*duration*Math.atan(u),speed:WAVE_SPEED/square,acceleration:-2*WAVE_SPEED*u/(duration*square*square)};
+}
+
 export function tideAt(seconds){
  const elapsed=Number.isFinite(seconds)?Math.max(0,seconds):0;
  const cycle=Math.max(1,Math.floor((elapsed-WAVE_TRAIL)/WAVE_PERIOD)+1),relative=elapsed-cycle*WAVE_PERIOD;
- // Long approach, then a constant-speed passage. Position and velocity join
- // continuously at −95 s; the old ridge fades away before the next appears.
- const join=-95;
- let centre;
- if(relative<join){
-  centre=join*WAVE_SPEED-WAVE_SPEED*245*(1-Math.exp((relative-join)/245));
- }else centre=relative*WAVE_SPEED;
+ const travel=waveMotion(relative);
  const born=cycle===1?1:smooth((elapsed-((cycle-1)*WAVE_PERIOD+WAVE_TRAIL))/50);
  const strength=born*(1-smooth((relative-85)/(WAVE_TRAIL-85)));
- return {seconds:elapsed,cycle,relative,centre,strength,untilCrest:relative<=0?-relative:WAVE_PERIOD-relative,stage:relative<-70?'calm':relative<-3?'rising':relative<6?'crest':relative<80?'settling':'calm'};
+ return {seconds:elapsed,cycle,relative,...travel,strength,untilCrest:relative<=0?-relative:WAVE_PERIOD-relative,stage:relative<-45?'calm':relative<-10?'approaching':relative<-1.3?'rising':relative<2.8?'crest':relative<24?'settling':'calm'};
 }
 
 export function sampleWater(x,z,seconds,tide){
@@ -30,17 +34,24 @@ export function sampleWater(x,z,seconds,tide){
  const warp=16*Math.sin(x*.008)+8*Math.sin(x*.019),warpDx=.128*Math.cos(x*.008)+.152*Math.cos(x*.019);
  const amplitude=WAVE_HEIGHT*(.96+.035*Math.sin(x*.005)+.02*Math.sin(x*.013+1.1));
  const amplitudeDx=WAVE_HEIGHT*(.035*.005*Math.cos(x*.005)+.02*.013*Math.cos(x*.013+1.1));
- const across=z-tide.centre-warp,width=across>=0?FRONT_WIDTH:BACK_WIDTH,q=across/width;
- const envelope=Math.exp(-q*q)*tide.strength,large=amplitude*envelope,largeDz=large*(-2*across/(width*width)),largeDx=amplitudeDx*envelope-largeDz*warpDx;
+ // A continuous width transition removes the acceleration kink caused by
+ // joining two different Gaussian widths directly at the crest.
+ const across=z-tide.centre-warp,blend=Math.tanh(across/CREST_BLEND),width=BACK_WIDTH+(FRONT_WIDTH-BACK_WIDTH)*(.5+.5*blend);
+ const widthDz=(FRONT_WIDTH-BACK_WIDTH)*.5*(1-blend*blend)/CREST_BLEND,q=across/width,qDz=1/width-across*widthDz/(width*width);
+ const envelope=Math.exp(-q*q)*tide.strength,large=amplitude*envelope,largeDz=-2*large*q*qDz,largeDx=amplitudeDx*envelope-largeDz*warpDx;
  dx+=largeDx;dz+=largeDz;
  return {height:ripples+large,ripples,large,dx,dz,largeDx,largeDz};
 }
 
 export function waterCameraPose(tide,seconds,yaw=0,pitch=0){
- const drift=26*Math.exp(-(((tide.relative-12)/42)**2))*tide.strength;
+ // A smooth forward draw precedes the lift, then carries the eye over the
+ // crest. The offset is zero at the crest, so the 20-minute timing stays exact.
+ const drift=PULL_DISTANCE*Math.tanh(tide.relative/PULL_TIME)*Math.exp(-((tide.relative/DRIFT_WINDOW)**2))*tide.strength;
  const surface=sampleWater(0,drift,seconds,tide);
  const along=surface.largeDx*Math.sin(yaw)-surface.largeDz*Math.cos(yaw);
- const ridePitch=clamp(Math.atan(along)*.19,-.19,.19),angle=clamp(pitch+ridePitch,-Math.PI*.46,Math.PI*.46);
+ const towardsWave=(.5+.5*Math.cos(yaw))**4;
+ const lookAhead=.43*Math.exp(-(((tide.relative+6)/5)**2))*towardsWave*tide.strength;
+ const ridePitch=.48*Math.tanh(Math.atan(along)*.9)+lookAhead,angle=clamp(pitch+ridePitch,-Math.PI*.46,Math.PI*.46);
  return {x:0,y:surface.height+EYE_HEIGHT,z:drift,pitch:angle,yaw,direction:[Math.sin(yaw)*Math.cos(angle),Math.sin(angle),-Math.cos(yaw)*Math.cos(angle)],surface};
 }
 
@@ -77,8 +88,10 @@ export const WATER_SURFACE_GLSL=`
   float warp=16.0*sin(p.x*.008)+8.0*sin(p.x*.019),warpDx=.128*cos(p.x*.008)+.152*cos(p.x*.019);
   float amplitude=${WAVE_HEIGHT.toFixed(1)}*(.96+.035*sin(p.x*.005)+.02*sin(p.x*.013+1.1));
   float amplitudeDx=${WAVE_HEIGHT.toFixed(1)}*(.035*.005*cos(p.x*.005)+.02*.013*cos(p.x*.013+1.1));
-  float across=p.y-waveCentre-warp,width=across>=0.0?${FRONT_WIDTH.toFixed(1)}:${BACK_WIDTH.toFixed(1)},q=across/width;
-  float envelope=exp(-q*q)*waveStrength,large=amplitude*envelope,largeDz=large*(-2.0*across/(width*width));
+  float across=p.y-waveCentre-warp,blend=tanh(across/${CREST_BLEND.toFixed(1)});
+  float width=${BACK_WIDTH.toFixed(1)}+${(FRONT_WIDTH-BACK_WIDTH).toFixed(1)}*(.5+.5*blend),widthDz=${((FRONT_WIDTH-BACK_WIDTH)*.5).toFixed(1)}*(1.0-blend*blend)/${CREST_BLEND.toFixed(1)};
+  float q=across/width,qDz=1.0/width-across*widthDz/(width*width);
+  float envelope=exp(-q*q)*waveStrength,large=amplitude*envelope,largeDz=-2.0*large*q*qDz;
   dx+=amplitudeDx*envelope-largeDz*warpDx;dz+=largeDz;
   return vec4(small+large,dx,dz,large/max(amplitude,.1));
  }

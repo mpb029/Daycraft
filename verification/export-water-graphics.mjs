@@ -19,8 +19,9 @@ function geometryId(o){
 }
 for(const [name,seconds,aspect,date,rain=false,yaw=0] of [
  ['calm',0,16/9,'2026-10-11T02:00Z'],['approach',1170,16/9,'2026-10-11T02:00Z'],
- ['night',0,16/9,'2026-10-11T09:12Z'],['night-approach',1170,16/9,'2026-10-11T09:12Z'],
- ['night-crest',1203,16/9,'2026-10-11T09:12Z'],['night-settling',1240,16/9,'2026-10-11T09:12Z'],
+ ['night',0,16/9,'2026-10-11T09:12Z'],['night-approach',1180,16/9,'2026-10-11T09:12Z'],
+ ['night-crest',1200,16/9,'2026-10-11T09:12Z'],['night-settling',1218,16/9,'2026-10-11T09:12Z'],
+ ['night-lift',1196,16/9,'2026-10-11T09:12Z'],['night-descent',1206,16/9,'2026-10-11T09:12Z'],
  ['night-phone',0,390/844,'2026-10-11T09:12Z'],['night-rain',0,16/9,'2026-10-11T09:12Z',true],
  ['night-away',0,16/9,'2026-10-11T09:12Z',false,Math.PI],['full-moon',0,16/9,'2026-10-26T12:00Z']]){
  const width=aspect<1?390:960,height=aspect<1?844:540,camera=new T.PerspectiveCamera(58,aspect,.1,18000),tide=tideAt(seconds),p=waterCameraPose(tide,seconds,yaw,-.025),w=aspect<1?phone:desktop,sky=skyAt(new Date(date));

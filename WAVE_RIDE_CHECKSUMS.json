@@ -1,0 +1,39 @@
+{
+  "release": "1.9.2",
+  "compatible_bases": [
+    "1.9.0",
+    "1.9.1"
+  ],
+  "app_files": [
+    "app.mjs",
+    "meadow-night.mjs",
+    "sw.js",
+    "water-cycle.mjs",
+    "water-lighting.mjs",
+    "water-world.mjs",
+    "world-renderer.mjs"
+  ],
+  "sha256": {
+    "UPDATE.md": "1095b0a6d9c9305b4f02d2a15d04e14e9b2b9153644cf9e4f2d1129e2a3b951c",
+    "app.mjs": "c10aa421285725f823261b442f9a11a9e79deb95e618ac6ae3364f7d911c43a3",
+    "meadow-night.mjs": "9701da29e733a0919e8bd56f9f9141651946b1d2f63696dba24a2c2406a80bbc",
+    "sw.js": "97eb8cc67a870334969868e6d378c9bf3b1d4c6f04f79c88f89be32f76d65a0f",
+    "verification/app-smoke.test.mjs": "13605d44c17b5f4a948eb6ca5464559294d9b700be5d31e266711080b8c7ceac",
+    "verification/atmosphere.test.mjs": "663b9eae03e4893eee2b90bd666a1881c618eddb27499592dd995123a0c4b57c",
+    "verification/domain.test.mjs": "663a8b36a5dee5e32d0404a1378f130f4358fe4a5ea76eb56b60b47d98d305b8",
+    "verification/export-water-graphics.mjs": "fb47022d8c15f9acb0fd6bae7aea86234557065f51abfae9e65c239b2eb0914d",
+    "verification/gles-context.py": "e33b6c1d1cee136d8b813c86cdbfc506b373f380c896de05ac766f7c58c3b7ed",
+    "verification/meadow.test.mjs": "6ea1f666e4ee5e8355999f417d4a27e2ca4fa14099dc569dc05c4a7dceaa4ac3",
+    "verification/overlay.test.mjs": "f114bee275f1c055d7fb4d19bf657f66094e6a334a24678539c1a895294dfac6",
+    "verification/pages.test.mjs": "8494bd67fb119435d3a6faf68be746e573ad48b19aa14e7b9dce1577b39c508a",
+    "verification/render-water-graphics.py": "62703c846fff42fa3a6dcc2d32784065899626ab7c8252b19052d1f5bafd1c19",
+    "verification/sky.test.mjs": "4c043d899f800ee141422aefe4c9aa2d0f5770d101ba024d62818954a58718c9",
+    "verification/water.test.mjs": "618ecd3d1dd9ab4b2ebd35146e579e3b5c020d9204dfbad2434e662528a51624",
+    "verification/world-ui.test.mjs": "c77d7251d968ec1505d01d9673bd21f0c1f17a88e3779cee3e817b558c494591",
+    "verification/world.test.mjs": "234bfeb1d3a13c46f322e5613aee1a98f6774ff3ed7803c85397e24d9ee99da4",
+    "water-cycle.mjs": "4e65d9e7628a217a34dc36277e031186a38a80fe1debb207a7e2f5db491be7db",
+    "water-lighting.mjs": "c9ea1d3a93fc15cf59ce5cb81b1212813e6085458b2f0eaa164eabc528001767",
+    "water-world.mjs": "926065186cc37b44fa4a059dace60606efcf7679ce34072e4bc02a0d2b56e03e",
+    "world-renderer.mjs": "8c1f985cdb0b78b4e515537578add8b6d109e2707455dd17af4f6cf676c37434"
+  }
+}
