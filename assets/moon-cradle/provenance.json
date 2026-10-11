@@ -1,0 +1,63 @@
+{
+  "source": "Meshy_AI_vintage_moon_cradle_m_1011025906_image-to-3d-texture.obj",
+  "originalTriangles": 494442,
+  "triangles": 35998,
+  "vertices": 28955,
+  "relativeAttributeAwareError": 0.001006613252684474,
+  "height": 3.412976118147404,
+  "footprint": [
+    4,
+    4
+  ],
+  "orientationYawDegrees": 90,
+  "streams": {
+    "positions": {
+      "offset": 0,
+      "bytes": 347460,
+      "count": 86865,
+      "type": "Float32Array"
+    },
+    "normals": {
+      "offset": 347460,
+      "bytes": 347460,
+      "count": 86865,
+      "type": "Float32Array"
+    },
+    "uvs": {
+      "offset": 694920,
+      "bytes": 231640,
+      "count": 57910,
+      "type": "Float32Array"
+    },
+    "indices": {
+      "offset": 926560,
+      "bytes": 215988,
+      "count": 107994,
+      "type": "Uint16Array"
+    }
+  },
+  "sourceSha256": "01553d769a3ca27c86f366855ed5c99d1662f5e77168debf1e3a984399b57dd1",
+  "sourceTextureSha256": "649502ce1db2fe7c8d0c1462cbc44ef511fc6f248ce1058d2ffdb6dc6a6228c4",
+  "sourceTextureSize": [
+    4096,
+    4096
+  ],
+  "appTextureSize": [
+    1024,
+    1024
+  ],
+  "triangleReductionPercent": 92.72,
+  "tools": {
+    "three": "0.186.1",
+    "meshoptimizer": "1.3.0"
+  },
+  "normalisation": "Y-up, grounded at Y=0, centred on X/Z, height 3.412976118147404 world units. Original colours retained.",
+  "glbSha256": "d755fcb63f4c454345352c19b399caeb1f2275607f4f38f2e3fe207d7971c580",
+  "verification": "Optimised mesh inspected in four offline 3D renders; browser/WebGL appearance remains a separate check.",
+  "validation": {
+    "validator": "Khronos glTF Validator",
+    "version": "2.0.0-dev.3.10",
+    "errors": 0,
+    "warnings": 0
+  }
+}

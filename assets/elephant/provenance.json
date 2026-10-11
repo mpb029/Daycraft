@@ -1,0 +1,61 @@
+{
+  "source": "Meshy_AI_toys_1992_elephant_st_1011021113_image-to-3d-texture.obj",
+  "originalTriangles": 299794,
+  "triangles": 36000,
+  "vertices": 26091,
+  "relativeAttributeAwareError": 0.0006685215048491955,
+  "height": 4.2,
+  "footprint": [
+    4,
+    4
+  ],
+  "streams": {
+    "positions": {
+      "offset": 0,
+      "bytes": 313092,
+      "count": 78273,
+      "type": "Float32Array"
+    },
+    "normals": {
+      "offset": 313092,
+      "bytes": 313092,
+      "count": 78273,
+      "type": "Float32Array"
+    },
+    "uvs": {
+      "offset": 626184,
+      "bytes": 208728,
+      "count": 52182,
+      "type": "Float32Array"
+    },
+    "indices": {
+      "offset": 834912,
+      "bytes": 216000,
+      "count": 108000,
+      "type": "Uint16Array"
+    }
+  },
+  "sourceSha256": "355cfcc59183741b6adfda6bf5150ff04a4e9f77e41559ba2fcb55b2369ab16a",
+  "sourceTextureSha256": "fb01a48b73aabc6a84edf1f24919157734eb9a12d396db1a5a34e2a8208747ef",
+  "sourceTextureSize": [
+    4096,
+    4096
+  ],
+  "appTextureSize": [
+    1024,
+    1024
+  ],
+  "triangleReductionPercent": 87.99,
+  "tools": {
+    "three": "0.186.1",
+    "meshoptimizer": "1.3.0"
+  },
+  "normalisation": "Y-up, grounded at Y=0, centred on X/Z, height 4.2 world units. Original colours retained.",
+  "glbSha256": "3969b3c67f24d2bcc67ea2a9cd4f48219d0d36ef0cdc27bee0c709d0d965272e",
+  "verification": "Optimised mesh inspected in four offline 3D renders; browser/WebGL appearance remains a separate check.",
+  "glbValidation": {
+    "validator": "Khronos glTF Validator 2.0.0-dev.3.10",
+    "errors": 0,
+    "warnings": 0
+  }
+}
