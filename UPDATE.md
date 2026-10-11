@@ -1,44 +1,52 @@
-# Daycraft night sky update — 1.8.0
+# Daycraft — Water planet and background choices, 1.9.0
 
-An update for the existing 1.7.0 meadow app in https://github.com/mpb029/Daycraft .
-The live site remains https://mpb029.github.io/Daycraft/ . This package has not been uploaded or deployed by the assistant.
+A cumulative update for the existing meadow app at https://mpb029.github.io/Daycraft/ .
+Works over 1.7.0 or 1.8.0. It includes the previous night-sky update, so there is no need to upload 1.8 first.
+This package has not been uploaded or deployed by the assistant.
 
-## Upload to your existing GitHub repo
+## Install in your existing GitHub repository
 
-1. Download and extract this ZIP.
+1. Extract this ZIP on your computer.
 2. Open https://github.com/mpb029/Daycraft/upload/main .
-3. Drag in the 13 loose app/licence files listed below. Put them at the repository root, alongside the existing index.html. Upload the extracted files, not the ZIP. Replace matching filenames. There is no new folder to upload for this update.
-4. Commit to main and wait for the GitHub Pages deployment to finish in Actions. Keep your current Pages settings.
-5. Open Daycraft and press Ctrl+Shift+R in Firefox on your computer. Then close all Daycraft tabs/windows and reopen the site so the updated offline version can activate. For an installed phone app, first reload the site in that browser, then close all its Daycraft tabs and the installed app, and reopen it.
-6. In Settings, open Sky & location. It should say Daycraft 1.8.0. Choose Use my location, or enter coordinates manually. It starts with an approximate Gympie-area location.
+3. Upload the 17 loose app/licence files listed below at the repository root, alongside the existing index.html. Replace matching filenames. Upload extracted files, not this ZIP; there are no new runtime folders to upload.
+4. Commit to main. Keep your current Pages settings and the existing assets, icons and vendor folders. Wait for the Pages deployment to finish in Actions.
+5. Open Daycraft and press Ctrl+Shift+R in Firefox. Close all Daycraft tabs/windows and reopen the site to activate the new offline version. If using an installed phone app, first reload the site in its browser, then close its Daycraft tabs and the installed app, and reopen it.
+6. Choose Water planet from the new background dropdown above the scene. Settings also has two background cards. The version at the bottom of Sky & location should say Daycraft 1.9.0.
 
-Keep the existing assets, icons and vendor folders. Your saved tasks, materials, items and placements use the same browser storage and are preserved. Do not clear site data to refresh the app. Export a backup in Settings whenever you want a separate copy of your progress.
+UPDATE.md, BACKGROUND_UPDATE_CHECKSUMS.json and verification/ are supporting files; uploading them is optional.
+Saved tasks, materials, earned items and meadow placements are preserved. Do not clear site data to refresh the update. Settings → Export backup makes a separate copy of your progress.
 
-UPDATE.md, SKY_UPDATE_CHECKSUMS.json and verification/ are supporting files and do not need to be uploaded.
+## Water planet
 
-## What you will see
+- Gentle, shallow-looking ripples stretch to a hazy horizon in every direction. A huge distant wave crosses the scene as real 3D water geometry.
+- The first crest passes after 20 minutes of active viewing of Water planet. Further crests follow every 20 active minutes. Time pauses while a different background is selected, the tab is hidden, the wave is paused, or Calm mode/reduced motion is active. Reloading/reopening the app starts a fresh cycle. No background notification or scheduled service is involved.
+- As the wave reaches you, the camera rises with the same surface used to draw the water, drifts over the crest, descends its far side and returns to the gentle water. The eye stays above the surface. The horizon stays level, with a small pitch adjustment and no camera roll or shake.
+- Drag to look around; scroll or pinch to change zoom. Face wave returns your gaze to the approaching wave.
+- Try a wave brings the distant wave closer over about 24 seconds, then runs the normal approach and ride. The crest arrives about 96 seconds after pressing it from calm water; the following crest is 20 active minutes later. It does not suddenly teleport the wave or camera to the crest.
+- Pause wave holds the large wave and ride at their current point; the small ripples keep moving. Resume wave continues from there. Calm mode and device reduced motion pause all scenery movement. Turning these off resumes the held scene.
+- The task and progress panels remain over the background. Space and Show/Hide panels work as before. A task, form, or tab change does not restart the wave cycle.
+- Water planet follows the same actual day/night sky and saved location as the meadow, with sun/moon highlights on the water and optional rain. Balloons, leaves and meadow fireflies do not appear over the ocean.
 
-- The sun, seasonal dawn/dusk and meadow lighting follow the device’s actual date and time and the saved coordinates. No fixed 6 am/6 pm switch.
-- Balloons and blowing leaves disappear at sunset and return during daylight.
-- A deep blue, densely starred sky appears gradually through twilight. Moonlight changes with the visible moon; a little ambient light keeps earned items visible on moonless nights.
-- Fireflies flitter and glow gently just above the grass in your camera view. Their paths are anchored in the world; turning the camera reveals the grass you are now looking at. They do not populate the entire map or behave like a flat screen overlay.
-- The moon uses its current phase, horizon position and bright-limb tilt for the saved location. It can appear during the day, can be below the horizon at night, and is almost invisible around new moon. Local hills may obscure a low moon. Its disc is slightly enlarged for visibility; surface markings and the star pattern are decorative artwork, not a star catalogue or a photographic lunar map.
-- Settings → Sky & location includes Sky view, Look at moon and Meadow view. Collection also has a Sky view camera control. Use Space or Hide panels to enjoy the scenery.
-- Rain remains optional. It darkens the light, obscures stars and strongly dims the moon. Fireflies are dimmer in rain. This is the rain setting you choose, not a live weather service.
-- Calm mode and the device’s reduced-motion preference pause animated movement and twinkling. Fireflies remain as still glows; the actual sky time continues updating. Effects pause while arranging items or when the app is hidden.
-- Sky readings update about every 20 seconds, independently of the animation clock. The small on-screen clock uses the device’s local timezone. Task day boundaries still use the timezone selected in preferences.
+The scene is a stylised, cinematic water world inspired by the requested imagery. It is not a fluid-dynamics or tsunami prediction model, and uses no film footage or third-party image assets.
 
-## Location and offline behaviour
+## Meadow and your collection
 
-Use my location makes one browser location request when you press the button. The browser may ask permission. It saves coordinates rounded to three decimal places; it does not continuously track you. You can enter coordinates instead, or keep the approximate default. Update the saved location if you travel.
+Meadow remains available from the same selector. Its grass, balloons, leaves, night fireflies, real-time sky and free item placement remain available. Switching backgrounds keeps the saved meadow arrangement and restores its camera view.
 
-All astronomy calculations run locally in the app, including offline after a complete update has been cached. Daycraft sends no coordinates to an astronomy service. The saved location is included in exported backups. Tasks and settings remain browser-local; separate devices still have separate progress unless you transfer a backup.
+Both backgrounds use the same task list, progress and inventory. Earned objects are arranged in the meadow. When you choose Place or Move from Water planet, the meadow opens for placement; Open my meadow in Collection also returns there. The water planet stays clear to the horizon.
 
-## Files to upload
+Your chosen background and wave on/off preference are saved in this browser and included in backups. The running wave timer and view angles are session state. Different devices still hold separate progress unless you transfer a backup.
+
+## Previous night-sky features included
+
+Seasonal sunrise/sunset, the actual moon phase/position/bright-limb tilt, a decorative star field, moonlight, and meadow fireflies are included. Sky & location starts with an approximate Gympie-area location. Use my location requests a location once when pressed; manual coordinates are also available. Astronomy runs locally and offline after the complete app has been cached. Task day boundaries use the separately selected timezone.
+
+## App files to upload
 
 - ASTRONOMY-LICENSE.txt
 - app.mjs
 - astronomy-engine.mjs
+- backgrounds.mjs
 - domain.mjs
 - meadow-atmosphere.mjs
 - meadow-layout.css
@@ -47,25 +55,30 @@ All astronomy calculations run locally in the app, including offline after a com
 - sky-location.mjs
 - sky-time.mjs
 - sw.js
+- water-controls.mjs
+- water-cycle.mjs
+- water-world.mjs
 - world-renderer.mjs
 - world-view.mjs
 
-## Verification
+## Validation
 
-47 automated checks pass. They cover task and world behaviour, backup compatibility, location input and permission errors, date/season/longitude/polar cases, independent published lunar-phase dates, illuminated disc fraction and hemisphere tilt, actual clock changes, night gating, rain and reduced motion, fireflies’ camera bounds and ground clearance, star coordinate transforms, sky camera controls, local dependencies and the scoped offline cache.
+56 automated checks pass. They cover existing task and world behaviour, backups and older settings, background switching and placement return, the 1,200-second wave cadence, pause/preview behaviour, surface gradients checked against finite differences, continuous camera motion and surface clearance, horizon coverage and visibility in desktop/phone aspect ratios, particle/geometry budgets, water mouse/touch controls, night effects and astronomy, local import paths and offline cache isolation.
 
-The five new/updated shader pairs also compiled and linked using the existing native OpenGL ES compiler. This is a shader check, not a browser visual test. Browser appearance, touch interaction and phone performance have not been visually verified in this environment.
+The actual water and sky shaders compiled and linked in native OpenGL ES. Six native render checks were inspected: calm water, approaching wave, crest, descent, phone aspect ratio and night water. These directly use the app’s geometry, shader code and camera calculations, but do not run the browser UI. Full browser interaction, CSS layout, real phone performance and a complete real-time 20-minute session have not been visually tested here.
 
-The ZIP has been checked for integrity. Merging its app files onto the saved 1.7.0 runtime reproduces the verified 1.8.0 runtime byte for byte. To run the portable tests in a complete checkout containing these changes:
+The ZIP passed integrity and byte comparisons: overlaying its app files onto either the saved 1.7.0 or 1.8.0 runtime recreates the verified 1.9.0 runtime exactly.
+
+To rerun the portable automated checks after merging with a complete checkout:
 
     node --test verification/*.test.mjs
 
-## Astronomy dependency and independent reference
+## Bundled astronomy licence
 
-Astronomy Engine 2.1.19 by Don Cross is bundled as astronomy-engine.mjs under the MIT licence in ASTRONOMY-LICENSE.txt. No CDN, API key, package installation or build step is needed.
+Astronomy Engine 2.1.19 by Don Cross remains bundled as astronomy-engine.mjs with its MIT licence in ASTRONOMY-LICENSE.txt.
+Source: https://github.com/cosinekitty/astronomy
+Pinned commit: 61dc07020aaa6885d2c7f688a4d82beaf6edb9ef
+Original module: source/js/esm/astronomy.js
+SHA-256: 068f1445ed0c636c94818fe6d20d7d125120e605e0bab9fc4675c3d531be5ad7
 
-- Source: https://github.com/cosinekitty/astronomy
-- Pinned commit: 61dc07020aaa6885d2c7f688a4d82beaf6edb9ef
-- Original file: source/js/esm/astronomy.js
-- Unmodified module SHA-256: 068f1445ed0c636c94818fe6d20d7d125120e605e0bab9fc4675c3d531be5ad7
-- Independent phase-date test reference: US Naval Observatory, https://aa.usno.navy.mil/calculated/moon/phases?year=2026 . The four test events are global phase times and contain no user location.
+No build step, paid host, external API, server or ChatGPT connection is needed to run the site.

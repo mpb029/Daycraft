@@ -144,3 +144,39 @@ html,body{height:100%;overflow:hidden;background:#b7ced2}
  .startup-card{margin:16vh 20px;padding:25px}
 }
 @media(max-height:540px) and (min-width:721px){.meadow-panel.content{top:75px;bottom:86px;max-height:calc(100dvh - 161px)}.meadow-nav{bottom:12px}.panel-toggle{bottom:15px}.meadow-hint{display:none}}
+
+/* Background choice stays accessible above either 3D landscape. */
+.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.meadow-header{max-width:calc(100% - 455px)}
+.atmosphere-controls{display:grid;grid-template-columns:auto auto auto;align-items:center;gap:7px;max-width:calc(100vw - 30px)}
+.background-picker{display:block;margin:0}
+.background-picker select{width:145px;min-height:42px;border:1px solid #fffff5b8;border-radius:12px;padding:8px 11px;background:#f9fcedeb;color:#354e39;font-size:12px;box-shadow:0 8px 30px #25483218;backdrop-filter:blur(16px)}
+.atmosphere-controls .sky-clock{position:static;grid-row:2;grid-column:1/-1;justify-self:end;line-height:1.5}
+.atmosphere-controls .motion-note{position:static;grid-column:1/-1;justify-self:end;grid-row:auto}
+.water-quick-controls{grid-column:1/-1;display:flex;gap:6px;justify-content:flex-end;flex-wrap:wrap}
+.water-quick-controls .btn{min-height:34px;font-size:10px;padding:6px 10px}
+#water-status{flex-basis:100%;text-align:right;font-size:10px;color:#304f52;text-shadow:0 1px 8px #e9f2f3}
+.night-sky #water-status{color:#dce8f7;text-shadow:0 1px 8px #071320}
+.background-options{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0}
+.background-option{padding:9px 9px 12px;border:1px solid #d4ddcf;border-radius:13px;background:#f7faf1;text-align:left;display:flex;flex-direction:column;gap:6px}
+.background-option.selected{border-color:#56765e;box-shadow:0 0 0 2px #56765e22;background:#edf4e5}
+.background-option strong{font:17px Georgia,serif;margin-top:3px}.background-option>span:last-child{font-size:11px;line-height:1.55;color:#647363}
+.background-swatch{height:78px;width:100%;border-radius:8px;overflow:hidden;position:relative}
+.background-swatch.meadow{background:linear-gradient(#adcddb 0%,#dbe9e6 48%,#9bbb66 49%,#658f44 100%)}
+.background-swatch.meadow:before{content:'';position:absolute;width:170%;height:75%;left:-40%;top:40%;background:#789f50;border-radius:50% 50% 0 0;transform:rotate(-9deg)}
+.background-swatch.meadow:after{content:'';position:absolute;width:140%;height:70%;left:20%;top:52%;background:#568039;border-radius:50% 50% 0 0;transform:rotate(9deg)}
+.background-swatch.water{background:linear-gradient(#abb8bd 0%,#dce3e2 48%,#899fa1 49%,#3b5c66 100%)}
+.background-swatch.water:before{content:'';position:absolute;width:160%;height:21%;left:-25%;top:33%;background:linear-gradient(#a7bcbb 0%,#4b6870 25%,#40575d 100%);border-radius:42% 44% 0 0;box-shadow:0 -1px 0 #e4ece7;transform:rotate(-1deg)}
+.background-swatch.water:after{content:'';position:absolute;inset:56% -20% 0;background:repeating-linear-gradient(174deg,transparent 0px,transparent 8px,#e5eeea22 9px,transparent 10px)}
+.water-settings{border-top:1px solid #d4ddcf;margin-top:15px;padding-top:15px}
+@media(min-width:721px) and (max-width:1100px){.meadow-name{display:none}.meadow-header{max-width:calc(100% - 430px)}}
+@media(max-width:720px){
+ .meadow-header{max-width:none}
+ .background-picker select{width:126px;min-height:40px;font-size:11px;padding:7px 8px}
+ .atmosphere-controls{column-gap:5px;row-gap:5px}
+ .atmosphere-controls>.glass-button{padding:7px 8px;gap:4px;font-size:10px}
+ .water-quick-controls .btn{min-height:36px;font-size:10px}
+ #water-status{display:none}
+}
+@media(max-width:360px){.background-picker select{width:112px}.atmosphere-controls>.glass-button .icon{display:none}}
+@media(max-width:720px) and (max-height:700px){.water-world .meadow-panel.content{max-height:42dvh}}

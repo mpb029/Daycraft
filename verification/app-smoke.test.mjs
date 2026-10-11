@@ -25,6 +25,11 @@ test('Task → focus → complete → build → undo works through app event han
   await act('panels');assert.equal(get('#meadow-interface').hidden,false);
   await act('rain');assert.equal(state().settings.rain,true);assert.match(get('#app').innerHTML,/Rain on/);
   await act('rain');assert.equal(state().settings.rain,false);
+  await act('background',{background:'water'});assert.equal(state().settings.background,'water');assert.match(get('#app').innerHTML,/data-background="water"/);assert.match(get('#app').innerHTML,/Try a wave/);assert.equal((get('#app').innerHTML.match(/data-world-scene/g)||[]).length,1);
+  await act('water-ride');assert.equal(state().settings.waterRide,false);await act('water-ride');assert.equal(state().settings.waterRide,true);
+  const waterBeforePanels=get('#app').innerHTML;await act('panels');assert.equal(get('#app').innerHTML,waterBeforePanels);await act('panels');
+  await act('nav',{view:'settings'});assert.equal(state().settings.background,'water');assert.match(get('#app').innerHTML,/Let the wave carry you/);
+  for(const f of listeners.change||[])await f({target:{id:'background-select',value:'meadow'}});assert.equal(state().settings.background,'meadow');await act('nav',{view:'today'});
   submit('task-form',{title:'<img src=x onerror=alert(1)>',area:'work',step:'Open the drawing',doneMeans:'A checked result',minutes:'15',repeat:'none',planned:'on',due:'',reason:''},{id:''});
   assert.equal(state().tasks.length,1);assert.ok(get('#app').innerHTML.includes('&lt;img'));assert.ok(!get('#app').innerHTML.includes('<img src=x'));
   const id=state().tasks[0].id;
@@ -38,7 +43,7 @@ test('Task → focus → complete → build → undo works through app event han
   await act('nav',{view:'settings'});assert.match(get('#app').innerHTML,/not synced between devices/);
   assert.equal((get('#app').innerHTML.match(/data-world-scene/g)||[]).length,1,'Settings still overlays one meadow');
   submit('settings-form',{name:'Marty',worldName:'My place',zone:'Australia/Brisbane',calm:'on'});assert.equal(state().settings.calm,true);
-  assert.match(get('#app').innerHTML,/Sky & location/);assert.match(get('#app').innerHTML,/Daycraft 1\.8\.0/);
+  assert.match(get('#app').innerHTML,/Sky & location/);assert.match(get('#app').innerHTML,/Daycraft 1\.9\.0/);
   const beforeLocation=state();submit('sky-location-form',{latitude:'',longitude:'0',label:'Invalid'});assert.deepEqual(state(),beforeLocation);
   submit('sky-location-form',{latitude:'51.5',longitude:'-.1',label:'<b>London</b>'});assert.equal(state().settings.skyLocation.latitude,51.5);assert.equal(state().settings.skyLocation.longitude,-.1);assert.match(get('#app').innerHTML,/&lt;b&gt;London&lt;\/b&gt;/);assert.deepEqual(state().tasks,beforeLocation.tasks);
   submit('settings-form',{name:'Marty',worldName:'My place',zone:'Australia/Brisbane',calm:'on'});assert.equal(state().settings.skyLocation.latitude,51.5);

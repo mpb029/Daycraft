@@ -80,10 +80,11 @@ export function createNightSky({mobile=false}={}){
  const root=new T.Group(),celestial=new T.Group(),stars=makeStars(mobile),moon=makeMoon(),sun=makeSun(),{flies,count}=makeFireflies(mobile);
  root.name='Time of day';celestial.add(stars,moon,sun);root.add(celestial,flies);
  const right=new T.Vector3(),up=new T.Vector3(),facing=new T.Vector3(),basis=new T.Matrix4();let lastAt=null,animationTime=null;
- function update(seconds,{camera,sky,motion=true,raining=false,editing=false,placed=[]}={}){
+ function update(seconds,{camera,sky,motion=true,raining=false,editing=false,placed=[],environment='meadow',skyScale=1}={}){
   if(!sky)return;
   if(motion||animationTime===null)animationTime=seconds;
   celestial.position.copy(camera.position);
+  celestial.scale.setScalar(skyScale);
   const ratio=Math.min(globalThis.devicePixelRatio||1,1.5),wet=raining?1:0;
   stars.visible=sky.night>.001&&!raining;stars.material.uniforms.brightness.value=sky.night*(1-.42*sky.moon.fraction*smoothRange(-1,25,sky.moon.altitude));stars.material.uniforms.time.value=animationTime;stars.material.uniforms.pixelRatio.value=ratio;
   if(lastAt!==sky.at){
@@ -99,7 +100,7 @@ export function createNightSky({mobile=false}={}){
   moon.visible=sky.moon.altitude>-.6;moon.material.uniforms.visibility.value=smoothRange(-.6,.3,sky.moon.altitude)*(1-.62*sky.daylight)*(1-.98*wet);moon.material.uniforms.daylight.value=sky.daylight;
   moon.material.uniforms.shadow.value.set('#091222').lerp(new T.Color('#abcada'),sky.daylight);
   sun.visible=sky.sun.altitude>-.6;sun.material.uniforms.visibility.value=smoothRange(-.6,.2,sky.sun.altitude)*(1-.97*wet);
-  flies.visible=sky.night>.001&&!editing;
+  flies.visible=sky.night>.001&&!editing&&environment==='meadow';
   if(flies.visible){
    const candidates=firefliesInView(camera,animationTime,{limit:count,placed});
    const positions=flies.geometry.attributes.position,strength=flies.geometry.attributes.strength;
