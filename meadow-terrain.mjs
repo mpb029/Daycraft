@@ -59,15 +59,15 @@ export function makeGrass(theme='meadow',placed=[],count=78000){
  }
  return {mesh:meshes[0],meshes,update:(seconds,motion,editing)=>{time.value=seconds;breeze.value=motion?1:0;arranging.value=editing?1:0;},uniforms:{time,breeze,arranging}};
 }
-function sky(theme){const p=FIELD_PALETTES[theme]||FIELD_PALETTES.meadow;return new T.Mesh(new T.SphereGeometry(1400,32,16),new T.ShaderMaterial({side:T.BackSide,depthWrite:false,toneMapped:false,uniforms:{top:{value:new T.Color(p.sky)},horizon:{value:new T.Color(p.horizon)}},vertexShader:`varying vec3 skyDirection;void main(){skyDirection=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}`,fragmentShader:`
- uniform vec3 top;uniform vec3 horizon;varying vec3 skyDirection;
+function sky(theme){const p=FIELD_PALETTES[theme]||FIELD_PALETTES.meadow;return new T.Mesh(new T.SphereGeometry(1400,32,16),new T.ShaderMaterial({side:T.BackSide,depthWrite:false,toneMapped:false,uniforms:{rainMood:{value:0},top:{value:new T.Color(p.sky)},horizon:{value:new T.Color(p.horizon)}},vertexShader:`varying vec3 skyDirection;void main(){skyDirection=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}`,fragmentShader:`
+ uniform vec3 top;uniform vec3 horizon;uniform float rainMood;varying vec3 skyDirection;
  float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
  float noise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.0-2.0*f);return mix(mix(hash(i),hash(i+vec2(1,0)),f.x),mix(hash(i+vec2(0,1)),hash(i+vec2(1,1)),f.x),f.y);}
- void main(){vec3 d=normalize(skyDirection);float h=max(d.y,0.0);vec3 color=mix(horizon,top,smoothstep(0.0,.65,h));vec2 uv=d.xz/max(d.y+.12,.06)*1.3;float n=noise(uv)*.58+noise(uv*2.08)*.28+noise(uv*4.1)*.14;float cloud=smoothstep(.56,.76,n)*smoothstep(.025,.18,h);color=mix(color,vec3(.94,.955,.945),cloud*.72);gl_FragColor=vec4(color,1.0);
+ void main(){vec3 d=normalize(skyDirection);float h=max(d.y,0.0);vec3 color=mix(horizon,top,smoothstep(0.0,.65,h));vec2 uv=d.xz/max(d.y+.12,.06)*1.3;float n=noise(uv)*.58+noise(uv*2.08)*.28+noise(uv*4.1)*.14;float cloud=smoothstep(.56,.76,n)*smoothstep(.025,.18,h);color=mix(color,vec3(.94,.955,.945),cloud*.72);color=mix(color,mix(vec3(.56,.64,.67),vec3(.72,.78,.79),1.0-h),rainMood*.82);gl_FragColor=vec4(color,1.0);
  #include <colorspace_fragment>
  }`}));}
 export function createMeadow({theme='meadow',placed=[],grassCount=78000}={}){
  const root=new T.Group();root.name='Open meadow';const ground=new T.Mesh(makeTerrainGeometry(theme),new T.MeshLambertMaterial({vertexColors:true,color:'#ffffff'}));ground.name='Rolling hills';ground.receiveShadow=true;root.add(ground);
- const grass=makeGrass(theme,placed,grassCount);root.add(...grass.meshes);root.add(sky(theme));return {root,ground,grass,palette:FIELD_PALETTES[theme]||FIELD_PALETTES.meadow};
+ const grass=makeGrass(theme,placed,grassCount);root.add(...grass.meshes);const dome=sky(theme);root.add(dome);return {root,ground,grass,setRain:enabled=>{dome.material.uniforms.rainMood.value=enabled?1:0;},palette:FIELD_PALETTES[theme]||FIELD_PALETTES.meadow};
 }
 export function createMeadowLights(scene){scene.add(new T.HemisphereLight('#e5f2ff','#405c23',1.45));const sun=new T.DirectionalLight('#fff3d6',1.9);sun.position.set(-34,60,24);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);Object.assign(sun.shadow.camera,{left:-22,right:22,top:22,bottom:-22,near:1,far:130});sun.shadow.bias=-.0006;sun.shadow.normalBias=.025;scene.add(sun);return sun;}

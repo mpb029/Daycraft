@@ -1,0 +1,136 @@
+/* A full-viewport landscape, with a small working surface above it. */
+html,body{height:100%;overflow:hidden;background:#b7ced2}
+[hidden]{display:none!important}
+.meadow-stage{position:fixed;inset:0;z-index:0;overflow:hidden}
+.meadow-stage .world-scene{width:100%;height:100%;min-height:0}
+.meadow-stage canvas{touch-action:none}
+.meadow-interface{position:relative;z-index:2;pointer-events:none;height:100dvh}
+.meadow-interface button,.meadow-interface input,.meadow-interface select,.meadow-interface textarea,.meadow-panel,.meadow-nav{pointer-events:auto}
+.meadow-header{position:fixed;top:22px;left:26px;display:flex;align-items:center;gap:17px;max-width:calc(100% - 350px);text-shadow:0 1px 14px #f9fff2}
+.meadow-header .brand{font-size:28px;letter-spacing:-1px;color:#203d31}
+.meadow-header .brand img{width:37px;height:37px}
+.meadow-name{font-family:Georgia,serif;font-size:17px;color:#365c47;border-left:1px solid #527b5766;padding-left:17px;max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.meadow-header-actions{margin-left:8px}
+.meadow-header-actions .btn{box-shadow:0 3px 18px #173f2920}
+.atmosphere-controls{position:fixed;top:24px;right:25px;display:flex;align-items:center;gap:7px;pointer-events:auto}
+.glass-button,.panel-toggle,.meadow-nav{background:#f9fceddf;border:1px solid #fffff5b8;backdrop-filter:blur(16px);box-shadow:0 8px 30px #25483218}
+.glass-button{min-height:42px;font-size:12px;gap:7px}
+.glass-button[aria-pressed=true]{background:#f2f7e9ec;border-color:#8aa487}
+.glass-button .icon{width:17px;height:17px}
+.motion-note{position:absolute;top:48px;right:0;color:#304b3b;font-size:10px;white-space:nowrap;background:#f4f7e3d6;padding:4px 9px;border-radius:7px}
+.meadow-panel.content{position:fixed;top:91px;bottom:101px;left:26px;width:430px;max-width:calc(100vw - 52px);max-height:calc(100dvh - 192px);margin:0;padding:23px;overflow:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#a5b89d transparent;border:1px solid #fffff8bd;border-radius:22px;background:#f7faefec;backdrop-filter:blur(17px);box-shadow:0 16px 55px #29442f24;outline-offset:4px}
+.meadow-panel[data-panel=world],.meadow-panel[data-panel=progress],.meadow-panel[data-panel=settings]{width:490px}
+.meadow-panel .page-heading{display:block;margin:0 0 20px}
+.meadow-panel .page-heading h1{font-size:29px;line-height:1.15;letter-spacing:-.8px;margin:7px 0 10px}
+.meadow-panel .page-heading p{font-size:12px;line-height:1.6}
+.meadow-panel .page-heading .eyebrow{font-size:9px;letter-spacing:1.3px}
+.meadow-panel .energy-toggle{width:max-content;margin-top:14px;background:#e9eedfc9}
+.meadow-panel .energy-toggle button{padding:6px 10px}
+.meadow-panel .dashboard,.meadow-panel .below,.meadow-panel .two-cols,.meadow-panel .chapter-card{display:grid;grid-template-columns:minmax(0,1fr);gap:16px}
+.today-progress{display:flex;align-items:center;gap:25px;padding:0 2px 14px;border-bottom:1px solid #cad5bf}
+.today-progress>div{display:grid;gap:2px}
+.today-progress strong{font:26px/1.1 Georgia,serif;color:#375a3f}
+.today-progress span{font-size:10px;color:#63715e}
+.today-progress>.btn{margin-left:auto;min-height:40px;padding:6px 0}
+.meadow-panel .next-card{padding:19px;background:#eff3e4a3;border-color:#d4dec9}
+.meadow-panel .next-card h2{font-size:24px;margin:10px 0}
+.meadow-panel .next-card p{font-size:12px}
+.meadow-panel .starter-icon{display:none}
+.meadow-panel .step-box{padding:12px;margin-bottom:15px;font-size:12px}
+.meadow-panel .below{margin-top:22px}
+.meadow-panel .task-row{padding:14px 11px;gap:9px;background:#fffff9e8}
+.meadow-panel .task-title{font-size:12px}
+.meadow-panel .task-menu{gap:0}
+.meadow-panel .task-menu .btn{padding:5px 7px;min-height:35px}
+.meadow-panel .blank{padding:19px;background:#f9fcf2a8}
+.meadow-panel .padded{padding:20px;background:#fffff6b8}
+.meadow-panel .footer-note{font-size:10px;margin:23px 0 0;color:#64765b}
+.meadow-panel .weekly-card{background:#fffff6b8;padding:18px}
+.meadow-panel .stat-grid{gap:9px;margin-bottom:16px}
+.meadow-panel .stat-card{padding:15px 12px;background:#fffff6b8}
+.meadow-panel .stat-card strong{font-size:29px}
+.meadow-panel .stat-card p{font-size:10px}
+.meadow-panel .filters{gap:8px;margin-bottom:13px}
+.meadow-panel .tabs{gap:2px}
+.meadow-panel .tabs button{padding:8px 10px;font-size:11px}
+.meadow-panel .search{max-width:none}
+.meadow-panel .world-balance{width:max-content;margin-top:14px;background:#e9efdbc4}
+.meadow-panel .world-balance .material-model{height:44px;width:53px}
+.meadow-panel .world-balance strong{font-size:23px}
+.meadow-panel .island-selector{gap:9px;flex-wrap:wrap}
+.meadow-panel .island-selector>span{display:none}
+.meadow-panel .island-selector select{font-size:11px;max-width:calc(100% - 92px)}
+.meadow-panel .world-editor{border:1px solid #d4ddc9;border-radius:13px;overflow:hidden;scroll-margin:10px}
+.meadow-panel .camera-tools{padding:11px;border-top:0;gap:5px;background:#eff4e5d4}
+.meadow-panel .camera-tools .btn{min-height:40px;min-width:38px;font-size:11px;padding:7px 9px}
+.meadow-panel .placement-rest,.meadow-panel .placement-panel{padding:17px;background:#f8fcefcc}
+.meadow-panel .placement-rest strong{font-size:19px}
+.meadow-panel .placement-rest p,.meadow-panel .placement-panel>p{font-size:11px;line-height:1.7}
+.meadow-panel .placement-panel .row-between{align-items:start;gap:8px}
+.meadow-panel .placement-panel .tag{display:none}
+.meadow-panel .placement-controls{gap:7px}
+.meadow-panel .placement-controls .btn{font-size:11px;padding:9px}
+.meadow-panel .placement-actions .btn{font-size:11px;padding:9px 11px;white-space:normal}
+.meadow-panel .catalog{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.meadow-panel .build-card{padding:13px;background:#fcfff4c4}
+.meadow-panel .build-card h3{font-size:18px}
+.meadow-panel .build-card p{font-size:11px}
+.meadow-panel .model-preview{height:108px}
+.meadow-panel .inventory-grid{grid-template-columns:minmax(0,1fr)}
+.meadow-panel .inventory-model{height:76px;width:75px}
+.meadow-panel .inventory-item{background:#fffff6bf}
+.meadow-panel .inventory-actions .btn{min-height:39px}
+.meadow-panel .collection-details{padding-left:14px;padding-right:14px;background:#fafff1a3}
+.meadow-panel .collection-details>summary{font-size:18px}
+.meadow-panel .collection-details>summary span{float:none;display:block;margin:5px 0 0;font-size:10px}
+.meadow-panel .chapter-card{padding:17px;gap:15px}
+.meadow-panel .chapter-card h2{font-size:23px}
+.meadow-panel .chapter-next{border-left:0;border-top:1px solid #cbd6b9;padding:16px 0 0}
+.meadow-panel .section-heading h2{font-size:16px}
+.meadow-panel .section-heading p{font-size:11px}
+.meadow-panel .focus-ribbon{border:1px solid #c7d6b8;border-radius:11px;font-size:11px;padding:8px;margin-bottom:19px;gap:8px}
+.meadow-panel .focus-ribbon .icon{width:16px}
+.meadow-nav{position:fixed;left:26px;bottom:24px;display:flex;gap:3px;padding:7px;border-radius:18px;pointer-events:auto}
+.meadow-nav button{border:0;background:transparent;border-radius:11px;min-width:77px;padding:9px 11px;display:flex;align-items:center;flex-direction:column;gap:5px;color:#52644d;font-size:10px;line-height:1.2}
+.meadow-nav button.active{background:#dbe7ce;color:#284b34}
+.meadow-nav button:hover{background:#e5edd8}
+.meadow-nav .icon{width:18px;height:18px}
+.panel-toggle{position:fixed;bottom:26px;right:25px;z-index:4;color:#354e39;border-radius:13px;gap:12px;min-height:45px;font-size:12px}
+.panel-toggle kbd{font:10px/1.5 ui-sans-serif,sans-serif;border:1px solid #aaba9d;border-radius:4px;padding:1px 5px;color:#5d7152;background:#ffffff55}
+.meadow-hint{position:fixed;right:25px;bottom:87px;font-size:10px;color:#f8ffed;text-shadow:0 1px 6px #20360d,0 1px 3px #20360d}
+.meadow-hint span{margin:0 5px}
+.meadow-status{position:fixed;left:50%;top:96px;max-width:430px;width:calc(100% - 40px);z-index:5;pointer-events:none}
+.meadow-status .world-error{border-radius:10px;margin-bottom:8px;box-shadow:0 8px 35px #31482620}
+#toast{z-index:20;left:50%;bottom:103px;max-width:calc(100% - 36px)}
+.skip{z-index:30}.skip:focus{top:7px}
+.startup-card{max-width:390px;margin:18vh auto;padding:30px;border-radius:18px;background:#f9fced;text-align:center;color:#314e3d;box-shadow:0 15px 60px #30493425}
+.startup-card img{width:45px}.startup-card h1{font:32px Georgia,serif}.startup-card p{font-size:13px;line-height:1.7}.startup-card details{font-size:11px;text-align:left;overflow-wrap:anywhere;margin-top:16px}
+@media(max-width:1000px){
+ .meadow-name{display:none}.meadow-header{max-width:calc(100% - 300px)}
+ .meadow-panel.content{width:390px;left:20px;padding:20px}
+ .meadow-panel[data-panel=world],.meadow-panel[data-panel=progress],.meadow-panel[data-panel=settings]{width:450px}
+ .meadow-nav{left:20px}.meadow-nav button{min-width:69px}
+ .meadow-status{left:auto;right:20px;max-width:330px}
+}
+@media(max-width:720px){
+ .meadow-header{left:15px;right:15px;top:max(13px,env(safe-area-inset-top));max-width:none;gap:10px;justify-content:space-between}
+ .meadow-header .brand{font-size:24px;gap:8px}.meadow-header .brand img{width:31px;height:31px}
+ .meadow-header-actions .btn{font-size:11px;min-height:40px;padding:8px 12px}
+ .atmosphere-controls{top:68px;right:15px;gap:6px}
+ .glass-button{min-height:40px;padding:8px 10px;font-size:10px;gap:5px}.glass-button .icon{width:15px;height:15px}
+ .meadow-panel.content{top:auto;bottom:calc(131px + env(safe-area-inset-bottom));left:12px;width:calc(100% - 24px);max-width:none;max-height:49dvh;height:auto;padding:20px;border-radius:20px;background:#f7faeff0}
+ .meadow-panel[data-panel=world],.meadow-panel[data-panel=progress],.meadow-panel[data-panel=settings]{width:calc(100% - 24px)}
+ .meadow-panel .page-heading h1{font-size:26px}.meadow-panel .page-heading{margin-bottom:17px}
+ .meadow-panel .energy-toggle{margin-top:10px}.meadow-panel .below{margin-top:19px}
+ .meadow-panel .two-cols{display:grid;grid-template-columns:minmax(0,1fr)}
+ .meadow-panel .form-row{grid-template-columns:minmax(0,1fr)}
+ .meadow-nav{left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));justify-content:space-between;padding:6px;border-radius:16px}
+ .meadow-nav button{min-width:0;flex:1;padding:10px 4px;font-size:10px;gap:5px}
+ .panel-toggle{bottom:calc(83px + env(safe-area-inset-bottom));right:14px;min-height:39px;font-size:11px;padding:8px 13px;background:#f9fcedec}
+ .panel-toggle kbd{display:none}.panels-hidden .panel-toggle{bottom:calc(18px + env(safe-area-inset-bottom));opacity:.9}
+ .meadow-hint{display:none}.meadow-status{top:116px;left:12px;right:12px;max-width:none;width:auto}
+ .meadow-status .world-error{font-size:10px;padding:10px 12px}
+ #toast{bottom:calc(134px + env(safe-area-inset-bottom))}
+ .startup-card{margin:16vh 20px;padding:25px}
+}
+@media(max-height:540px) and (min-width:721px){.meadow-panel.content{top:75px;bottom:86px;max-height:calc(100dvh - 161px)}.meadow-nav{bottom:12px}.panel-toggle{bottom:15px}.meadow-hint{display:none}}
