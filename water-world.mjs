@@ -1,7 +1,7 @@
 import * as T from './vendor/three.module.js';
 import {createSkyDome} from './meadow-terrain.mjs';
 import {WATER_SURFACE_GLSL,tideAt} from './water-cycle.mjs';
-import {smoothRange} from './sky-time.mjs';
+import {WATER_MOON,WATER_NIGHT} from './water-lighting.mjs';
 
 export const WATER_RADIUS=9000;
 export const WATER_PALETTE={sky:'#9eafb8',horizon:'#dae1df',fog:'#dae1df',fogNear:3200,fogFar:7600};
@@ -25,11 +25,12 @@ export function makeWaterGeometry({mobile=false}={}){
 export function createWaterPlanet({mobile=false}={}){
  const root=new T.Group();root.name='Water planet';
  const dome=createSkyDome('meadow',WATER_PALETTE);dome.scale.setScalar(5);dome.name='Water planet sky';root.add(dome);
+ dome.material.uniforms.nightTop.value.set(WATER_NIGHT.top);dome.material.uniforms.nightHorizon.value.set(WATER_NIGHT.horizon);
  const uniforms={waterTime:{value:0},waveCentre:{value:tideAt(0).centre},waveStrength:{value:1},daylight:{value:1},rainMood:{value:0},skyTop:{value:new T.Color(WATER_PALETTE.sky)},skyHorizon:{value:new T.Color(WATER_PALETTE.horizon)},waterBody:{value:new T.Color('#264449')},sunDirection:{value:new T.Vector3(0,1,0)},moonDirection:{value:new T.Vector3(0,-1,0)},moonPower:{value:0}};
  const material=new T.ShaderMaterial({side:T.DoubleSide,toneMapped:false,uniforms,vertexShader:`
  ${WATER_SURFACE_GLSL}
  varying vec3 surfacePosition;varying vec2 surfaceSlope;varying float ridge;
- void main(){vec4 sample=waterSurface(position.xz);vec3 p=vec3(position.x,sample.x,position.z);surfacePosition=p;surfaceSlope=sample.yz;ridge=sample.w;gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.0);}
+ void main(){vec4 waterSample=waterSurface(position.xz);vec3 p=vec3(position.x,waterSample.x,position.z);surfacePosition=p;surfaceSlope=waterSample.yz;ridge=waterSample.w;gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.0);}
  `,fragmentShader:`
  uniform float waterTime;uniform float daylight;uniform float rainMood;uniform vec3 skyTop;uniform vec3 skyHorizon;uniform vec3 waterBody;uniform vec3 sunDirection;uniform vec3 moonDirection;uniform float moonPower;
  varying vec3 surfacePosition;varying vec2 surfaceSlope;varying float ridge;
@@ -46,11 +47,17 @@ export function createWaterPlanet({mobile=false}={}){
   vec3 reflected=reflect(-view,normal),reflection=reflectionSky(reflected);reflection*=mix(.23,1.0,smoothstep(-.25,.08,reflected.y));
   vec3 body=waterBody*(.65+.35*max(dot(normal,sunDirection),0.0));
   vec3 colour=mix(body,reflection,.18+.82*fresnel);
+  // Diffuse moonlight, a broad reflection and light through the wave's crest
+  // keep its face readable; specular glints alone left moonless dates black.
+  float moonDiffuse=max(dot(normal,moonDirection),0.0);
+  float moonThrough=pow(max(dot(normal,-moonDirection),0.0),2.0)*smoothstep(.12,.92,ridge);
+  colour+=vec3(.025,.047,.074)*moonPower*(.24+.76*moonDiffuse+moonThrough*.6);
   float sunGlint=pow(max(dot(reflect(-sunDirection,normal),view),0.0),130.0)*daylight*smoothstep(-.02,.1,sunDirection.y);
   float moonGlint=pow(max(dot(reflect(-moonDirection,normal),view),0.0),110.0)*moonPower;
-  colour+=vec3(1.0,.92,.75)*sunGlint*.8*(1.0-rainMood*.87)+vec3(.53,.67,.88)*moonGlint*.9;
-  float foam=smoothstep(.959,.996,ridge)*(.25+.75*noise(vec2(p.x*.042+waterTime*.08,p.y*.072-waterTime*.12)));
-  vec3 foamColour=mix(vec3(.035,.055,.077),vec3(.72,.8,.8),daylight);colour=mix(colour,foamColour,foam*.73);
+  float moonSheen=pow(max(dot(reflect(-moonDirection,normal),view),0.0),24.0)*moonPower;
+  colour+=vec3(1.0,.92,.75)*sunGlint*.8*(1.0-rainMood*.87)+vec3(.53,.67,.88)*(moonGlint*.9+moonSheen*.13)*(1.0-rainMood*.55);
+  float foam=smoothstep(.94,.992,ridge)*(.4+.6*noise(vec2(p.x*.042+waterTime*.08,p.y*.072-waterTime*.12)));
+  vec3 foamColour=mix(vec3(.22,.32,.43),vec3(.72,.8,.8),daylight);colour=mix(colour,foamColour,foam*.78);
   float haze=smoothstep(mix(3200.0,1500.0,rainMood),mix(7600.0,4600.0,rainMood),distance);colour=mix(colour,skyHorizon,haze);
   gl_FragColor=vec4(colour,1.0);
   #include <colorspace_fragment>
@@ -59,13 +66,13 @@ export function createWaterPlanet({mobile=false}={}){
  const water=new T.Mesh(makeWaterGeometry({mobile}),material);water.name='Continuous water and travelling tidal wave';water.frustumCulled=false;root.add(water);
  let lastSky=null,raining=false;
  function recolour(){if(!lastSky)return;const d=lastSky.daylight;
-  uniforms.skyTop.value.set('#040a19').lerp(new T.Color(raining?'#6f8790':WATER_PALETTE.sky),d);
-  uniforms.skyHorizon.value.set('#14263b').lerp(new T.Color(raining?'#b3c5c9':WATER_PALETTE.horizon),d);
-  uniforms.waterBody.value.set('#081824').lerp(new T.Color(raining?'#293e46':'#264449'),d);
+  uniforms.skyTop.value.set(WATER_NIGHT.top).lerp(new T.Color(raining?'#6f8790':WATER_PALETTE.sky),d);
+  uniforms.skyHorizon.value.set(WATER_NIGHT.horizon).lerp(new T.Color(raining?'#b3c5c9':WATER_PALETTE.horizon),d);
+  uniforms.waterBody.value.set(WATER_NIGHT.body).lerp(new T.Color(raining?'#293e46':'#264449'),d);
  }
  return {root,dome,water,palette:WATER_PALETTE,
   setRain(value){raining=!!value;uniforms.rainMood.value=raining?1:0;dome.material.uniforms.rainMood.value=raining?1:0;recolour();},
-  setSky(info){lastSky=info;const u=dome.material.uniforms;u.daylight.value=info.daylight;u.dusk.value=Math.max(0,1-Math.abs(info.sun.geometricAltitude+1)/9);u.sunDirection.value.fromArray(info.sun.direction);uniforms.daylight.value=info.daylight;uniforms.sunDirection.value.fromArray(info.sun.direction);uniforms.moonDirection.value.fromArray(info.moon.direction);uniforms.moonPower.value=info.moon.fraction*(1-info.daylight)*smoothRange(-1,20,info.moon.altitude);recolour();},
+  setSky(info){lastSky=info;const u=dome.material.uniforms;u.daylight.value=info.daylight;u.dusk.value=Math.max(0,1-Math.abs(info.sun.geometricAltitude+1)/9);u.sunDirection.value.fromArray(info.sun.direction);uniforms.daylight.value=info.daylight;uniforms.sunDirection.value.fromArray(info.sun.direction);uniforms.moonDirection.value.fromArray(WATER_MOON.direction);uniforms.moonPower.value=WATER_MOON.fraction*(1-info.daylight);recolour();},
   update(seconds,tide){uniforms.waterTime.value=seconds;uniforms.waveCentre.value=tide.centre;uniforms.waveStrength.value=tide.strength;}
  };
 }

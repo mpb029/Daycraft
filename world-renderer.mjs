@@ -10,6 +10,7 @@ import {normaliseBackground} from './backgrounds.mjs';
 import {createWaterPlanet} from './water-world.mjs';
 import {createTideClock,waterCameraPose} from './water-cycle.mjs';
 import {createWaterLook} from './water-controls.mjs';
+import {WATER_MOON} from './water-lighting.mjs';
 let main=null,previewRenderer=null,previewFailed=false;
 const previews=new Map();
 function newRenderer(extra={}){const r=new T.WebGLRenderer({antialias:true,alpha:true,powerPreference:'low-power',...extra});r.setPixelRatio(Math.min(globalThis.devicePixelRatio||1,1.5));r.outputColorSpace=T.SRGBColorSpace;r.toneMapping=T.ACESFilmicToneMapping;r.toneMappingExposure=1.06;return r;}
@@ -83,7 +84,7 @@ function createMain(){
  if(typeof IntersectionObserver==='function')state.intersection=new IntersectionObserver(entries=>{state.inView=entries.some(e=>e.isIntersecting);if(state.inView)state.draw();else state.stop();});
  document.addEventListener('visibilitychange',()=>{if(document.hidden)state.stop();else state.draw();});reduced?.addEventListener?.('change',()=>state.draw());
  const canvas=renderer.domElement;canvas.setAttribute('aria-label','3D meadow with rolling hills and long grass, following the real time and saved location. At night, stars, the moon when above the horizon, and fireflies appear. Drag to look around, pinch or scroll to zoom. Use Arrange for placement.');canvas.setAttribute('role','img');
- renderer.debug.onShaderError=()=>state.config?.onError('This device could not draw the 3D meadow. Tasks, inventory and coordinate placement are still available.');
+ renderer.debug.onShaderError=(gl,program,vertex,fragment)=>{console.error('Daycraft background shader:',gl.getProgramInfoLog(program),gl.getShaderInfoLog(vertex),gl.getShaderInfoLog(fragment));state.config?.onError(`The ${state.background==='water'?'water planet':'meadow'} could not be drawn. Your tasks and saved progress are still available.`);};
  canvas.addEventListener('webglcontextlost',ev=>{ev.preventDefault();state.lost=true;state.stop();state.config?.onError('The 3D view paused. Reload to restore it. Your saved world is safe.');});
  canvas.addEventListener('webglcontextrestored',()=>{state.lost=false;state.draw();});
  canvas.addEventListener('pointerdown',ev=>{state.pointers.set(ev.pointerId,{x:ev.clientX,y:ev.clientY,moved:false});if(state.pointers.size>1)state.multi=true;},true);
@@ -122,7 +123,7 @@ export function mountScene(host,config){
   m.resize();m.draw();return true;
  }catch{config.onError?.('The 3D background could not open on this device. Tasks and coordinate placement still work. Try an up-to-date browser with WebGL 2 and graphics acceleration.');return false;}
 }
-export function cameraAction(action){if(!main)return false;const {controls,camera}=main;if(main.background==='water'){if(action==='moon'){main.refreshSky();if(main.sky.moon.altitude<=0)return false;main.waterLook.aim(main.sky.moon.direction);}else main.waterLook.action(action);return true;}if(action==='moon'){main.refreshSky();if(main.sky.moon.altitude<=0)return false;pointCameraAtSky(main,main.sky.moon.direction);return true;}if(action==='sky'){const d=camera.getWorldDirection(new T.Vector3());d.y=0;if(d.lengthSq()<.001)d.set(0,0,-1);d.normalize().multiplyScalar(Math.cos(Math.PI/5));d.y=Math.sin(Math.PI/5);pointCameraAtSky(main,d.toArray());return true;}if(['field','arrange','top','reset'].includes(action)){preset(main,action==='reset'?'field':action);return true;}if(action==='left'||action==='right')camera.position.sub(controls.target).applyAxisAngle(T.Object3D.DEFAULT_UP,action==='left'?Math.PI/8:-Math.PI/8).add(controls.target);if(action==='in'||action==='out'){camera.position.sub(controls.target).multiplyScalar(action==='in'?.82:1.22).add(controls.target);}controls.update();main.draw();return true;}
+export function cameraAction(action){if(!main)return false;const {controls,camera}=main;if(main.background==='water'){if(action==='moon'){main.refreshSky();if(main.sky.daylight>=.999)return false;main.waterLook.aim(WATER_MOON.direction);}else main.waterLook.action(action);return true;}if(action==='moon'){main.refreshSky();if(main.sky.moon.altitude<=0)return false;pointCameraAtSky(main,main.sky.moon.direction);return true;}if(action==='sky'){const d=camera.getWorldDirection(new T.Vector3());d.y=0;if(d.lengthSq()<.001)d.set(0,0,-1);d.normalize().multiplyScalar(Math.cos(Math.PI/5));d.y=Math.sin(Math.PI/5);pointCameraAtSky(main,d.toArray());return true;}if(['field','arrange','top','reset'].includes(action)){preset(main,action==='reset'?'field':action);return true;}if(action==='left'||action==='right')camera.position.sub(controls.target).applyAxisAngle(T.Object3D.DEFAULT_UP,action==='left'?Math.PI/8:-Math.PI/8).add(controls.target);if(action==='in'||action==='out'){camera.position.sub(controls.target).multiplyScalar(action==='in'?.82:1.22).add(controls.target);}controls.update();main.draw();return true;}
 
 export function previewWaterWave(){
  if(!main||main.background!=='water')return 'Choose Water planet first.';
@@ -134,6 +135,7 @@ export function previewWaterWave(){
 export function waterStatus(){
  if(!main||main.background!=='water')return 'A wave every 20 minutes';
  if(!main.waterMotion||main.config.state.settings.waterRide===false)return 'Tidal wave paused';
- if(main.tide.previewing)return 'A wave is approaching';
- return {calm:'A wave every 20 minutes',rising:'Rising with the wave',crest:'Over the crest',settling:'Settling into calm water'}[main.tide.snapshot.stage];
+ if(main.tide.previewing)return `Wave approaching · crest in ${Math.ceil(main.tide.secondsToCrest)}s`;
+ const seconds=Math.ceil(main.tide.secondsToCrest),next=`Next crest in ${Math.floor(seconds/60)}:${String(seconds%60).padStart(2,'0')}`;
+ return {calm:next,rising:'Rising with the wave',crest:'Over the crest',settling:'Settling into calm water'}[main.tide.snapshot.stage];
 }

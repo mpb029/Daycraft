@@ -1,6 +1,7 @@
 import * as T from './vendor/three.module.js';
 import {makeRandom,terrainHeight,groundIsOccupied} from './meadow-terrain.mjs';
 import {smoothRange} from './sky-time.mjs';
+import {WATER_MOON} from './water-lighting.mjs';
 
 const pointFragment=`
  varying vec3 tint;varying float glow;
@@ -85,19 +86,19 @@ export function createNightSky({mobile=false}={}){
   if(motion||animationTime===null)animationTime=seconds;
   celestial.position.copy(camera.position);
   celestial.scale.setScalar(skyScale);
-  const ratio=Math.min(globalThis.devicePixelRatio||1,1.5),wet=raining?1:0;
-  stars.visible=sky.night>.001&&!raining;stars.material.uniforms.brightness.value=sky.night*(1-.42*sky.moon.fraction*smoothRange(-1,25,sky.moon.altitude));stars.material.uniforms.time.value=animationTime;stars.material.uniforms.pixelRatio.value=ratio;
-  if(lastAt!==sky.at){
+  const ratio=Math.min(globalThis.devicePixelRatio||1,1.5),wet=raining?1:0,water=environment==='water',lunar=water?WATER_MOON:sky.moon,skyKey=`${sky.at}:${environment}`;
+  stars.visible=sky.night>.001&&!raining;stars.material.uniforms.brightness.value=sky.night*(1-.42*lunar.fraction*smoothRange(-1,25,lunar.altitude));stars.material.uniforms.time.value=animationTime;stars.material.uniforms.pixelRatio.value=ratio;
+  if(lastAt!==skyKey){
    const r=sky.starRotation;
    // Astronomy's matrix is column-major; HOR = north, west, zenith.
    stars.matrix.set(-r[0][1],-r[1][1],-r[2][1],0,r[0][2],r[1][2],r[2][2],0,-r[0][0],-r[1][0],-r[2][0],0,0,0,0,1);stars.matrixAutoUpdate=false;
-   moon.position.fromArray(sky.moon.direction).multiplyScalar(1100);right.fromArray(sky.moon.right);up.fromArray(sky.moon.up);facing.fromArray(sky.moon.direction).negate();basis.makeBasis(right,up,facing);moon.quaternion.setFromRotationMatrix(basis);
-   moon.material.uniforms.light.value.fromArray(sky.moon.light);
-   sun.position.fromArray(sky.sun.direction).multiplyScalar(1170);sun.quaternion.copy(camera.quaternion);lastAt=sky.at;
+   moon.position.fromArray(lunar.direction).multiplyScalar(1100);right.fromArray(lunar.right);up.fromArray(lunar.up);facing.fromArray(lunar.direction).negate();basis.makeBasis(right,up,facing);moon.quaternion.setFromRotationMatrix(basis);moon.scale.setScalar(water?1.9:1);
+   moon.material.uniforms.light.value.fromArray(lunar.light);moon.name=water?'Water planet cinematic moon':'Moon at the current phase';
+   sun.position.fromArray(sky.sun.direction).multiplyScalar(1170);sun.quaternion.copy(camera.quaternion);lastAt=skyKey;
   }
   // The sun always faces the viewer, even when only the camera orientation changes.
   sun.lookAt(camera.position);
-  moon.visible=sky.moon.altitude>-.6;moon.material.uniforms.visibility.value=smoothRange(-.6,.3,sky.moon.altitude)*(1-.62*sky.daylight)*(1-.98*wet);moon.material.uniforms.daylight.value=sky.daylight;
+  moon.visible=water?sky.daylight<.999:lunar.altitude>-.6;moon.material.uniforms.visibility.value=water?(1-sky.daylight)*(1-.5*wet):smoothRange(-.6,.3,lunar.altitude)*(1-.62*sky.daylight)*(1-.98*wet);moon.material.uniforms.daylight.value=sky.daylight;
   moon.material.uniforms.shadow.value.set('#091222').lerp(new T.Color('#abcada'),sky.daylight);
   sun.visible=sky.sun.altitude>-.6;sun.material.uniforms.visibility.value=smoothRange(-.6,.2,sky.sun.altitude)*(1-.97*wet);
   flies.visible=sky.night>.001&&!editing&&environment==='meadow';

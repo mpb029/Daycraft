@@ -1,84 +1,65 @@
-# Daycraft — Water planet and background choices, 1.9.0
+# Daycraft — Water visibility and moonlight fix, 1.9.1
 
-A cumulative update for the existing meadow app at https://mpb029.github.io/Daycraft/ .
-Works over 1.7.0 or 1.8.0. It includes the previous night-sky update, so there is no need to upload 1.8 first.
-This package has not been uploaded or deployed by the assistant.
+This seven-file update fixes the Water planet version already on your GitHub Pages site:
+https://mpb029.github.io/Daycraft/
 
-## Install in your existing GitHub repository
+The update has been prepared and checked, but has not been uploaded or deployed by the assistant.
 
-1. Extract this ZIP on your computer.
+## Install
+
+1. Extract this ZIP.
 2. Open https://github.com/mpb029/Daycraft/upload/main .
-3. Upload the 17 loose app/licence files listed below at the repository root, alongside the existing index.html. Replace matching filenames. Upload extracted files, not this ZIP; there are no new runtime folders to upload.
-4. Commit to main. Keep your current Pages settings and the existing assets, icons and vendor folders. Wait for the Pages deployment to finish in Actions.
-5. Open Daycraft and press Ctrl+Shift+R in Firefox. Close all Daycraft tabs/windows and reopen the site to activate the new offline version. If using an installed phone app, first reload the site in its browser, then close its Daycraft tabs and the installed app, and reopen it.
-6. Choose Water planet from the new background dropdown above the scene. Settings also has two background cards. The version at the bottom of Sky & location should say Daycraft 1.9.0.
+3. Upload the seven loose app files below alongside your existing index.html, replacing matching filenames. Upload the extracted files, not the ZIP.
+4. Commit the files to main and wait for the GitHub Pages deployment in Actions to finish.
+5. Open Daycraft and press Ctrl+Shift+R. Close all Daycraft tabs/windows and reopen the site so the new offline version can activate. For an installed phone app, first reload the site in its browser, then close its Daycraft tabs and the installed app, and reopen it.
+6. Settings → Sky & location should show Daycraft 1.9.1. Select Water planet and press Face wave. Press Space or Hide panels to enjoy the full view.
 
-UPDATE.md, BACKGROUND_UPDATE_CHECKSUMS.json and verification/ are supporting files; uploading them is optional.
-Saved tasks, materials, earned items and meadow placements are preserved. Do not clear site data to refresh the update. Settings → Export backup makes a separate copy of your progress.
+Keep all your other files, including assets, icons and vendor. Your saved tasks, materials, earned items and meadow placements are preserved. Do not clear site data to refresh the update.
 
-## Water planet
-
-- Gentle, shallow-looking ripples stretch to a hazy horizon in every direction. A huge distant wave crosses the scene as real 3D water geometry.
-- The first crest passes after 20 minutes of active viewing of Water planet. Further crests follow every 20 active minutes. Time pauses while a different background is selected, the tab is hidden, the wave is paused, or Calm mode/reduced motion is active. Reloading/reopening the app starts a fresh cycle. No background notification or scheduled service is involved.
-- As the wave reaches you, the camera rises with the same surface used to draw the water, drifts over the crest, descends its far side and returns to the gentle water. The eye stays above the surface. The horizon stays level, with a small pitch adjustment and no camera roll or shake.
-- Drag to look around; scroll or pinch to change zoom. Face wave returns your gaze to the approaching wave.
-- Try a wave brings the distant wave closer over about 24 seconds, then runs the normal approach and ride. The crest arrives about 96 seconds after pressing it from calm water; the following crest is 20 active minutes later. It does not suddenly teleport the wave or camera to the crest.
-- Pause wave holds the large wave and ride at their current point; the small ripples keep moving. Resume wave continues from there. Calm mode and device reduced motion pause all scenery movement. Turning these off resumes the held scene.
-- The task and progress panels remain over the background. Space and Show/Hide panels work as before. A task, form, or tab change does not restart the wave cycle.
-- Water planet follows the same actual day/night sky and saved location as the meadow, with sun/moon highlights on the water and optional rain. Balloons, leaves and meadow fireflies do not appear over the ocean.
-
-The scene is a stylised, cinematic water world inspired by the requested imagery. It is not a fluid-dynamics or tsunami prediction model, and uses no film footage or third-party image assets.
-
-## Meadow and your collection
-
-Meadow remains available from the same selector. Its grass, balloons, leaves, night fireflies, real-time sky and free item placement remain available. Switching backgrounds keeps the saved meadow arrangement and restores its camera view.
-
-Both backgrounds use the same task list, progress and inventory. Earned objects are arranged in the meadow. When you choose Place or Move from Water planet, the meadow opens for placement; Open my meadow in Collection also returns there. The water planet stays clear to the horizon.
-
-Your chosen background and wave on/off preference are saved in this browser and included in backups. The running wave timer and view angles are session state. Different devices still hold separate progress unless you transfer a backup.
-
-## Previous night-sky features included
-
-Seasonal sunrise/sunset, the actual moon phase/position/bright-limb tilt, a decorative star field, moonlight, and meadow fireflies are included. Sky & location starts with an approximate Gympie-area location. Use my location requests a location once when pressed; manual coordinates are also available. Astronomy runs locally and offline after the complete app has been cached. Task day boundaries use the separately selected timezone.
-
-## App files to upload
-
-- ASTRONOMY-LICENSE.txt
 - app.mjs
-- astronomy-engine.mjs
-- backgrounds.mjs
-- domain.mjs
-- meadow-atmosphere.mjs
-- meadow-layout.css
 - meadow-night.mjs
-- meadow-terrain.mjs
-- sky-location.mjs
-- sky-time.mjs
 - sw.js
-- water-controls.mjs
 - water-cycle.mjs
+- water-lighting.mjs
 - water-world.mjs
 - world-renderer.mjs
-- world-view.mjs
 
-## Validation
+UPDATE.md, WATER_FIX_CHECKSUMS.json and verification/ are supporting files; you do not need to upload them.
 
-56 automated checks pass. They cover existing task and world behaviour, backups and older settings, background switching and placement return, the 1,200-second wave cadence, pause/preview behaviour, surface gradients checked against finite differences, continuous camera motion and surface clearance, horizon coverage and visibility in desktop/phone aspect ratios, particle/geometry budgets, water mouse/touch controls, night effects and astronomy, local import paths and offline cache isolation.
+This is a patch for the existing 1.9.0 Water planet release, not a full first-time installation. The public app.mjs, water-world.mjs, water-cycle.mjs, meadow-night.mjs and sw.js matched that baseline before this patch was made.
 
-The actual water and sky shaders compiled and linked in native OpenGL ES. Six native render checks were inspected: calm water, approaching wave, crest, descent, phone aspect ratio and night water. These directly use the app’s geometry, shader code and camera calculations, but do not run the browser UI. Full browser interaction, CSS layout, real phone performance and a complete real-time 20-minute session have not been visually tested here.
+## What was wrong
 
-The ZIP passed integrity and byte comparisons: overlaying its app files onto either the saved 1.7.0 or 1.8.0 runtime recreates the verified 1.9.0 runtime exactly.
+The water vertex shader used `sample` as a variable name. Three.js converts its ShaderMaterial programs to GLSL ES 3.00 for WebGL 2, where `sample` is reserved. The shader therefore failed to compile and the water and tidal wave did not draw, leaving the sky and a rendering warning. The previous shader check compiled the older GLSL language and missed this incompatibility.
 
-To rerun the portable automated checks after merging with a complete checkout:
+The variable is renamed. The corrected shader was compiled and linked as GLSL ES 3.00, matching the browser's language version. The shader error message now names the selected background and logs the compiler details for diagnosis.
+
+## What changes
+
+- Water and the 3D tidal wave draw again.
+- Water planet now has its own artistic, gibbous moon above the approaching wave every night. It fades in with dusk and out with daylight, following the real local day/night transition.
+- Moonlight creates silver water reflections and illuminates the wave, with a brighter foamy crest. Water remains readable when looking away from the moon. Rain softens the reflection and moon, while retaining enough light to see the water and wave.
+- The water-world moon is deliberately cinematic, not Earth's current phase or position. The meadow still uses the real local moon phase, sky position and seasonal sun calculations.
+- The default water view includes the moon at night. Look at moon in Settings points to the water-world moon while Water planet is selected.
+- The visible wave countdown tells you when the next crest will arrive. Try a wave brings it closer immediately, then carries you over the crest about 96 seconds after pressing the button from calm water.
+
+The normal crest interval remains 20 minutes of active Water planet viewing. Pausing, hiding the tab, choosing another background, Calm mode and device reduced motion hold the wave clock. The camera still follows the exact water surface over the crest and down to calm water. Tasks and progress are unchanged.
+
+## Verification
+
+57 automated checks pass, including the reported evening on 11 October 2026 at 7:12 pm Brisbane time, when the real Earth moon is below the horizon and nearly new. The checks confirm a visible water-world moon in desktop/phone view, lighting aligned with the moon, rain visibility, switching back to the true meadow moon at the same timestamp, 20-minute cadence, pause/preview timing, camera surface clearance, data preservation and offline import paths.
+
+Ten native OpenGL ES GPU frames were generated from the actual shipped geometry, shaders, moon, stars and camera calculations. The visual checks cover daytime, the reported night, the wave approach/crest/descent, phone geometry, rain lighting, looking away from the moon and a full-moon date. They use GLSL ES 3.00. These are graphics checks, not a browser session; full browser interaction, CSS layout and real-phone performance have not been rechecked here. The rain check covers lighting, not raindrop particles.
+
+ZIP integrity and byte comparisons confirm that overlaying these seven files onto the retained 1.9.0 runtime produces the checked 1.9.1 runtime exactly.
+
+To rerun automated checks after merging these files with a complete checkout:
 
     node --test verification/*.test.mjs
 
-## Bundled astronomy licence
+Optional GPU checks require Python 3, Pillow and native EGL/OpenGL ES on Linux. From the complete checkout root:
 
-Astronomy Engine 2.1.19 by Don Cross remains bundled as astronomy-engine.mjs with its MIT licence in ASTRONOMY-LICENSE.txt.
-Source: https://github.com/cosinekitty/astronomy
-Pinned commit: 61dc07020aaa6885d2c7f688a4d82beaf6edb9ef
-Original module: source/js/esm/astronomy.js
-SHA-256: 068f1445ed0c636c94818fe6d20d7d125120e605e0bab9fc4675c3d531be5ad7
+    node verification/export-water-graphics.mjs
+    python3 verification/render-water-graphics.py
 
-No build step, paid host, external API, server or ChatGPT connection is needed to run the site.
+They create a temporary water-graphics-check directory with the frames. No browser, server, external API or user data is involved.

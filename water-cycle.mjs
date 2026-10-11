@@ -61,7 +61,8 @@ export function createTideClock(){
    const target=state.cycle*WAVE_PERIOD-72;if(target<=seconds)return false;
    preview={start:seconds,target,elapsed:0,duration:24};return true;
   },
-  get snapshot(){return tideAt(seconds);},get previewing(){return !!preview;}
+  get snapshot(){return tideAt(seconds);},get previewing(){return !!preview;},
+  get secondsToCrest(){return preview?preview.duration-preview.elapsed+72:tideAt(seconds).untilCrest;}
  };
 }
 

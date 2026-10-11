@@ -4,6 +4,7 @@ import * as T from '../vendor/three.module.js';
 import {BACKGROUNDS,normaliseBackground} from '../backgrounds.mjs';
 import {tideAt,sampleWater,waterCameraPose,createTideClock,WAVE_PERIOD,EYE_HEIGHT} from '../water-cycle.mjs';
 import {createWaterPlanet,WATER_RADIUS} from '../water-world.mjs';
+import {WATER_MOON} from '../water-lighting.mjs';
 import {createWaterLook} from '../water-controls.mjs';
 import {createNightSky} from '../meadow-night.mjs';
 import {skyAt} from '../sky-time.mjs';
@@ -53,9 +54,9 @@ test('The ride rises over 150 metres, stays above the rendered surface and settl
 test('The active-view clock pauses without catch-up; preview has no initial jump and preserves the ride',()=>{
  const clock=createTideClock();clock.advance(600);const before=clock.snapshot;clock.advance(3600,false);assert.deepEqual(clock.snapshot,before);
  clock.advance(600);assert.equal(clock.snapshot.stage,'crest');clock.advance(100,false);assert.equal(clock.snapshot.seconds,1200);assert.equal(clock.preview(),false);
- const p=createTideClock();assert.equal(p.preview(),true);assert.equal(p.preview(),false);assert.equal(p.snapshot.seconds,0);
+ const p=createTideClock();assert.equal(p.secondsToCrest,1200);assert.equal(p.preview(),true);assert.equal(p.preview(),false);assert.equal(p.snapshot.seconds,0);assert.equal(p.secondsToCrest,96);
  p.advance(.001);assert.ok(Math.abs(p.snapshot.centre-tideAt(0).centre)<.001);p.advance(23.999);assert.equal(p.previewing,false);assert.equal(p.snapshot.relative,-72);
- p.advance(72);assert.equal(p.snapshot.stage,'crest');p.advance(1200);assert.equal(p.snapshot.stage,'crest');
+ assert.equal(p.secondsToCrest,72);p.advance(72);assert.equal(p.snapshot.stage,'crest');p.advance(1200);assert.equal(p.snapshot.stage,'crest');
  for(const delta of [-1,NaN,Infinity]){const s=p.snapshot;p.advance(delta);assert.deepEqual(p.snapshot,s);}
 });
 
@@ -97,4 +98,23 @@ test('Mouse and touch can look and zoom on water without affecting the meadow co
  handlers.pointerdown(pointer(1,0,0));handlers.pointerdown(pointer(2,100,0));const before=look.view;handlers.pointermove(pointer(2,200,0));assert.ok(look.view.fov<before.fov);assert.equal(look.view.yaw,before.yaw);look.clear();
  let prevented=false;handlers.wheel({deltaY:1e9,preventDefault:()=>prevented=true});assert.equal(prevented,true);assert.ok(look.view.fov<=80);
  look.action('wave');assert.deepEqual(look.view,{yaw:0,pitch:-.025,fov:58});look.aim([1,0,0]);assert.equal(look.view.yaw,Math.PI/2);assert.ok(draws>=4);
+});
+
+test('The reported moonless evening still has a visible water moon and matching illumination; switching restores the real meadow moon',()=>{
+ const sky=skyAt(new Date('2026-10-11T09:12Z')),original=structuredClone(sky),w=createWaterPlanet({mobile:true}),n=createNightSky({mobile:true});
+ assert.ok(sky.moon.altitude<0&&sky.moon.fraction<.02);assert.ok(sky.daylight<.01);
+ try{
+  w.setSky(sky);const uniforms=w.water.material.uniforms;
+  assert.ok(uniforms.moonPower.value>.85);assert.deepEqual(uniforms.moonDirection.value.toArray(),WATER_MOON.direction);
+  for(const aspect of [16/9,390/844]){
+   const c=new T.PerspectiveCamera(58,aspect,.1,18000),pose=waterCameraPose(tideAt(0),0,0,-.025);c.position.set(pose.x,pose.y,pose.z);c.lookAt(c.position.clone().add(new T.Vector3(...pose.direction)));c.updateMatrixWorld();
+   n.update(0,{camera:c,sky,environment:'water',skyScale:5});n.root.updateMatrixWorld(true);
+   const onScreen=n.moon.getWorldPosition(new T.Vector3()).project(c);assert.ok(Math.abs(onScreen.x)<.9&&Math.abs(onScreen.y)<.9&&onScreen.z<1);
+   assert.equal(n.moon.visible,true);assert.ok(n.moon.material.uniforms.visibility.value>.98);assert.ok(n.moon.position.clone().normalize().distanceTo(uniforms.moonDirection.value)<1e-9);
+   n.update(0,{camera:c,sky,environment:'water',skyScale:5,raining:true});assert.ok(n.moon.material.uniforms.visibility.value>.45);assert.equal(n.stars.visible,false);
+   // The same sky timestamp must still rebuild the moon when changing worlds.
+   n.update(0,{camera:c,sky,environment:'meadow'});assert.equal(n.moon.visible,false);assert.equal(n.moon.scale.x,1);assert.ok(n.moon.position.clone().normalize().distanceTo(new T.Vector3(...sky.moon.direction))<1e-9);
+  }
+  assert.deepEqual(sky,original,'The fictional water moon must never change real astronomy data');
+ }finally{disposeGroup(w.root);disposeGroup(n.root);}
 });
