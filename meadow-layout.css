@@ -157,7 +157,7 @@ html,body{height:100%;overflow:hidden;background:#b7ced2}
 .water-quick-controls .btn{min-height:34px;font-size:10px;padding:6px 10px}
 #water-status{flex-basis:100%;text-align:right;font-size:10px;color:#304f52;text-shadow:0 1px 8px #e9f2f3}
 .night-sky #water-status{color:#dce8f7;text-shadow:0 1px 8px #071320}
-.background-options{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0}
+.background-options{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:10px;margin:16px 0}
 .background-option{padding:9px 9px 12px;border:1px solid #d4ddcf;border-radius:13px;background:#f7faf1;text-align:left;display:flex;flex-direction:column;gap:6px}
 .background-option.selected{border-color:#56765e;box-shadow:0 0 0 2px #56765e22;background:#edf4e5}
 .background-option strong{font:17px Georgia,serif;margin-top:3px}.background-option>span:last-child{font-size:11px;line-height:1.55;color:#647363}
@@ -180,3 +180,7 @@ html,body{height:100%;overflow:hidden;background:#b7ced2}
 }
 @media(max-width:360px){.background-picker select{width:112px}.atmosphere-controls>.glass-button .icon{display:none}}
 @media(max-width:720px) and (max-height:700px){.water-world .meadow-panel.content{max-height:42dvh}}
+
+.background-swatch.forest{background:radial-gradient(ellipse at 75% 35%,#e3b762 0%,#746d39 8%,transparent 30%),repeating-linear-gradient(87deg,transparent 0 18%,#27372b 19% 25%,transparent 26% 33%),linear-gradient(#233d43,#375849 57%,#343f32 58%,#253b3c)}
+.background-swatch.forest:after{content:"";position:absolute;left:69%;top:29%;height:46%;width:3px;background:#bcbca6;box-shadow:0 25px 15px 6px #daba6928}
+.background-swatch.forest:before{content:"";position:absolute;left:calc(69% - 7px);top:27%;width:17px;height:17px;border:2px solid #627f86;border-radius:50%;background:linear-gradient(#92aab1 32%,#dad6b9 33% 68%,#92aab1 69%)}

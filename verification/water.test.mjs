@@ -14,7 +14,7 @@ import {disposeGroup} from '../world-models.mjs';
 test('Background preferences migrate and round-trip without changing tasks, materials or placements',()=>{
  const old=initialState();delete old.settings.background;delete old.settings.waterRide;
  const migrated=validateState(old);assert.equal(migrated.settings.background,'meadow');assert.equal(migrated.settings.waterRide,true);
- assert.equal(normaliseBackground('__proto__'),'meadow');assert.equal(normaliseBackground(null),'meadow');assert.equal(Object.keys(BACKGROUNDS).length,2);
+ assert.equal(normaliseBackground('__proto__'),'meadow');assert.equal(normaliseBackground(null),'meadow');assert.equal(Object.keys(BACKGROUNDS).length,3);
  const s=initialState();s.tasks=[{id:'a',title:'A useful task',repeat:'none',area:'work',doneMeans:'Done well'}];completeTask(s,'a','2026-10-11');const b=build(s,'garden');placeItem(s,b.instanceId,{islandId:'outlook',x:0,z:0,rotation:0});
  const builds=structuredClone(s.builds),completions=structuredClone(s.completions);s.settings.background='water';s.settings.waterRide=false;
  const restored=validateState(JSON.parse(JSON.stringify(s)));assert.equal(restored.settings.background,'water');assert.equal(restored.settings.waterRide,false);assert.deepEqual(restored.builds,builds);assert.deepEqual(restored.completions,completions);
