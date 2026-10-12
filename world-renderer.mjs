@@ -69,7 +69,7 @@ function createMain(){
    }else if(forest){state.tideRunning=false;const view=state.forestLook.view,pose=forestCameraPose(view);camera.position.fromArray(pose.position);camera.up.set(0,1,0);camera.lookAt(camera.position.clone().add(new T.Vector3(...pose.direction)));if(camera.fov!==view.fov){camera.fov=view.fov;camera.updateProjectionMatrix();}state.field.update(state.elapsed,{camera,motion,breeze:state.config.breeze});}
    else{state.tideRunning=false;state.field?.grass?.update(state.elapsed,motion&&state.config.breeze,!!state.config?.draft);}
    state.field?.dome.position.copy(camera.position);
-   state.atmosphere.update(state.elapsed,{camera,motion,breeze:state.config.breeze,raining:wet,editing:!!state.config.draft,daytime:state.background==='meadow'&&state.sky.daytime});
+   state.atmosphere.update(state.elapsed,{camera,motion,breeze:state.config.breeze,raining:wet&&!forest,editing:!!state.config.draft,daytime:state.background==='meadow'&&state.sky.daytime});
    state.nightSky.update(state.elapsed,{camera,sky:state.sky,motion,raining:wet,editing:!!state.config.draft,placed:state.placed,environment:state.background,skyScale:water?WATER_SKY_SCALE:1});
    state.field.beforeRender?.(renderer,scene,camera);
    renderer.render(scene,camera);state.dirty=false;state.lastFrame=now;

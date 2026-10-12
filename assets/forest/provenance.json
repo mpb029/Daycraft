@@ -1,8 +1,8 @@
 {
-  "version": "1.10.0",
+  "version": "1.10.1",
   "created": "2026-10-12",
   "scene": "Forest bus stop",
-  "geometry": "Original deterministic procedural meshes: trees, roots, branches, ferns, stones, poles, stop sign, lamp and road. Foliage uses alpha-cutout planes and folded leaf meshes. No characters.",
+  "geometry": "Original deterministic procedural meshes with curved foreground trunks and branches, parallel-transport tube frames, roots, folded fern and grass leaves, alpha-cutout foliage, roadside props, lamp, rain and uneven ground. No characters.",
   "textures": {
     "bark.png": {
       "source": "Image generation for this Daycraft scene",
@@ -14,5 +14,6 @@
     }
   },
   "sign": "Locally painted data texture with hand-drawn glyph strokes.",
-  "runtime": "Three.js already bundled with Daycraft. No external image host or font dependency."
+  "runtime": "Three.js already bundled with Daycraft. No external image host or font dependency.",
+  "visualRevision": "Closer framing, irregular canopy and mid-height foliage, foreground fern planting, bark relief, wet-road surface detail, height-dependent blue haze, low mist and lamp-lit rain with a bounded cone-volume shader."
 }

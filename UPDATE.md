@@ -1,6 +1,6 @@
-# Daycraft — Forest bus stop, version 1.10.0
+# Daycraft — Forest bus stop, version 1.10.1
 
-Adds the approved forest bus stop as a third 3D background. This package updates an existing Daycraft Water planet installation (1.9.0–1.9.3). It includes the latest long-horizon wave behavior. It has not been uploaded to GitHub or deployed by the assistant.
+Refines the forest bus stop to more closely follow your supplied rainy-forest reference. This remains a stylised interactive 3D scene; the reference’s photographic level of detail is not fully reproduced. This package updates an existing Daycraft Water planet installation (1.9.0 or later, including 1.10.0). It includes the latest long-horizon wave behavior. It has not been uploaded to GitHub or deployed by the assistant.
 
 ## Upload to your existing GitHub repository
 
@@ -9,9 +9,18 @@ Adds the approved forest bus stop as a third 3D background. This package updates
 3. Upload the loose app files listed below alongside your existing index.html, replacing matching names. Drag in the included assets folder too; it adds assets/forest without replacing your other earned-item assets. Upload the extracted files and folder, not the ZIP.
 4. Commit to main. Keep your current GitHub Pages settings, index.html, vendor, icons and other assets. Wait for the Pages deployment to complete in Actions.
 5. Open https://mpb029.github.io/Daycraft/ . Reload so the updated offline files can download, then close all Daycraft tabs/windows and reopen the site. If you use the installed phone app, close both its browser tabs and the installed app before reopening. The new textures add about 7 MB to the first download.
-6. Choose **Forest bus stop** from the background dropdown above the scene or in Settings. At the bottom of Settings → Sky & location, check for **Daycraft 1.10.0**.
+6. Choose **Forest bus stop** from the background dropdown above the scene or in Settings. At the bottom of Settings → Sky & location, check for **Daycraft 1.10.1**.
 
 Your saved tasks, materials, earned items and placements are preserved. Do not clear site data to refresh the app. Settings → Export backup can save a separate copy of your progress.
+
+## What changed in this revision
+
+- A closer, lower viewpoint gives the stop and lamp the framing seen in the reference, including a portrait opening view.
+- The road bends left into blue haze. Irregular trunks, curved boughs, smaller canopy leaves and mid-height foliage replace the more open, evenly spaced forest.
+- Denser foreground planting, fern fans and climbing leaves soften the roots and frame the stop.
+- Bark has surface relief. The wet road has finer aggregate, irregular puddles and sharper reflections instead of broad blurred highlights.
+- A visible volume of warm lamplight and locally lit rain contrast with the cool forest. Low mist adds depth between the trees.
+- Day/night, rain controls, Calm mode, looking around, panel toggling and the existing meadow/water behavior are retained.
 
 ## What the scene does
 
@@ -50,9 +59,9 @@ UPDATE.md, FOREST_UPDATE_CHECKSUMS.json, previews/ and verification/ are support
 
 65 automated checks pass: app task/focus/completion behavior; background and rain selection; saved-state migration; inventory placement; the full wave cycle; phone framing; reflection refresh after zoom; and graphics-resource disposal. Runtime file paths and the scoped offline cache are checked for the GitHub project URL.
 
-The forest shaders compile and render in native OpenGL ES 3.2. Day, night, portrait phone, reverse and upward views were rendered; desktop day/night and phone night were visually inspected. The native rain preview reproduces the existing unlit line material. These are graphics checks, not browser screenshots. A full browser interaction check and measurements on your own phone/computer remain unverified.
+The forest shaders compile and render in native OpenGL ES 3.2. Day, night, portrait phone, reverse and upward views were rendered; desktop day/night and phone night were visually inspected. The native preview renders the forest’s own rain shader, bark relief, light volume, mist and reflected scene. Texture mipmaps and the runtime reflection sizes are reproduced. These are graphics checks, not browser screenshots. A full browser interaction check and measurements on your own phone/computer remain unverified.
 
-The existing wave geometry, wave timing, water lighting, meadow terrain, weather, astronomy and reward-rule source files are byte-identical to version 1.9.3. Mobile forest detail is reduced; reflection textures are capped at 384 pixels on phones and 768 on desktop and refreshed at a lower rate when the view is still. The renderer retains its existing animation frame limit and pauses when hidden. Device frame rate has not been measured.
+The existing wave geometry, wave timing, water lighting, meadow terrain, weather, astronomy and reward-rule source files are byte-identical to version 1.9.3. Mobile forest detail stays below 300,000 geometry vertices in the checked scene; reflection textures are capped at 384 pixels on phones and 768 on desktop and refreshed at a lower rate when the view is still. The renderer retains its existing animation frame limit and pauses when hidden. Device frame rate has not been measured.
 
 To rerun the functional checks after applying the update, run `node --test verification/*.test.mjs` from the app folder. The optional native graphics helpers require Linux EGL/GLES, Python with Pillow, and Node. From the app folder, run `node verification/export-forest-graphics.mjs`, then `python3 verification/render-forest-graphics.py`.
 

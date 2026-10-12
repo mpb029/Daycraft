@@ -1,10 +1,10 @@
 {
-  "version": "1.10.0",
-  "base": "Existing Daycraft 1.9.0 or later",
+  "version": "1.10.1",
+  "base": "Existing Daycraft 1.9.0 or later, including 1.10.0",
   "files": {
     "app.mjs": {
       "bytes": 49227,
-      "sha256": "908c41a46e61eb676e87c9e1a5d079a1c6665ac2ad835f0d84ed0aa3d54a8242"
+      "sha256": "bd7bf27d69654d8a0777637aef4a8c13fe49c8491365a1354786a3c3d3a76ae9"
     },
     "assets/forest/bark.png": {
       "bytes": 4294634,
@@ -15,8 +15,8 @@
       "sha256": "eabffbf639621ab2d0a47f69f1605a7af7fafbddbd8f2b1b61ebcff9d2c158da"
     },
     "assets/forest/provenance.json": {
-      "bytes": 817,
-      "sha256": "f3b9986d54bffd39decc72e3af93aac059f9e27a4bedbaca663ba3d8a727653e"
+      "bytes": 1102,
+      "sha256": "795561d09effe7f889c6c4858772287986acb7d2b04662557e5a0cdba4f44757"
     },
     "backgrounds.mjs": {
       "bytes": 559,
@@ -27,16 +27,16 @@
       "sha256": "d0c300ff14d908464cd6f48474ed6475da420a33a5f28d938cd533ab572b74ed"
     },
     "forest-geometry.mjs": {
-      "bytes": 12115,
-      "sha256": "254dbfae2de57d9c203f70cfc9e9a9bfc9a057da42faf43913aeb72d098af1f6"
+      "bytes": 14862,
+      "sha256": "0b5d42abc4b68fc063bd8dd9c479d553a1696ac2c5dd4021d869396097111ea8"
     },
     "forest-materials.mjs": {
-      "bytes": 6974,
-      "sha256": "20d32522fd5748a4e833c2d5873b36a0b23fedf7cdc4afbd026d6fdac6f74aa0"
+      "bytes": 10848,
+      "sha256": "b8adc8e7f2c4bd18c6e3ad23a25fabd3f59f78edb4d0e9308f926113625e2497"
     },
     "forest-world.mjs": {
-      "bytes": 4799,
-      "sha256": "d5134c4eca23954822d610ed6019341df5ac37bd59c7f592865d40f64278c34d"
+      "bytes": 5896,
+      "sha256": "b1a0431f324b6593fcc9585a275dabda28b90d23b9dcf610d59679b8f6aaef9d"
     },
     "meadow-layout.css": {
       "bytes": 16038,
@@ -48,7 +48,7 @@
     },
     "sw.js": {
       "bytes": 2154,
-      "sha256": "f4ab5d0c6ba46d258290e0b27863506c694356c56da89cc0227a59ca3f8c54d1"
+      "sha256": "08db9764c9c55ef09c06ec9c37d26fccc6ff0ea4eb38b7bc5b471f1c3617a765"
     },
     "water-controls.mjs": {
       "bytes": 1988,
@@ -67,8 +67,8 @@
       "sha256": "d15ebe1dbdea80b27c06f554e7f12ed8dfb29da88123be89946465071087bacc"
     },
     "world-renderer.mjs": {
-      "bytes": 19599,
-      "sha256": "8e2ce70bf3ade1b8f44ba08a8683c92642fdc6f50a3402bb9c187dbfe692ea58"
+      "bytes": 19608,
+      "sha256": "3ff33b454f9d1471ebdc00a2e2ba41c9f8326865fd34a4b6d10ca4a530a8e81a"
     },
     "world-view.mjs": {
       "bytes": 15945,

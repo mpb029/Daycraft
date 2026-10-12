@@ -36,10 +36,10 @@ test('Touch look, zoom and Face bus stop preserve a separate opening view',()=>{
 test('Forest geometry stays finite and bounded on mobile; lighting and motion settings reach its shaders',()=>{
  const forest=createForest({mobile:true}),u=forest.uniforms;let vertices=0;
  forest.root.traverse(o=>{if(!o.geometry)return;const p=o.geometry.attributes.position;vertices+=p.count;for(const n of p.array)assert.ok(Number.isFinite(n));});
- assert.ok(vertices<250000,`Mobile vertex budget: ${vertices}`);assert.equal(forest.root.children.length,7);assert.equal(forest.root.userData.reflectionSize,384);
+ assert.ok(vertices<300000,`Mobile vertex budget: ${vertices}`);assert.ok(forest.root.children.length<=16,'Forest draw batches stay bounded');assert.equal(forest.root.userData.reflectionSize,384);
  const noon=skyAt(new Date('2026-10-12T02:00Z')),night=skyAt(new Date('2026-10-12T09:00Z'));forest.setSky(noon);assert.equal(u.lampOn.value,0);forest.setSky(night);assert.equal(u.lampOn.value,1);assert.equal(u.daylight.value,night.daylight);
- forest.setRain(false);assert.equal(u.wetness.value,0);forest.setRain(true);assert.equal(u.wetness.value,1);
- forest.update(11,{motion:false,breeze:true});assert.equal(u.breeze.value,0);forest.update(11,{motion:true,breeze:false});assert.equal(u.breeze.value,0);forest.update(12,{motion:true,breeze:true});assert.equal(u.breeze.value,1);
+ forest.setRain(false);forest.update(10,{motion:true});assert.equal(u.wetness.value,0);assert.equal(forest.rain.visible,false);forest.setRain(true);forest.update(11,{motion:true});assert.equal(u.wetness.value,1);assert.equal(forest.rain.visible,true);
+ forest.update(11,{motion:false,breeze:true});assert.equal(u.breeze.value,0);assert.equal(forest.rain.visible,false);forest.update(11,{motion:true,breeze:false});assert.equal(u.breeze.value,0);forest.update(12,{motion:true,breeze:true});assert.equal(u.breeze.value,1);
  disposeGroup(forest.root);
 });
 

@@ -25,7 +25,7 @@ textures={}
 gentextures=gl('glGenTextures',None,[C.c_int,C.POINTER(C.c_uint)])
 bindtexture=gl('glBindTexture',None,[C.c_uint,C.c_uint]);activetexture=gl('glActiveTexture',None,[C.c_uint])
 teximage=gl('glTexImage2D',None,[C.c_uint,C.c_int,C.c_int,C.c_int,C.c_int,C.c_int,C.c_uint,C.c_uint,C.c_void_p])
-texparameter=gl('glTexParameteri',None,[C.c_uint,C.c_uint,C.c_int]);integer=gl('glUniform1i',None,[C.c_int,C.c_int])
+texparameter=gl('glTexParameteri',None,[C.c_uint,C.c_uint,C.c_int]);integer=gl('glUniform1i',None,[C.c_int,C.c_int]);generatemipmap=gl('glGenerateMipmap',None,[C.c_uint])
 def texture_for(v):
     key=str(v)
     if key in textures:return textures[key]
@@ -36,7 +36,8 @@ def texture_for(v):
     if v.get('flipY'):im=im.transpose(Image.Transpose.FLIP_TOP_BOTTOM)
     handle=C.c_uint();gentextures(1,C.byref(handle));bindtexture(0x0DE1,handle.value)
     blob=C.create_string_buffer(im.tobytes());teximage(0x0DE1,0,0x8C43 if v.get('srgb') else 0x8058,im.width,im.height,0,0x1908,0x1401,blob)
-    for param,val in [(0x2801,0x2601),(0x2800,0x2601),(0x2802,0x2901 if v.get('repeat') else 0x812F),(0x2803,0x2901 if v.get('repeat') else 0x812F)]:texparameter(0x0DE1,param,val)
+    if v.get('mipmaps'):generatemipmap(0x0DE1)
+    for param,val in [(0x2801,0x2703 if v.get('mipmaps') else 0x2601),(0x2800,0x2601),(0x2802,0x2901 if v.get('repeat') else 0x812F),(0x2803,0x2901 if v.get('repeat') else 0x812F)]:texparameter(0x0DE1,param,val)
     textures[key]=handle.value;return handle.value
 def upload(file,target):
     handle=C.c_uint();genbuffers(1,C.byref(handle));bindbuffer(target,handle.value);b=(root/file).read_bytes();storage=C.create_string_buffer(b);bufferdata(target,len(b),storage,0x88E4);return handle.value

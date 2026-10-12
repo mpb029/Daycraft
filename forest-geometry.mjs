@@ -1,28 +1,30 @@
 import * as T from './vendor/three.module.js';
 import {makeRandom} from './meadow-terrain.mjs';
 
-export const FOREST_EYE=Object.freeze([0,1.72,8]);
+export const FOREST_EYE=Object.freeze([0,1.2,4]);
 export const FOREST_LAMP=Object.freeze([3.65,4.65,-3]);
-export const FOREST_SIGN=Object.freeze([3.9,2.05,-2.6]);
+export const FOREST_SIGN=Object.freeze([3.9,2.95,-2.6]);
 export const FOREST_VIEW=Object.freeze({yaw:0,pitch:.09,fov:60});
-export const forestInitialView=mobile=>({...FOREST_VIEW,yaw:mobile?.22:FOREST_VIEW.yaw});
-export const forestRoadX=z=>-7/(1+Math.exp((z+45)/12))+3/(1+Math.exp(-(z-70)/20));
-export function forestHeight(x,z){const edge=Math.max(0,Math.abs(x-forestRoadX(z))-3.5);return .10*Math.sin(x*.4)*Math.sin(z*.23)+Math.min(2.2,edge*.09)*(.7+.3*Math.sin(z*.06));}
+export const forestInitialView=mobile=>({...FOREST_VIEW,yaw:mobile?.40:FOREST_VIEW.yaw});
+export const forestRoadX=z=>-15/(1+Math.exp((z+30)/8))+3/(1+Math.exp(-(z-70)/20));
+export function forestHeight(x,z){const edge=Math.max(0,Math.abs(x-forestRoadX(z))-3.5);return .009*Math.sin(x*1.1)*Math.sin(z*.7)+Math.min(2.6,edge*.14)*(.8+.2*Math.sin(z*.06));}
 
 // Solid, deterministic geometry: the canopy, trunks and roadside plants have
 // real depth at every heading. Shared batches bound draw calls and allocation.
 export function makeForestGeometry({mobile=false}={}){
  const random=makeRandom(17101988),batches=Array.from({length:4},()=>({p:[],n:[],uv:[],tint:[],kind:[]}));
- const colour=new T.Color(),matrix=new T.Matrix4(),dummy=new T.Object3D();
+ const colour=new T.Color(),dummy=new T.Object3D();
  function add(g,batch,hex,kind,m=null){if(!g.attributes.normal)g.computeVertexNormals();if(m)g.applyMatrix4(m);const flat=g.index?g.toNonIndexed():g,p=flat.attributes.position,u=flat.attributes.uv,n=flat.attributes.normal,b=batches[batch];colour.set(hex);for(let i=0;i<p.count;i++){b.p.push(p.getX(i),p.getY(i),p.getZ(i));b.n.push(n.getX(i),n.getY(i),n.getZ(i));b.uv.push(u?u.getX(i):0,u?u.getY(i):0);b.tint.push(colour.r,colour.g,colour.b);b.kind.push(kind);}if(flat!==g)flat.dispose();g.dispose();}
- function spray(p,width,height,yaw,tilt=0){dummy.position.set(...p);dummy.rotation.set(tilt,yaw,(random()-.5)*.8);dummy.scale.set(1,1,1);dummy.updateMatrix();add(new T.PlaneGeometry(width,height),3,'#c2cbb0',7,dummy.matrix);}
+ function spray(p,width,height,yaw,tilt=0){if(p[2]>-28&&p[2]<3&&p[1]>8&&Math.abs(p[0]-forestRoadX(p[2]))<1.35)return;dummy.position.set(...p);dummy.rotation.set(tilt,yaw,(random()-.5)*.8);dummy.scale.set(1,1,1);dummy.updateMatrix();add(new T.PlaneGeometry(width,height),3,['#b6c5a1','#98b291','#aabf9d'][Math.floor(random()*3)],7,dummy.matrix);}
  function primitive(g,pos,scale,hex,kind,rotation=[0,0,0]){dummy.position.set(...pos);dummy.rotation.set(...rotation);dummy.scale.set(...scale);dummy.updateMatrix();add(g,2,hex,kind,dummy.matrix);}
  function tube(points,radii,hex,kind=0,sides=10,batch=0){
-  const pts=points.map(p=>new T.Vector3(...p)),p=[],uv=[],ix=[],up=new T.Vector3(0,1,0);
-  for(let j=0;j<pts.length;j++){
-   const direction=pts[Math.min(j+1,pts.length-1)].clone().sub(pts[Math.max(0,j-1)]).normalize();
-   const right=new T.Vector3().crossVectors(direction,Math.abs(direction.y)>.95?new T.Vector3(1,0,0):up).normalize(),forward=new T.Vector3().crossVectors(right,direction).normalize();
-   for(let i=0;i<=sides;i++){const angle=i/sides*Math.PI*2,flute=kind===0?1+.065*Math.sin(angle*7+j*.24)+.04*Math.cos(angle*11-j*.19):1;const v=pts[j].clone().addScaledVector(right,Math.cos(angle)*radii[j]*flute).addScaledVector(forward,Math.sin(angle)*radii[j]*flute);p.push(v.x,v.y,v.z);uv.push(i/sides,pts[j].y+Math.hypot(pts[j].x-pts[0].x,pts[j].z-pts[0].z)*.4);if(j<pts.length-1&&i<sides){const a=j*(sides+1)+i,c=a+sides+1;ix.push(a,c,a+1,a+1,c,c+1);}}
+  const control=points.map(p=>new T.Vector3(...p)),curve=new T.CatmullRomCurve3(control,false,'centripetal');
+  const smooth=points.length>2&&((kind===0&&radii[0]>.35&&Math.hypot(points[0][0],points[0][2]-4)<20)||kind===3);
+  const segments=(points.length-1)*(smooth?2:1),frames=curve.computeFrenetFrames(segments,false),pts=smooth?curve.getPoints(segments):control,p=[],uv=[],ix=[];let along=0;
+  for(let j=0;j<=segments;j++){
+   if(j)along+=pts[j].distanceTo(pts[j-1]);const t=j/segments,source=t*(radii.length-1),k=Math.min(radii.length-2,Math.floor(source)),q=source-k,radius=radii[k]+(radii[k+1]-radii[k])*q;
+   const right=frames.normals[j],forward=frames.binormals[j];
+   for(let i=0;i<=sides;i++){const angle=i/sides*Math.PI*2,flute=kind===0?1+.12*Math.sin(angle*5+t*1.5)+.05*Math.cos(angle*9-t):1;const v=pts[j].clone().addScaledVector(right,Math.cos(angle)*radius*flute).addScaledVector(forward,Math.sin(angle)*radius*flute);p.push(v.x,v.y,v.z);uv.push(i/sides,along);if(j<segments&&i<sides){const a=j*(sides+1)+i,c=a+sides+1;ix.push(a,a+1,c,a+1,c+1,c);}}
   }
   const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(p,3));g.setAttribute('uv',new T.Float32BufferAttribute(uv,2));g.setIndex(ix);add(g,batch,hex,kind);
  }
@@ -32,22 +34,22 @@ export function makeForestGeometry({mobile=false}={}){
   const verts=v.map(([x,y,z])=>[center[0]+c*x+s*z*ct,center[1]+y+z*st,center[2]-s*x+c*z*ct]),indices=[2,0,1,0,4,1,4,3,1,3,2,1],uvs=[[0,.42],[.5,.5],[.5,0],[1,.42],[.5,1]],b=batches[1];colour.set(hex);
   for(const i of indices){b.p.push(...verts[i]);b.uv.push(...uvs[i]);b.tint.push(colour.r,colour.g,colour.b);b.kind.push(1);}
  }
- const trees=[{x:6,z:-4,r:1.55,h:29},{x:-6.5,z:-2,r:1.25,h:27},{x:-5.8,z:12,r:1.2,h:25},{x:7,z:12,r:1.4,h:30},{x:7.6,z:-13,r:1.15,h:28},{x:-7.8,z:-16,r:1,h:26}];
+ const trees=[{x:6,z:-4,r:1.55,h:29},{x:-6.5,z:-4,r:1.45,h:27},{x:-5.8,z:12,r:1.2,h:25},{x:7,z:12,r:1.4,h:30},{x:5.6,z:-14,r:.95,h:23},{x:-6.8,z:-16,r:.85,h:26}];
  for(let side of [-1,1])for(let row=0;row<3;row++)for(let i=0;i<25;i++){
-  const z=-155+i*9+(random()-.5)*5,x=forestRoadX(z)+side*(6.5+row*8+random()*5);
+  const z=-155+i*9+(random()-.5)*8,x=forestRoadX(z)+side*(5.5+row*7+random()*6);
   if(trees.some(t=>Math.hypot(t.x-x,t.z-z)<4))continue;
-  trees.push({x,z,r:.42+random()*.75,h:18+random()*15});
+  trees.push({x,z,r:.42+random()*.75,h:15+random()*19});
  }
  const crowns=[];
  for(const [index,t] of trees.entries()){
-  const {x,z,r,h}=t,y=forestHeight(x,z)-.15,lean=(random()-.5)*2,leanZ=(random()-.5)*2,far=mobile&&Math.hypot(x,z-8)>55,sides=index<6?18:mobile?(far?6:8):10;
-  tube([[x,y,z],[x+.06,y+.55,z],[x-.08,y+2,z+.06],[x+lean*.2,y+h*.35,z+leanZ*.2],[x+lean*.6,y+h*.7,z+leanZ*.6],[x+lean,y+h,z+leanZ]],[r*1.35,r*1.07,r*.92,r*.8,r*.49,.04],index%2?'#4d4c39':'#545747',0,sides);
+  const {x,z,r,h}=t,y=forestHeight(x,z)-.15,lean=(random()-.5)*7,leanZ=(random()-.5)*5,far=mobile&&Math.hypot(x,z-8)>55,sides=index<6?28:mobile?(far?6:8):10;
+  tube([[x,y,z],[x+.07,y+.65,z],[x+lean*.05,y+2.4,z+leanZ*.08],[x+lean*.2,y+h*.35,z+leanZ*.2],[x+lean*.6,y+h*.7,z+leanZ*.6],[x+lean,y+h,z+leanZ]],[r*1.5,r*1.12,r*.84,r*.61,r*.32,.028],index%2?'#4d4c39':'#545747',0,sides);
   if(Math.hypot(x,z-8)<65)for(let k=0;k<(index<6?9:5);k++){
    const a=k/7*Math.PI*2+random(),len=r*(2.4+random()*1.9),dx=Math.cos(a),dz=Math.sin(a);
    tube([[x,y+r*.7,z],[x+dx*r*.8,y+.32,z+dz*r*.8],[x+dx*len*.65,forestHeight(x+dx*len*.65,z+dz*len*.65)+.10,z+dz*len*.65],[x+dx*len,forestHeight(x+dx*len,z+dz*len)-.09,z+dz*len]],[r*.32,r*.27,r*.10,.012],'#50523b',0,mobile&&index>=6?5:8);
   }
   for(let j=0;j<4;j++){
-   const a=random()*Math.PI*2,bh=h*(.22+random()*.43),len=3.5+random()*5,dx=Math.cos(a),dz=Math.sin(a),tip=[x+dx*len,y+bh+2+random()*2,z+dz*len];
+   const a=random()*Math.PI*2,bh=h*(.24+random()*.40),len=3.5+random()*5,dx=Math.cos(a),dz=Math.sin(a),tip=[x+dx*len,y+bh+2+random()*2,z+dz*len];
    tube([[x+lean*.3,y+bh,z],[x+dx*len*.43,y+bh+1.1,z+dz*len*.43],tip],[r*.31,r*.16,.028],'#4d5140',0,far?4:7);
    crowns.push({p:tip,r:3+random()*2});
    const inner=[tip[0]-dx*1.5,tip[1]-1.2,tip[2]-dz*1.5];
@@ -55,11 +57,28 @@ export function makeForestGeometry({mobile=false}={}){
   }
   crowns.push({p:[x+lean,y+h-1,z+leanZ],r:4});
  }
- for(const crown of crowns)for(let k=0;k<(mobile?5:9);k++){const a=random()*Math.PI*2,r=random()*crown.r,p=[crown.p[0]+Math.cos(a)*r,crown.p[1]+(random()-.5)*2,crown.p[2]+Math.sin(a)*r];spray(p,2.8+random()*2.7,2.4+random()*2.2,random()*Math.PI*2,(random()-.5)*1.4);}
+ for(const crown of crowns)for(let k=0;k<(mobile?8:13);k++){const a=random()*Math.PI*2,r=random()*crown.r,p=[crown.p[0]+Math.cos(a)*r,crown.p[1]+(random()-.5)*2,crown.p[2]+Math.sin(a)*r];spray(p,1.7+random()*2.0,1.4+random()*1.8,random()*Math.PI*2,(random()-.5)*1.4);}
  const leafBudget=mobile?1200:2200;
  for(let i=0;i<leafBudget;i++){
   const crown=crowns[i%crowns.length],a=random()*Math.PI*2,r=Math.sqrt(random())*crown.r,h=(random()-.5)*2.7,p=[crown.p[0]+Math.cos(a)*r,crown.p[1]+h,crown.p[2]+Math.sin(a)*r];
-  leaf(p,.6+random()*.7,.18+random()*.27,random()*Math.PI*2,(random()-.5)*1.5,['#465a38','#3c5535','#516641','#334c32'][i%4]);
+  leaf(p,.16+random()*.22,.045+random()*.075,random()*Math.PI*2,(random()-.5)*1.5,['#465a38','#3c5535','#516641','#334c32'][i%4]);
+ }
+ // Curving boughs frame the road without making a regular ceiling.
+ for(const side of [-1,1])for(let j=0;j<4;j++){
+  const z=-8-j*13,x=forestRoadX(z)+side*(5.8+j*.2),height=7.8+j*1.1;
+  const branch=[[x,forestHeight(x,z)-.18,z],[x-side*.3,height*.66,z+.1],[x-side*1.3,height,z-1.1],[x-side*3.0,height+1.5,z-3.2],[x-side*4.6,height+1.7,z-5.0]];
+  tube(branch,[.46,.34,.22,.11,.014],'#4d5140',0,mobile?8:12);
+  for(let k=0;k<(mobile?28:45);k++){const t=random(),p=[x-side*(1.0+t*4.2)+(random()-.5)*2,height+1.0+random()*2.0,z-t*5+(random()-.5)*3];spray(p,1.1+random()*1.6,1.2+random()*1.5,random()*6.28,(random()-.5)*1.8);}
+ }
+ // Uneven mid-height growth closes the open bands between trunks and canopy.
+ for(let i=0;i<(mobile?450:780);i++){
+  const z=-110+random()*158,side=i%2?1:-1,x=forestRoadX(z)+side*(5.7+random()*16),y=forestHeight(x,z)+1.4+random()*5.0;
+  spray([x,y,z],1.3+random()*2.1,1.4+random()*2.0,random()*6.28,(random()-.5)*.65);
+ }
+ // Small climbing leaves catch lamplight on the foreground trunks.
+ for(const [x,z,r] of [[6,-4,1.55],[-6.5,-4,1.45]])for(let j=0;j<40;j++){
+  const y=.4+random()*7.0,a=Math.PI*.16+random()*Math.PI*.60;
+  spray([x+Math.cos(a)*r,y,z+Math.sin(a)*r],.30+random()*.42,.38+random()*.50,(random()-.5)*.5,-.2);
  }
  // Layer broad leaves and fern fronds along both verges, away from the road.
  const plants=mobile?250:510;
@@ -75,22 +94,37 @@ export function makeForestGeometry({mobile=false}={}){
    }
   }else for(let k=0;k<(mobile?10:14);k++){const a=random()*Math.PI*2,spread=random()*.65;leaf([x+Math.sin(a)*spread,y+height*random(),z+Math.cos(a)*spread],.3+random()*.4,.14+random()*.15,a,.2+random()*.5,['#3b613c','#4b6c43','#557341'][k%3]);}
  }
+ // Dense foreground plants soften the roots and catch the warm light.
+ for(let i=0;i<(mobile?110:180);i++){
+  const side=i%2?1:-1,z=-10+random()*15,x=forestRoadX(z)+side*(3.5+random()*4.5);
+  if(Math.hypot(x-3.9,z+2.6)<1.0||trees.some(t=>Math.hypot(t.x-x,t.z-z)<t.r*.83))continue;
+  const y=forestHeight(x,z),size=.5+random()*.8;
+  for(let k=0;k<2;k++)spray([x+(random()-.5)*.25,y+size*.38,z],size,size*.85,k*1.5+random()*.6,-.15);
+  for(let k=0;k<5;k++)leaf([x+(random()-.5)*.3,y,z+(random()-.5)*.3],.3+random()*.5,.014+random()*.023,random()*6.28,.85+random()*.45,'#657d44');
+ }
+ // Foreground fern fans break up the exposed root silhouettes.
+ for(const [x,z] of [[-4.4,-4.2],[-5.1,-2.8],[-4.5,-.9],[4.2,-4.8],[5.2,-.8]]){
+  const y=forestHeight(x,z);
+  for(let f=0;f<6;f++){const a=f/6*Math.PI*2+.2,len=1.05+random()*.45;
+   for(let j=1;j<=6;j++){const q=j/7,p=[x+Math.sin(a)*len*q,y+.82*Math.sin(q*2.7),z+Math.cos(a)*len*q],l=len*.27*Math.sin(q*Math.PI);leaf(p,l,l*.24,a+.95,.18,'#647e48');leaf(p,l,l*.24,a-.95,.18,'#536d3f');}
+  }
+ }
  // Mossy stones, sparse utility poles and a pair of sagging wires in the mist.
- for(let i=0;i<85;i++){const z=-110+random()*145,x=forestRoadX(z)+(i%2?1:-1)*(3.7+random()*5);primitive(new T.IcosahedronGeometry(1,0),[x,forestHeight(x,z),z],[.12+random()*.36,.08+random()*.22,.14+random()*.4],'#555a46',2,[random(),random()*3,0]);}
+ for(let i=0;i<50;i++){const z=-110+random()*145,x=forestRoadX(z)+(i%2?1:-1)*(3.7+random()*5);primitive(new T.IcosahedronGeometry(1,1),[x,forestHeight(x,z),z],[.12+random()*.36,.08+random()*.22,.14+random()*.4],'#555a46',2,[random(),random()*3,0]);}
  for(let i=0;i<5;i++){const z=-25-i*26,x=forestRoadX(z)-5.3; tube([[x,forestHeight(x,z),z],[x+.18,11,z]],[.16,.1],'#4b4941',2,8,2);tube([[x-1.1,9.7,z],[x+1.2,9.7,z]],[.07,.07],'#4b4941',2,6,2);if(i<4)for(const offset of [-.8,.8]){const nextZ=z-26,nextX=forestRoadX(nextZ)-5.3;tube([[x+offset,9.8,z],[(x+nextX)*.5+offset,8.8,z-13],[nextX+offset,9.8,nextZ]],[.014,.014,.014],'#2e3633',2,4,2);}}
  // Hero props are genuine meshes: sign, pole, timetable, concrete foot, lamp.
- primitive(new T.BoxGeometry(.65,.23,.48),[3.9,.115,-2.6],[1,1,1],'#a2a18c',2);
- tube([[3.9,.22,-2.6],[3.9,2.26,-2.6]],[.034,.034],'#a5ada6',3,12,2);
+ primitive(new T.BoxGeometry(.85,.32,.62),[3.9,.16,-2.6],[1,1,1],'#a2a18c',2);
+ tube([[3.9,.22,-2.6],[3.9,3.16,-2.6]],[.034,.034],'#a5ada6',3,12,2);
  primitive(new T.CylinderGeometry(.46,.46,.045,48),FOREST_SIGN,[1,1,1],'#747f80',3,[Math.PI/2,0,0]);
- primitive(new T.CircleGeometry(.45,48),[3.9,2.05,-2.574],[1,1,1],'#e9e5cd',5);
- primitive(new T.BoxGeometry(.22,.45,.065),[3.9,1.21,-2.56],[1,1,1],'#abae9f',3);
- primitive(new T.PlaneGeometry(.186,.402),[3.9,1.21,-2.522],[1,1,1],'#e1decb',6);
+ primitive(new T.CircleGeometry(.45,48),[3.9,2.95,-2.574],[1,1,1],'#e9e5cd',5);
+ primitive(new T.BoxGeometry(.22,.45,.065),[3.9,1.68,-2.56],[1,1,1],'#abae9f',3);
+ primitive(new T.PlaneGeometry(.186,.402),[3.9,1.68,-2.522],[1,1,1],'#e1decb',6);
  tube([[5.2,0,-3],[5.2,4.8,-3],[5.05,5.08,-3],[4.6,5.18,-3],[3.8,4.94,-3],[3.65,4.8,-3]],[.06,.06,.055,.05,.05,.05],'#5c6358',3,12,2);
  primitive(new T.CylinderGeometry(.13,.30,.18,32),[3.65,4.75,-3],[1,1,1],'#565e50',3);
  primitive(new T.SphereGeometry(.12,20,12),FOREST_LAMP,[1,.72,1],'#fff0bc',4);
  primitive(new T.CircleGeometry(.22,32),[3.65,4.649,-3],[1,1,1],'#ffefb0',4,[-Math.PI/2,0,0]);
  const geometries=batches.map(b=>{const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(b.p,3));g.setAttribute('uv',new T.Float32BufferAttribute(b.uv,2));g.setAttribute('tint',new T.Float32BufferAttribute(b.tint,3));g.setAttribute('surfaceKind',new T.Float32BufferAttribute(b.kind,1));if(b.n.length===b.p.length)g.setAttribute('normal',new T.Float32BufferAttribute(b.n,3));else g.computeVertexNormals();g.computeBoundingSphere();return g;});
- const ground=new T.PlaneGeometry(370,370,mobile?100:160,mobile?100:160);ground.rotateX(-Math.PI/2);const gp=ground.attributes.position;for(let i=0;i<gp.count;i++)gp.setY(i,forestHeight(gp.getX(i),gp.getZ(i)));ground.computeVertexNormals();
+ const ground=new T.PlaneGeometry(370,370,mobile?100:160,mobile?100:160);ground.rotateX(-Math.PI/2);const gp=ground.attributes.position;for(let i=0;i<gp.count;i++){const x=Math.sign(gp.getX(i))*Math.pow(Math.abs(gp.getX(i))/185,1.4)*185,z=Math.sign(gp.getZ(i))*Math.pow(Math.abs(gp.getZ(i))/185,1.4)*185;gp.setXYZ(i,x,forestHeight(x,z),z);}ground.computeVertexNormals();
  return {geometries,ground,treeCount:trees.length,leafBudget};
 }
 
