@@ -14,6 +14,7 @@ export function createWaterLook(canvas,{active,draw,initialView={yaw:0,pitch:-.0
  return {
   get view(){return {yaw,pitch,fov};},
   clear(){pointers.clear();pinch=0;},
+  setView(next){if(Number.isFinite(next.yaw))yaw=next.yaw;if(Number.isFinite(next.pitch))pitch=clamp(next.pitch,-1.3,1.3);if(Number.isFinite(next.fov))fov=clamp(next.fov,35,80);draw();},
   aim(direction){yaw=Math.atan2(direction[0],-direction[2]);pitch=clamp(Math.asin(clamp(direction[1],-1,1)),-1.3,1.3);draw();},
   action(action){if(['field','reset','wave','stop'].includes(action)){({yaw,pitch,fov}=initialView);}if(action==='sky')pitch=.6;if(action==='left')yaw-=Math.PI/8;if(action==='right')yaw+=Math.PI/8;if(action==='in')fov=clamp(fov*.85,35,80);if(action==='out')fov=clamp(fov/ .85,35,80);draw();}
  };

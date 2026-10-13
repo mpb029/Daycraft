@@ -1,0 +1,9 @@
+.background-swatch.cinema{background:linear-gradient(#c8bca4 0 28%,#28231e 29% 42%,#713236 43% 73%,#b1aba0 74%)}
+.background-swatch.cinema:after{content:'CINEMA CAFÉ';position:absolute;inset:22px 8px auto;text-align:center;color:#edce87;font:600 11px/1.5 ui-sans-serif,sans-serif;letter-spacing:2px}
+.cinema-world .meadow-header .brand,.cinema-world .meadow-name,.cinema-world .sky-clock{color:#fff1d2;text-shadow:0 2px 5px #201914,0 0 17px #201914}
+.cinema-world .meadow-name{border-color:#e3bc7580}
+.cinema-world .atmosphere-controls{max-width:310px;gap:8px;grid-template-columns:1fr;justify-items:end}
+.cinema-views{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end;grid-column:1/-1}
+.cinema-views .btn{min-height:38px;padding:8px 10px;font-size:11px}
+.cinema-world .cinema-views{padding:8px;background:#29221deb;border:1px solid #b3935b60;border-radius:12px}
+@media(max-width:720px){.cinema-world .atmosphere-controls{top:64px;max-width:calc(100vw - 30px)}.cinema-world .sky-clock{display:none}.cinema-world .meadow-name{display:none}.cinema-world .meadow-panel.content{max-height:calc(100dvh - 295px)}.cinema-views .btn{min-height:42px}}

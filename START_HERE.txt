@@ -1,0 +1,9 @@
+Daycraft 1.13.0 — Cinema café
+
+This updates your existing Daycraft repository.
+Extract this ZIP, then upload its CONTENTS to the root of the main branch.
+Keep the assets, previews and verification folders intact.
+Do not upload an outer cinema-v113-release folder.
+Do not delete existing repository files.
+After GitHub Pages deploys, reload Daycraft and choose Cinema café.
+UPDATE.md contains the full instructions and fidelity/verification notes.
