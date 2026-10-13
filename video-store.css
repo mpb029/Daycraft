@@ -1,18 +1,18 @@
 .app-version{font:10px/1.2 ui-sans-serif,sans-serif;letter-spacing:0;padding:5px 7px;border-radius:6px;background:#eef4dfde;color:#31523d;text-shadow:none}
 .store-new{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 11px;margin-bottom:17px;border:1px solid #c7d4e6;border-radius:10px;background:#e7edf5;color:#25486c;font-size:11px}
 .store-new .btn{padding:5px 12px;background:#123f88;color:#fff4d2}
-.background-swatch.video-store{background:linear-gradient(#d8c9a8 0 19%,#063e8c 20% 36%,#e9c849 37% 40%,#d9ceb4 41% 49%,#183c70 50%);}
-.background-swatch.video-store:after{content:'BLOCKBUSTER VIDEO';position:absolute;inset:15px 8px auto;padding:10px 5px;text-align:center;color:#ffd249;background:#083c8d;border:2px solid #f6c738;font:bold 10px/1.2 ui-sans-serif,sans-serif}
+.background-swatch.video-store{background:linear-gradient(#d8c9a8 0 19%,#28514b 20% 36%,#d28a99 37% 40%,#b89b76 41% 49%,#5a2437 50%);}
+.background-swatch.video-store:after{content:'AFTER HOURS VIDEO';position:absolute;inset:15px 8px auto;padding:10px 5px;text-align:center;color:#ecc7b9;background:#223d39;border:2px solid #a17f64;font:bold 10px/1.2 ui-sans-serif,sans-serif}
 .video-store-world .meadow-header{max-width:calc(100% - 370px)}
 .video-store-world .meadow-header .brand,.video-store-world .meadow-name,.video-store-world .sky-clock{color:#fff0ce;text-shadow:0 1px 6px #122540,0 0 18px #122540}
 .video-store-world .meadow-name{border-color:#ffd04788}
 .store-controls{width:330px;grid-template-columns:1fr;justify-items:end;gap:6px}
 .store-controls .background-picker select{width:180px}
 .store-controls .sky-clock{grid-row:auto}
-.store-quick-controls{grid-column:1/-1;padding:10px 12px;border:1px solid #b4c2d16b;background:#142a43e8;backdrop-filter:blur(14px);border-radius:13px;display:grid;gap:8px;width:100%;box-shadow:0 6px 22px #06142333}
+.store-quick-controls{grid-column:1/-1;padding:10px 12px;border:1px solid #b4c2d16b;background:#233b35e8;backdrop-filter:blur(14px);border-radius:13px;display:grid;gap:8px;width:100%;box-shadow:0 6px 22px #06142333}
 .store-quick-controls>div{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end}
 .store-quick-controls .btn{min-height:36px;padding:6px 8px;font-size:10px}
-.store-quick-controls .glass-button[aria-pressed=true]{background:#f3d376;border-color:#ffd450}
+.store-quick-controls .glass-button[aria-pressed=true]{background:#d6bba6;border-color:#deb5a7}
 #trailer-status{display:block;color:#eef3f9;font-size:11px;line-height:1.45;text-align:right;overflow-wrap:anywhere}
 #trailer-source{color:#efcc7b;font-size:10px;text-align:right;pointer-events:auto}
 #store-tv-layer{position:fixed;inset:0;z-index:1;pointer-events:none;overflow:hidden}
@@ -30,7 +30,9 @@
  .store-controls{width:min(330px,calc(100vw - 30px));top:64px;gap:4px}
  .store-quick-controls{padding:8px;gap:6px}.store-quick-controls .btn{min-height:38px}
  .store-controls .sky-clock{display:none}
- .video-store-world .meadow-panel.content{max-height:calc(100dvh - 390px)}
+ .video-store-world .meadow-panel.content{max-height:calc(100dvh - 420px)}
  .app-version{font-size:9px;padding:4px}.meadow-header .brand{gap:6px}
  .app-update{bottom:92px;width:calc(100vw - 28px)}
 }
+
+.film-library{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:16px}.film-card{display:grid;gap:6px;align-content:start;padding:10px;border:1px solid #c9cbbb;border-radius:10px;background:#e9e6d9;color:#263d31;cursor:pointer;text-align:left;font:inherit}.film-card img{width:100%;height:180px;object-fit:contain;background:#242d28;border-radius:4px}.film-card strong{font-size:12px;line-height:1.4}.film-card span{font-size:10px;line-height:1.4;color:#607060}.film-card:hover,.film-card:focus-visible{border-color:#567765;background:#dedecb}.vhs-scan-pair{flex-wrap:wrap}.vhs-scan-pair>a{max-width:39%;text-align:center;color:#47624f;font-size:11px}.vhs-scan-pair .vhs-spine{max-width:17%}.vhs-scan-pair span{display:block;margin:8px 0}.store-views{border-top:1px solid #b6c9b12d;padding-top:7px}.video-store-world .meadow-name{border-color:#dfba9f88}

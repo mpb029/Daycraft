@@ -1,54 +1,62 @@
-# Daycraft — 1980s video store, version 1.11.0
+# Daycraft 1.12.0 — After Hours Video
 
-This update adds the video store to the actual Daycraft background selector. The earlier standalone TV-preview HTML did not update the app. This package is based on the published v1.10.1 files in mpb029/Daycraft (commit f439090). It has not been pushed to GitHub or deployed by the assistant.
+The video-store background is now an independent shop with a relaxed 80s feel.
 
-## Install in your existing repository
+- Clear windows look out onto blue sky, leafy hedges, marked parking bays and three period-inspired cars.
+- Rain has its own saved on/off setting. It stays outside, with glass droplets and wet asphalt. Calm mode and reduced motion pause it.
+- Blue sky is the default. The **Blue sky / Local time** control switches the outside view to the date, time and location saved in Settings.
+- Walnut trim, a fluted timber counter, burgundy carpet, cream shelves, teal and pink signs, detailed checkout equipment and a ceiling CRT replace the old chain branding.
+- 36 distinct films, 1,026 cases and ten framed theatrical posters. The collection includes Carpenter, Spielberg, Zemeckis and Burton favourites, plus Gremlins, Toys, The Goonies, Labyrinth and more.
+- **Windows**, **Posters**, **Shelves**, **TV** and **Store** controls move between useful viewpoints. Drag to look around and pinch or scroll to zoom.
+- **Browse 36 films** opens the collection. Select a title for its poster and the available full-resolution VHS scans.
 
-1. Extract **Daycraft_Blockbuster_Update_v1.11.0.zip**.
-2. Open https://github.com/mpb029/Daycraft/upload/main . Drag the extracted files and folders into the upload area. Keep the `assets/video-store` folder structure. Replace matching filenames beside your existing `index.html`. Upload the contents, not the ZIP or its outer folder.
-3. Commit to `main` and wait for the GitHub Pages deployment to finish in **Actions**. Keep the existing Pages settings and all other app files.
-4. Open https://mpb029.github.io/Daycraft/ . Reload once to download the update, wait a few seconds, then reload again. If it still shows the old version, close every Daycraft browser tab and installed-app window, then reopen. **Do not clear site data**: that would remove your browser's saved progress.
-5. Look for **1.11.0 beside “daycraft”**. Choose **1980s video store** from the background dropdown, or press **Open** in the new-background notice.
-6. Press **Play trailers** once. Use **TV view** for a closer look; **Shelf view** moves to the VHS shelf; **Read VHS covers** opens the original scans. **Space / Hide panels** retains the existing overlay behavior.
+Tasks, earned items, meadow placements, backups, the other backgrounds and the four-trailer reel are retained. Space or Hide panels still reveals the scenery.
 
-After updating, this link opens the store directly:
-https://mpb029.github.io/Daycraft/?scene=video-store
+## Install this update on your existing GitHub Pages site
 
-The update ZIP contains changed files and new assets only. Keep the existing vendor, icons, meadow, water, forest and earned-item files. The verification and previews folders are optional supporting files.
+The release ZIP contains two upload batches. GitHub's browser uploader accepts up to 100 files at once, so the artwork is uploaded first.
 
-## What changes
+1. Extract the ZIP on your computer.
+2. Open `https://github.com/mpb029/Daycraft` at the repository root on `main`.
+3. Choose **Add file → Upload files**. Open `01-Artwork` inside the extracted ZIP and drag its **assets** folder into GitHub. Commit these files.
+4. Return to the repository root and choose **Add file → Upload files** again. Open `02-App` and drag **everything inside it** into GitHub. Commit these files, replacing files with the same names.
+5. Keep the paths intact. The numbered folders themselves and the ZIP file do not belong in the repository. The result must have `app.mjs` and `sw.js` at the root, and film artwork under `assets/video-store/catalog/`.
+6. Wait for the repository's Pages deployment to finish, then open `https://mpb029.github.io/Daycraft/?scene=video-store`. If Daycraft shows **Reload update**, finish any open form and select it.
+7. Check the visible **1.12.0** badge and the **After Hours Video** background name. No clearing of saved data is required.
 
-- A selectable, interactive 3D video store: blue carpet, cream shelves, period-inspired ticket branding, ceiling lighting, CRT checkout terminals and an overhead television.
-- Original high-resolution VHS scans mapped onto the actual shelf cases. Shelf view and the scan viewer make the spines readable. Store signs use real text rather than generated lettering.
-- A four-trailer reel: **Back to the Future Part II (1989)**, **Gremlins (1984)**, **Toys (1992)** and **The Thing (1982)**. It advances on playback-end events and loops after the fourth trailer. Toys is the requested exception to the 1980s theme.
-- Play, pause, next, sound and camera controls. Playback starts muted, pauses when the tab is hidden, and stops when another scene is selected. Native player pauses are respected. The player survives task-panel rerenders and Space toggling.
-- Visible app version and an update notice for future releases. The offline worker activates only after all required files are cached. Failed or incomplete asset uploads do not replace the working offline version.
+With a local Git checkout, merge the contents of both numbered folders into the repository root, commit the changes and push them together. This package is an update to the existing Daycraft repository, not a complete standalone copy.
 
-All backgrounds continue to share your existing tasks, materials, collection and placements. Indoor lights stay on; the store windows follow the time outside. Outdoor rain settings are retained when switching scenes. The store draws only when the camera or scene changes, apart from periodic daylight refreshes; the video player manages its own frames.
+GitHub upload reference: https://docs.github.com/en/repositories/working-with-files/managing-files/adding-a-file-to-a-repository
 
-## Accuracy and playback limits
+## Artwork and performance
 
-This is a stylised 3D implementation, not a photographic reproduction of the concept image or a measured reconstruction of a particular store. Its shelf catalogue deliberately repeats three verified US editions: Gremlins (Warner 11388), The Thing (MCA 77009), and Back to the Future (MCA 80196). Gremlins and The Thing have original front and spine scans; Back to the Future has an original spine only. There is no invented front cover for that edition. Collector watermarks remain intact. The entire historical catalogue and every physical packaging surface are not 100% reproduced.
+The catalogue contains 27 authentic VHS fronts, 28 authentic VHS spines and 36 theatrical posters. Shelf scans use unchanged archive-provided small derivatives. Where an original VHS scan is unavailable, the case uses theatrical artwork and a plain After Hours title label; this is not presented as a verified retail VHS edition. Source wear and collector watermarks are retained. Film dates and VHS edition dates may differ; this is an 80s-inspired shop with an 80s/90s collection.
 
-Trailers stream through YouTube and Vimeo embeds; no downloaded film footage is included. They require internet access and may be unavailable if a provider blocks embedding, a browser blocks the player, or a video is removed. The source link and Next control remain available. Live browser playback has not been verified in this environment.
+All source links, edition details and hashes are in `assets/video-store/catalog/catalog.json` and `provenance.json`. Full-resolution scan URLs load only when a film is opened and require an internet connection. Some source posters have limited resolution; the app does not invent detail to claim perfect scans.
 
-Sources are recorded in `assets/video-store/provenance.json` and `video-store-catalog.mjs`. Branding and movie artwork remain the property of their respective owners. This personal scene is not affiliated with Blockbuster or the film distributors.
+The local catalogue images total 5.03 MB. Geometry is combined into 108 drawing batches, with 154,926 vertices. The dry shop renders when needed; rain uses the app's existing 24 fps scenery limit and stops when the page is hidden. These are implementation budgets, not measured frame rates on your devices. Trailers also need an internet connection and may be subject to the provider's embedding rules.
 
 ## Verification
 
-All 72 automated checks pass. The included Node suite checks task/focus/completion/build behavior; saved-state migration; placements; existing scenes and wave timing; store selection; the four-film playback state machine; stale callbacks; pause/visibility behavior; TV projection at desktop and phone dimensions; file paths; and cache-update safety.
+- 73 automated checks: task/focus/completion/build/undo flows, backups and placement, all other scenes, app controls, separate store weather and time preferences, geometry budgets, window openings, texture disposal, TV alignment and trailer state, local Pages paths and complete-cache activation.
+- Eight native GLES renders using the shipped geometry, shaders and artwork: entrance, portrait phone, shelves, TV, windows, rain, night and posters. Previews are in `previews/`.
+- Browser UI layout, live YouTube/Vimeo playback and device frame rate were not exercised in this environment. The supplied previews show the 3D scene without the HTML task overlays.
 
-Run from the app folder:
+Run the automated suite:
 
 ```sh
 node --test verification/*.test.mjs
 ```
 
-The 3D store's shaders were compiled and rendered with native OpenGL ES. Desktop, portrait, shelf and TV camera views were checked. Images in `previews/video-store-*.png` are native renders of the shipped geometry and materials with a standby TV screen. They are not browser screenshots or evidence of successful streamed playback. Browser layout, provider playback and device frame rate still need checking on your phone/computer.
-
-Optional graphics checks require Linux EGL/GLES, Node, Python, Pillow and CairoSVG:
+Native rendering checks (Python EGL/OpenGL ES, Pillow and CairoSVG required):
 
 ```sh
 node verification/export-store-graphics.mjs
 python3 verification/render-store-graphics.py
+```
+
+The catalogue module and the shop's SVG signs can be rebuilt from the checked-in source manifest:
+
+```sh
+node verification/build-store-catalog.mjs
 ```

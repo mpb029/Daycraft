@@ -1,5 +1,5 @@
 import * as T from './vendor/three.module.js';
-import {TRAILERS,VHS_EDITIONS} from './video-store-catalog.mjs';
+import {TRAILERS,FILM_CATALOG} from './video-store-catalog.mjs';
 import {createTrailerReel,screenHomography} from './video-store-reel.mjs';
 let reel=null,layer=null,screen=null,youtubePromise=null,vimeoPromise=null,active=false;
 const loaderTimeout=20000;
@@ -67,9 +67,14 @@ export function positionStoreTV(camera,corners,root,width,height){
  if(quad.every(p=>p[0]<0)||quad.every(p=>p[0]>width)||quad.every(p=>p[1]<0)||quad.every(p=>p[1]>height)){layer.hidden=true;return;}
  // Hide when shelves/counter obscure the centre; never float through a wall.
  target.fromArray(corners[0]).add(new T.Vector3(...corners[2])).multiplyScalar(.5);direction.copy(target).sub(camera.position);const distance=direction.length();ray.set(camera.position,direction.normalize());ray.near=.1;ray.far=distance-.025;root.updateMatrixWorld(true);
- if(ray.intersectObject(root,true).length){layer.hidden=true;return;}
+ if(ray.intersectObjects(root.userData.tvOccluders||root.children,true).length){layer.hidden=true;return;}
  const matrix=screenHomography(quad);layer.hidden=!matrix;if(matrix)screen.style.transform='matrix3d('+matrix.join(',')+')';
 }
 export function vhsInspectorHTML(escape){
- return `<p>Original scans from specific US VHS editions. Choose a spine for a readable close-up. Collector watermarks are retained.</p><div class="vhs-scans">${VHS_EDITIONS.map(t=>`<section><h3>${escape(t.title)}</h3><p class="small-text">${escape(t.edition)}</p><div class="vhs-scan-pair">${t.front?`<a href="${t.front}" target="_blank" rel="noopener"><img src="${t.front}" alt="${escape(t.title)} original VHS front"></a>`:'<p class="small-text">Original spine only; no invented front artwork.</p>'}<a class="vhs-spine" href="${t.spine}" target="_blank" rel="noopener"><img src="${t.spine}" alt="${escape(t.title)} original VHS spine"></a></div><a href="${t.source}" target="_blank" rel="noopener noreferrer">Edition and scan source</a></section>`).join('')}</div>`;
+ return `<p>36 films from the 80s and 90s. Choose one to inspect its original VHS scans and theatrical poster.</p><div class="film-library">${FILM_CATALOG.map(t=>`<button class="film-card" data-action="store-film" data-film="${escape(t.id)}"><img loading="lazy" src="./${t.front||t.poster}" alt=""><strong>${escape(t.title)}</strong><span>${t.year} · ${escape(t.director)}</span></button>`).join('')}</div>`;
+}
+export function vhsFilmHTML(id,escape){
+ const t=FILM_CATALOG.find(t=>t.id===id);if(!t)return '';
+ const edition=t.edition?Object.values(t.edition).join(' · '):'',images=[['front',t.fullResolutionFront||t.front,'Original VHS front'],['spine',t.fullResolutionSpine||t.spine,'Original VHS spine'],['poster',t.poster,'Theatrical poster']].filter(([,src])=>src);
+ return `<p>${escape(t.title)} (${t.year}) · Directed by ${escape(t.director)}</p><p class="small-text">${escape(edition||'Theatrical poster art with an After Hours title label on the shelf.')} ${t.front||t.spine?'Original collector scans; wear and watermarks are retained.':''}</p><div class="vhs-scan-pair">${images.map(([kind,src,label])=>`<a class="vhs-${kind}" href="${escape(src.startsWith('http')?src:'./'+src)}" target="_blank" rel="noopener noreferrer"><img loading="lazy" src="${escape(src.startsWith('http')?src:'./'+src)}" alt="${escape(t.title+' · '+label)}"><span>${label}</span></a>`).join('')}</div><p class="small-text">Full-size scans load from the archive when you open a film and need an internet connection.</p><a href="${escape(t.sourceUrls[0])}" target="_blank" rel="noopener noreferrer">Artwork source and edition details</a><div class="dialog-actions"><button class="btn" data-action="store-inspect">Back to films</button><button class="btn" data-action="close">Close</button></div>`;
 }

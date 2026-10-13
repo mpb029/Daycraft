@@ -1,0 +1,852 @@
+{
+  "version": "1.12.0",
+  "base_commit": "b5e03b04f9fa6dc964c5453a9c83dda2fef9c59d",
+  "files": [
+    {
+      "path": "UPDATE.md",
+      "batch": "02-App",
+      "sha256": "f40b6e6493bb4a1c987c6516378eb2941cedf12ed1dc004106a24657a4c30607",
+      "bytes": 5181
+    },
+    {
+      "path": "app.mjs",
+      "batch": "02-App",
+      "sha256": "92c00c0020152e95474821ba96a815bfdedf377831890c3e19d2b8dbc12143d2",
+      "bytes": 53301
+    },
+    {
+      "path": "assets/video-store/adventure.svg",
+      "batch": "02-App",
+      "sha256": "4e3fd8aca16a37e0ac3f2b901aad843b123a73497baa4b57c566473ab8f02159",
+      "bytes": 357
+    },
+    {
+      "path": "assets/video-store/after-hours-window.svg",
+      "batch": "02-App",
+      "sha256": "993a1ee237e9a753b98b22e197cca09df0c2548c9b07eeae5002beb6921f2412",
+      "bytes": 465
+    },
+    {
+      "path": "assets/video-store/catalog/back-to-the-future-ii-front.jpg",
+      "batch": "01-Artwork",
+      "sha256": "2f218aab868defcf1a5558daa1c50c1a1a6ec146672227c771cee27841fe601f",
+      "bytes": 10492
+    },
+    {
+      "path": "assets/video-store/catalog/back-to-the-future-ii-spine.jpg",
+      "batch": "01-Artwork",
+      "sha256": "09553771ef4be6f016a74bb66152f6cb3c0753fcd5b10164c95d4d58bb1de1cc",
+      "bytes": 2503
+    },
+    {
+      "path": "assets/video-store/catalog/back-to-the-future-ii-studio-poster.jpg",
+      "batch": "01-Artwork",
+      "sha256": "62b8d5207218afbf9be051ee0c77d0d010427d290ce25a4d9c0f716f391ccdcb",
+      "bytes": 147084
+    },
+    {
+      "path": "assets/video-store/catalog/back-to-the-future-iii-front.jpg",
+      "batch": "01-Artwork",
+      "sha256": "c06a290a5bfd291ca30546e5da16d37553c98ae5860fb3c8bd117d78183d844b",
+      "bytes": 11612
+    },
+    {
+      "path": "assets/video-store/catalog/back-to-the-future-iii-spine.jpg",
+      "batch": "01-Artwork",
+      "sha256": "4af7f4099328f919c68eb9c00b5c8bc02096967a5de0584b72046c9f1002827c",
+      "bytes": 3060
+    },
+    {
+      "path": "assets/video-store/catalog/back-to-the-future-iii-studio-poster.jpg",
+      "batch": "01-Artwork",
+      "sha256": "d47549ae11985ca16d89ee824caa0e0ed0eab90926b0dd38a032b5ea0edca702",
+      "bytes": 163687
+    },
+    {
+      "path": "assets/video-store/catalog/back-to-the-future-spine.jpg",
+      "batch": "01-Artwork",
+      "sha256": "497fe88a23107734f043d1cfdaca0b140b76983b989617d26c0d6046c6273af0",
+      "bytes": 3349
+    },
+    {
+      "path": "assets/video-store/catalog/back-to-the-future-studio-poster.jpg",
+      "batch": "01-Artwork",
+      "sha256": "9b903b89e4013468e72d067775669f4a7b4ea208ddeaea9ce203e578866bf233",
+      "bytes": 690013
+    },
+    {
+      "path": "assets/video-store/catalog/batman-label.svg",
+      "batch": "02-App",
+      "sha256": "a3a781dd549f2b6746f8f742b8b2e0f85613257bd9a2c2c37a310e8e9d967f63",
+      "bytes": 516
+    },
+    {
+      "path": "assets/video-store/catalog/batman-poster.jpg",
+      "batch": "01-Artwork",
+      "sha256": "f0302b64eb0bf10f5a43ddaf27117c5fb8a91896602ca0f4381facf31252f748",
+      "bytes": 67667
+    },
+    {
+      "path": "assets/video-store/catalog/batman-returns-front.jpg",
+      "batch": "01-Artwork",
+      "sha256": "70ce98bf930e90291f6f4873d0a3a1b1af7b9b2504ed85ccee191c11780658f4",
+      "bytes": 8519
+    },
+    {
+      "path": "assets/video-store/catalog/batman-returns-poster.jpg",
+      "batch": "01-Artwork",
+      "sha256": "03db1b64bd5e5dfa4a9d1c3e86b790f7ba105ca4d2f9180ee5cb42653e7e9f29",
+      "bytes": 35905
+    },
+    {
+      "path": "assets/video-store/catalog/batman-returns-spine.jpg",
+      "batch": "01-Artwork",
+      "sha256": "9afffe39295bfdeb07abc64f7cee842b3051b4599bedd6c192c228f13c9906d1",
+      "bytes": 2890
+    },
+    {
+      "path": "assets/video-store/catalog/beetlejuice-front.jpg",
+      "batch": "01-Artwork",
+      "sha256": "cd40716e7a5309fb7da97da6fc31cefc66fa300561bbd1444f319e6bac8a91ba",
+      "bytes": 9900
+    },
+    {
+      "path": "assets/video-store/catalog/beetlejuice-poster.png",
+      "batch": "01-Artwork",
+      "sha256": "244b5eca4d012aa0a30cc6cb0cae1a3bc8a4590e649904595a26acd8df3ea6a6",
+      "bytes": 192207
+    },
+    {
+      "path": "assets/video-store/catalog/beetlejuice-spine.jpg",
+      "batch": "01-Artwork",
+      "sha256": "80731c06f2b8e6c288f9b022dde2702f997b2bb923891161ff849f91df67c150",
+      "bytes": 3585
+    },
+    {
+      "path": "assets/video-store/catalog/big-trouble-front.jpg",
+      "batch": "01-Artwork",
+      "sha256": "5053bf68a8f6b7e65156eb45b6b9d022bd2659688ea83b5d24ae3c5566bbb323",
+      "bytes": 12044
+    },
+    {
+      "path": "assets/video-store/catalog/big-trouble-poster.jpg",
+      "batch": "01-Artwork",
+      "sha256": "0c66c7621c5c1e20082b38e8128a1e0aed4827177978566a1f01db77ba0c2a01",
+      "bytes": 66264
+    },
+    {
+      "path": "assets/video-store/catalog/big-trouble-spine.jpg",
+      "batch": "01-Artwork",
+      "sha256": "2f03a8ec44271193e86cb29a25fb99de171b1d7ee19d567eea17d04cffba0149",
+      "bytes": 3498
+    },
+    {
+      "path": "assets/video-store/catalog/catalog.json",
+      "batch": "02-App",
+      "sha256": "c88bcbb71d6f393a7643eb5a9162ac1587f0f42e8632b955dc6f2c4a58c48459",
+      "bytes": 42899
+    },
+    {
+      "path": "assets/video-store/catalog/christine-front.jpg",
+      "batch": "01-Artwork",
+      "sha256": "a427560ca57fbd4db8ee7bf8a583a048c1620b3086ab405e21b86721a13f22be",
+      "bytes": 5508
+    },
+    {
+      "path": "assets/video-store/catalog/christine-poster.jpg",
+      "batch": "01-Artwork",
+      "sha256": "e58877bb16e800c1b4d2cf56ebe2e8fdca4a04d9550ea421e762129eb37cf8c9",
+      "bytes": 20428
+    },
+    {
+      "path": "assets/video-store/catalog/christine-spine.jpg",
+      "batch": "01-Artwork",
+      "sha256": "23b2fbe2d11481fc9e1b8d23bc52d0d75703588fa404dbfd88c68e46d8b3d295",
+      "bytes": 2891
+    },
+    {
+      "path": "assets/video-store/catalog/death-becomes-her-front.jpg",
+      "batch": "01-Artwork",
+      "sha256": "2e46753be3cbb6f04c05bc4706ac3cbb7a2744b9d65a183953de0a8b7bd5d1ec",
+      "bytes": 10344
+    },
+    {
+      "path": "assets/video-store/catalog/death-becomes-her-poster.jpg",
+      "batch": "01-Artwork",
+      "sha256": "44ab6698ed31935ffc6bde6d8fcd4d7fb12ac110844600cc5e20efefe1b22db0",
+      "bytes": 37132
+    },
+    {
+      "path": "assets/video-store/catalog/death-becomes-her-spine.jpg",
+      "batch": "01-Artwork",
+      "sha256": "637c49f34fb1c393b619e8827b1c705f68fb58edb450f3efa8b0e3d3eee37003",
+      "bytes": 3117
+    },
+    {
+      "path": "assets/video-store/catalog/ed-wood-front.jpg",
+      "batch": "01-Artwork",
+      "sha256": "3f406b006be979d4399b9ddfe76789a0abfb39bd42e71ba7ba45f2bc98c15c7c",
+      "bytes": 11509
+    },
+    {
+      "path": "assets/video-store/catalog/ed-wood-poster.jpg",
+      "batch": "01-Artwork",
+      "sha256": "1acc08325eb7b70434004f25d5c9cf2f328ab5fb6bf341078123fea615cba88b",
+      "bytes": 17685
+    },
+    {
+      "path": "assets/video-store/catalog/ed-wood-spine.jpg",
+      "batch": "01-Artwork",
+      "sha256": "8677eb52b644bfda5dbb59023e8ed9fb3bae39df48f3069c8e3350c57c673698",
+      "bytes": 3014
+    },
+    {
+      "path": "assets/video-store/catalog/edward-scissorhands-front.jpg",
+      "batch": "01-Artwork",
+      "sha256": "2b8b096cecc1183e18a0613041bca0cba1383fdc1af5073059a8089745b93768",
+      "bytes": 10472
+    },
+    {
+      "path": "assets/video-store/catalog/edward-scissorhands-poster.jpg",
+      "batch": "01-Artwork",
+      "sha256": "f3d8f6b2e0b3d1ca582e58d8017322cc94e177d5842f72e236945c5bad700aae",
+      "bytes": 25184
+    },
+    {
+      "path": "assets/video-store/catalog/edward-scissorhands-spine.jpg",
+      "batch": "01-Artwork",
+      "sha256": "d6d873e3500505229fe0b2c3b3a50291eaad29ed603ef2679f321208cf89a976",
+      "bytes": 2346
+    },
+    {
+      "path": "assets/video-store/catalog/escape-from-new-york-label.svg",
+      "batch": "02-App",
+      "sha256": "fda4e7e84d618e584bbe10e70bc326bd123dea45c63a536607743c76bd2a71a2",
+      "bytes": 530
+    },
+    {
+      "path": "assets/video-store/catalog/escape-from-new-york-poster.jpg",
+      "batch": "01-Artwork",
+      "sha256": "bcdfdd0b56baf979767dfcbb8920ae2c019c0a942b5c04ece6fb33d4d16c451f",
+      "bytes": 27405
+    },
+    {
+      "path": "assets/video-store/catalog/et-front.jpg",
+      "batch": "01-Artwork",
+      "sha256": "1db0ab10a9940572f8a7ebffcd0ff61e073db21b640db4c159856715864c9b9d",
+      "bytes": 9469
+    },
+    {
+      "path": "assets/video-store/catalog/et-spine.jpg",
+      "batch": "01-Artwork",
+      "sha256": "5f2dcf09ee6beebc32fc31bce46854f5bfde2a7230b5d4b91062b23897100074",
+      "bytes": 3804
+    },
+    {
+      "path": "assets/video-store/catalog/et-studio-poster.jpg",
+      "batch": "01-Artwork",
+      "sha256": "01fb75ff91aac3d7f7b84309a036ef64110acf1b564ce9bb0f0279c9c3975194",
+      "bytes": 165486
+    },
+    {
+      "path": "assets/video-store/catalog/forrest-gump-front.jpg",
+      "batch": "01-Artwork",
+      "sha256": "f7ab4412b096d245b0e70f16309317e98963ee80acf67e23dbaca11aa56e6966",
+      "bytes": 9908
+    },
+    {
+      "path": "assets/video-store/catalog/forrest-gump-poster.jpg",
+      "batch": "01-Artwork",
+      "sha256": "c89cc0e044c86d6ab0593ee0997b5a4d57a478329315ad3362f36d88826e2a87",
+      "bytes": 27614
+    },
+    {
+      "path": "assets/video-store/catalog/forrest-gump-spine.jpg",
+      "batch": "01-Artwork",
+      "sha256": "6fa6e8a6cd03d3bc1e2eb570bc63e6d72f48bad6feccc0f2a944b7b0a2405203",
+      "bytes": 4489
+    },
+    {
+      "path": "assets/video-store/catalog/ghostbusters-label.svg",
+      "batch": "02-App",
+      "sha256": "b6f0a43a0f7d19bac78fe8ccfd11b8d24f6c83abc2f8f071895bd069b15401ec",
+      "bytes": 522
+    },
+    {
+      "path": "assets/video-store/catalog/ghostbusters-poster.png",
+      "batch": "01-Artwork",
+      "sha256": "1867a63c40bbb4844433eb2debda675041bee44718404b3300832fc445d6f72e",
+      "bytes": 180764
+    },
+    {
+      "path": "assets/video-store/catalog/goonies-label.svg",
+      "batch": "02-App",
+      "sha256": "462ead2fc355177830070a3bbbb74ded0f79abcbd8ca971b76c5aef342a23c17",
+      "bytes": 521
+    },
+    {
+      "path": "assets/video-store/catalog/goonies-studio-poster.jpg",
+      "batch": "01-Artwork",
+      "sha256": "44afaa6a607d3f88eac7eecd9993f2809152729b911d30ba877af53492359e8d",
+      "bytes": 152206
+    },
+    {
+      "path": "assets/video-store/catalog/gremlins-2-label.svg",
+      "batch": "02-App",
+      "sha256": "77e4438c2b85234b040d7950522c4add45d144f153a446e7a4f50683b5a7a163",
+      "bytes": 535
+    },
+    {
+      "path": "assets/video-store/catalog/gremlins-2-poster.jpg",
+      "batch": "01-Artwork",
+      "sha256": "670b667b9720a1498f16bbaaea919621cc0402c64d6cc1f68c53e025189677d7",
+      "bytes": 21552
+    },
+    {
+      "path": "assets/video-store/catalog/gremlins-front.jpg",
+      "batch": "01-Artwork",
+      "sha256": "adeada6c2cb70093514afa9b8e9bcb952e19c872ecbbbfa79440bef1866d0889",
+      "bytes": 8900
+    },
+    {
+      "path": "assets/video-store/catalog/gremlins-spine.jpg",
+      "batch": "01-Artwork",
+      "sha256": "41a627791dcf93622ad82f03fa30e4194b9efa7afb2a0a680ab09e3685e8ac83",
+      "bytes": 2757
+    },
+    {
+      "path": "assets/video-store/catalog/gremlins-studio-poster.jpg",
+      "batch": "01-Artwork",
+      "sha256": "1ca80fa2a35382b62b98f232a20318bee0a9cf102699126e4e0ceaf8e5d5d061",
+      "bytes": 100232
+    },
+    {
+      "path": "assets/video-store/catalog/hook-front.jpg",
+      "batch": "01-Artwork",
+      "sha256": "bc94b3b77bbf80412b53db8da5b5447cb2f4b8096c6a63fcdc2bc6b4b64a5b52",
+      "bytes": 11355
+    },
+    {
+      "path": "assets/video-store/catalog/hook-spine.jpg",
+      "batch": "01-Artwork",
+      "sha256": "a7ef064d6294b29a6578dddd39256a7a28c8d52173eb6135817a0f094fe48dac",
+      "bytes": 3276
+    },
+    {
+      "path": "assets/video-store/catalog/hook-studio-poster.jpg",
+      "batch": "01-Artwork",
+      "sha256": "132864594808b56cc3e8bdf39c5eb94665130d7fa47673d241f8b83d58fdd792",
+      "bytes": 445821
+    },
+    {
+      "path": "assets/video-store/catalog/jurassic-park-label.svg",
+      "batch": "02-App",
+      "sha256": "cfb53f2bb90419923778524c130c176b5ad806fdc906cd9b362506d628597689",
+      "bytes": 523
+    },
+    {
+      "path": "assets/video-store/catalog/jurassic-park-studio-poster.jpg",
+      "batch": "01-Artwork",
+      "sha256": "72ac4636573a5a27649822a7a7b8d119001b7eba3efc1fb0a942794ce34e64e9",
+      "bytes": 99784
+    },
+    {
+      "path": "assets/video-store/catalog/labyrinth-label.svg",
+      "batch": "02-App",
+      "sha256": "47ce3b6a4f2d2acb71254852d1a1d17f8bf6555b987b9718828d30175d878f24",
+      "bytes": 519
+    },
+    {
+      "path": "assets/video-store/catalog/labyrinth-poster.jpg",
+      "batch": "01-Artwork",
+      "sha256": "c4134e7c3e195be3be6502b01291cee91c1479aa6309aa546285ae317b7cb0da",
+      "bytes": 33753
+    },
+    {
+      "path": "assets/video-store/catalog/last-crusade-front.jpg",
+      "batch": "01-Artwork",
+      "sha256": "53cb26bb93062720c9c8e6166846fe88747865007727f5ab5e8cb1cd10dbdc73",
+      "bytes": 10904
+    },
+    {
+      "path": "assets/video-store/catalog/last-crusade-spine.jpg",
+      "batch": "01-Artwork",
+      "sha256": "5a05e90e12d5794c64c361ef16a454a119541a9dc381ae6d1b1034623d54b9a2",
+      "bytes": 3980
+    },
+    {
+      "path": "assets/video-store/catalog/last-crusade-studio-poster.jpg",
+      "batch": "01-Artwork",
+      "sha256": "cff51ef70b32c5c3d4dd1c1dcdc1829fe3a5052151d79a3ed6b7ee0e228acdc6",
+      "bytes": 432967
+    },
+    {
+      "path": "assets/video-store/catalog/mars-attacks-front.jpg",
+      "batch": "01-Artwork",
+      "sha256": "4d1a37de90669a2775c28b6e2dd9dc630f8c15ccdc84e36e4e224c009728ab42",
+      "bytes": 13426
+    },
+    {
+      "path": "assets/video-store/catalog/mars-attacks-poster.jpg",
+      "batch": "01-Artwork",
+      "sha256": "57fc4b63aaceca1e324629406a43e2690fbbc93009bd22479d398f7a71c9b400",
+      "bytes": 40975
+    },
+    {
+      "path": "assets/video-store/catalog/mars-attacks-spine.jpg",
+      "batch": "01-Artwork",
+      "sha256": "35284d7f75563c8df2cfaea67c7cd4d4b3fa9acaba491c993f0ffe45527bc819",
+      "bytes": 3972
+    },
+    {
+      "path": "assets/video-store/catalog/mouth-of-madness-front.jpg",
+      "batch": "01-Artwork",
+      "sha256": "f5a84e5970a15ab4bad70eefce0b8ed843e0d014440f5335cf6aea7d6b1b2501",
+      "bytes": 8916
+    },
+    {
+      "path": "assets/video-store/catalog/mouth-of-madness-poster.jpg",
+      "batch": "01-Artwork",
+      "sha256": "922eb19d1745544d5aa785d2283f4e8cb6d2cf23da7bbda9782293362443057a",
+      "bytes": 11683
+    },
+    {
+      "path": "assets/video-store/catalog/mouth-of-madness-spine.jpg",
+      "batch": "01-Artwork",
+      "sha256": "27ae3b1b07c7f766a7538eff4a1636f3e3c8f9f4609a4cfcb4db642c6ad262da",
+      "bytes": 3552
+    },
+    {
+      "path": "assets/video-store/catalog/neverending-story-label.svg",
+      "batch": "02-App",
+      "sha256": "8df48ed298874036d6cb1d1be9139137b8f6447cbcd208a485d8b1f9d5f3b1e9",
+      "bytes": 531
+    },
+    {
+      "path": "assets/video-store/catalog/neverending-story-poster.jpg",
+      "batch": "01-Artwork",
+      "sha256": "8eaf3937b64446a986b7e5c98906300430fc9900b83eb90b0a7d3b9ea5ee0532",
+      "bytes": 164030
+    },
+    {
+      "path": "assets/video-store/catalog/nightmare-before-christmas-front.jpg",
+      "batch": "01-Artwork",
+      "sha256": "211c0d29f6d8351558507cf223b9526f6d893635c76489800e55dd6d3c07af59",
+      "bytes": 9017
+    },
+    {
+      "path": "assets/video-store/catalog/nightmare-before-christmas-poster.jpg",
+      "batch": "01-Artwork",
+      "sha256": "61ae76b5889bc3d17ef4400b70b2df4c6d6e9aebd81163ee8914f754914ea8a3",
+      "bytes": 97053
+    },
+    {
+      "path": "assets/video-store/catalog/nightmare-before-christmas-spine.jpg",
+      "batch": "01-Artwork",
+      "sha256": "7f1146c92e1d109053b576082ecdf5c954d8405a64782267510edc8c573c1b7d",
+      "bytes": 3008
+    },
+    {
+      "path": "assets/video-store/catalog/pee-wee-front.jpg",
+      "batch": "01-Artwork",
+      "sha256": "5b03a6ee297375877e437ab468ca8fa2b7ba4406a80cd05b6517c40905b629eb",
+      "bytes": 8564
+    },
+    {
+      "path": "assets/video-store/catalog/pee-wee-poster.jpg",
+      "batch": "01-Artwork",
+      "sha256": "236cd1673614a84e5cd5e24d32f110db6ba339923b149a68e6d547b77c20b9b2",
+      "bytes": 23180
+    },
+    {
+      "path": "assets/video-store/catalog/pee-wee-spine.jpg",
+      "batch": "01-Artwork",
+      "sha256": "66fdcb5e09a3a97e0cede3731a688fad73fe99b94c0c430e7f9d4fc828fe8ba3",
+      "bytes": 2674
+    },
+    {
+      "path": "assets/video-store/catalog/provenance.json",
+      "batch": "02-App",
+      "sha256": "c63230e20d098bf8fd53faa9006c509a0a5057a0cb024ce90eac073e7786fe0f",
+      "bytes": 68005
+    },
+    {
+      "path": "assets/video-store/catalog/raiders-front.jpg",
+      "batch": "01-Artwork",
+      "sha256": "599def7599922a6fc26829ff3782ee1e7714189338bc597c65eddbd7197694f5",
+      "bytes": 10707
+    },
+    {
+      "path": "assets/video-store/catalog/raiders-spine.jpg",
+      "batch": "01-Artwork",
+      "sha256": "3cf616edcffdbdc26f5f0b48b4032c5fefd89d8ee5d28d15019f60d9c1e86afc",
+      "bytes": 2493
+    },
+    {
+      "path": "assets/video-store/catalog/raiders-studio-poster.jpg",
+      "batch": "01-Artwork",
+      "sha256": "954d3244e2405b85b01187530f436ce6f648c565769b1a285b832863eebb7ecb",
+      "bytes": 191475
+    },
+    {
+      "path": "assets/video-store/catalog/roger-rabbit-front.jpg",
+      "batch": "01-Artwork",
+      "sha256": "9ae95c4987e7456fd9b0d9cb057cbe482db963e4c9fedfc72140381ad4d72314",
+      "bytes": 12828
+    },
+    {
+      "path": "assets/video-store/catalog/roger-rabbit-poster.jpg",
+      "batch": "01-Artwork",
+      "sha256": "5b9d5d45d2822ffe4b17190af497647a3b17254d1d270eb96a6fcc12cb862011",
+      "bytes": 78709
+    },
+    {
+      "path": "assets/video-store/catalog/roger-rabbit-spine.jpg",
+      "batch": "01-Artwork",
+      "sha256": "2d8d8630355e45c96315b04c5c9a1d541fc1f821179f45c1c895575dd548f8a1",
+      "bytes": 5239
+    },
+    {
+      "path": "assets/video-store/catalog/romancing-the-stone-front.jpg",
+      "batch": "01-Artwork",
+      "sha256": "8cf0bb547c991529eda9016bbe6d1b75b1c2bd1d17308d5bdd24487906307bf0",
+      "bytes": 11572
+    },
+    {
+      "path": "assets/video-store/catalog/romancing-the-stone-poster.jpg",
+      "batch": "01-Artwork",
+      "sha256": "f3fea2e1f57d84695c1995b832dc85584f5b3517b4ab12ecce68e505a429dfb5",
+      "bytes": 70711
+    },
+    {
+      "path": "assets/video-store/catalog/romancing-the-stone-spine.jpg",
+      "batch": "01-Artwork",
+      "sha256": "d4a408ed3e64d226d538d1b1c7f9a3b58a3f324a4a705fc0ddc92abd620fe943",
+      "bytes": 3694
+    },
+    {
+      "path": "assets/video-store/catalog/temple-of-doom-front.jpg",
+      "batch": "01-Artwork",
+      "sha256": "417afafc4f72b78b31eab101a5bb9a31a001caa1fd0493bff60f3a32e67cee12",
+      "bytes": 11025
+    },
+    {
+      "path": "assets/video-store/catalog/temple-of-doom-spine.jpg",
+      "batch": "01-Artwork",
+      "sha256": "142af10b6bdf673960bec9116726b895ef4e32ea6ad6437e612be67cb6f10d07",
+      "bytes": 3459
+    },
+    {
+      "path": "assets/video-store/catalog/temple-of-doom-studio-poster.jpg",
+      "batch": "01-Artwork",
+      "sha256": "caa436c763470cc9a5b14c27699f854e10963a013b5d5b80d6debffbd9900a75",
+      "bytes": 182956
+    },
+    {
+      "path": "assets/video-store/catalog/terminator-2-front.jpg",
+      "batch": "01-Artwork",
+      "sha256": "b96639a67c26fcde4c0f09e947d4397904ba40616a76cb5377966a9f0ed5764d",
+      "bytes": 9572
+    },
+    {
+      "path": "assets/video-store/catalog/terminator-2-poster.png",
+      "batch": "01-Artwork",
+      "sha256": "1da47e248110ed462f1b58ee8054619b66f78eaf92e3bfb27d4124b71f5e50ab",
+      "bytes": 179026
+    },
+    {
+      "path": "assets/video-store/catalog/terminator-2-spine.jpg",
+      "batch": "01-Artwork",
+      "sha256": "8e19c77b0508934dade4113f4d573c9b2eb49d725b514a2e4721584c72b4cdd3",
+      "bytes": 3403
+    },
+    {
+      "path": "assets/video-store/catalog/the-fog-front.jpg",
+      "batch": "01-Artwork",
+      "sha256": "5bcbd994d3d7a08d4d23e81b5ab5624e4136f80874197e2a9fc5533a69b662d2",
+      "bytes": 10334
+    },
+    {
+      "path": "assets/video-store/catalog/the-fog-poster.jpg",
+      "batch": "01-Artwork",
+      "sha256": "ea411543af792e5b2b2286b3bcb63f672a7043854e067afd83215facae5f70a9",
+      "bytes": 88895
+    },
+    {
+      "path": "assets/video-store/catalog/the-fog-spine.jpg",
+      "batch": "01-Artwork",
+      "sha256": "3107b03b893286bb4ffb517c12dfb17ef6d97a533ee7e2a362cbb9959271a7dd",
+      "bytes": 3332
+    },
+    {
+      "path": "assets/video-store/catalog/the-thing-front.jpg",
+      "batch": "01-Artwork",
+      "sha256": "d93ffefe118e31cefff8841d2eb54ce94978d67392ffa44a37096a8c60e753d3",
+      "bytes": 9972
+    },
+    {
+      "path": "assets/video-store/catalog/the-thing-poster.png",
+      "batch": "01-Artwork",
+      "sha256": "cba49fba052a4a0cd7f79811d0bd9225f8fc85c9023efe09532e430d5162402f",
+      "bytes": 159250
+    },
+    {
+      "path": "assets/video-store/catalog/the-thing-spine.jpg",
+      "batch": "01-Artwork",
+      "sha256": "fa3bfb429f84bb3ea0dbb3c12fd781b7aad591eb90ba407156518935c44dc37d",
+      "bytes": 3124
+    },
+    {
+      "path": "assets/video-store/catalog/they-live-front.jpg",
+      "batch": "01-Artwork",
+      "sha256": "61804099488a9adb6a726257ed23234858ee88edcb52e42ecc4fd0940cfc8fe4",
+      "bytes": 8943
+    },
+    {
+      "path": "assets/video-store/catalog/they-live-poster.jpg",
+      "batch": "01-Artwork",
+      "sha256": "e8713a80dce2a54295b09f4d8e17306270e57339cc82d6722f776963849b4711",
+      "bytes": 178261
+    },
+    {
+      "path": "assets/video-store/catalog/they-live-spine.jpg",
+      "batch": "01-Artwork",
+      "sha256": "6fd995a5f7bf71967f0ff92770bb379fe754416f4165b2f36c50f49ddfaebf12",
+      "bytes": 3553
+    },
+    {
+      "path": "assets/video-store/catalog/toys-front.jpg",
+      "batch": "01-Artwork",
+      "sha256": "cb53711f9da9e221835bd9225e76fa36be2eb79163339f36a1854622f9e283d1",
+      "bytes": 8738
+    },
+    {
+      "path": "assets/video-store/catalog/toys-poster.jpg",
+      "batch": "01-Artwork",
+      "sha256": "dfba3db32cc619c70d023de14832037c593ccfdc717586374ba7613410deea20",
+      "bytes": 44351
+    },
+    {
+      "path": "assets/video-store/catalog/toys-spine.jpg",
+      "batch": "01-Artwork",
+      "sha256": "1a0b84331a38d7f532712a2b4e7b3f497749e2d806a7213f0fbc683fd0f5f62d",
+      "bytes": 3539
+    },
+    {
+      "path": "assets/video-store/comedy.svg",
+      "batch": "02-App",
+      "sha256": "f4529797064778f5d7b92b245778e575ac02520cd021d52940dc7050f620d1a2",
+      "bytes": 355
+    },
+    {
+      "path": "assets/video-store/family.svg",
+      "batch": "02-App",
+      "sha256": "4e2e9078ba9b6ba60d5c559e6727e6cec1febf310140d7e148bb5006348e2a3a",
+      "bytes": 352
+    },
+    {
+      "path": "assets/video-store/horror.svg",
+      "batch": "02-App",
+      "sha256": "22b75845079ceb823d037ff8efd65604e98f12787a45dce33c5d926a82326317",
+      "bytes": 352
+    },
+    {
+      "path": "assets/video-store/logo.svg",
+      "batch": "02-App",
+      "sha256": "4bf9527beb7aa8136126fabc5ea77e5765056f734e733fe469cf3bdd8222d9f3",
+      "bytes": 572
+    },
+    {
+      "path": "assets/video-store/membership.svg",
+      "batch": "02-App",
+      "sha256": "3f97f01bda2be2f43b09b96d868b158a49d64ba321df9fabfdc75900d1b6e029",
+      "bytes": 565
+    },
+    {
+      "path": "assets/video-store/new-releases.svg",
+      "batch": "02-App",
+      "sha256": "c882282d2f5178bd80836191b146895ca92b4216bdb5d24bca21ba3710f7027b",
+      "bytes": 357
+    },
+    {
+      "path": "assets/video-store/open.svg",
+      "batch": "02-App",
+      "sha256": "bf87b538699fd8322fafd38744913ab8e30d91c43a6458546b2003b20d6e4f0d",
+      "bytes": 316
+    },
+    {
+      "path": "assets/video-store/rental-policy.svg",
+      "batch": "02-App",
+      "sha256": "edd3b918116a06b59d5597fe4933e0208e87d12dd38768965b7948e667fe4a15",
+      "bytes": 555
+    },
+    {
+      "path": "assets/video-store/returns.svg",
+      "batch": "02-App",
+      "sha256": "7837af08c377df874e1e82fd0ced655dd4aafc5a3bdfcb28e03da285600a8450",
+      "bytes": 288
+    },
+    {
+      "path": "assets/video-store/staff-picks.svg",
+      "batch": "02-App",
+      "sha256": "6004b3f50bc7c0476d8b6a5e88ad0a91a12be3766540d5ad71cf5423ad7e641e",
+      "bytes": 346
+    },
+    {
+      "path": "assets/video-store/terminal.svg",
+      "batch": "02-App",
+      "sha256": "8b6de674f6fe8b95dc232490b388be9ebd3978a48376230f89447c256d6a594e",
+      "bytes": 517
+    },
+    {
+      "path": "assets/video-store/tv-standby.svg",
+      "batch": "02-App",
+      "sha256": "990f500e60fc0dcbbd0e98aa04fc6618a48aea7b5cf4b4ce79119310e97faed6",
+      "bytes": 649
+    },
+    {
+      "path": "backgrounds.mjs",
+      "batch": "02-App",
+      "sha256": "a3b45adb93d15c41934e7cc21f865d8941a30e6bb93b6fe9815d0f9b0b012805",
+      "bytes": 763
+    },
+    {
+      "path": "domain.mjs",
+      "batch": "02-App",
+      "sha256": "23d153b44c1f1ec890b3d1938809b493a316985bee04b1a62b264cd5ad239a22",
+      "bytes": 10880
+    },
+    {
+      "path": "index.html",
+      "batch": "02-App",
+      "sha256": "df0d55e770fafd16773b63d573c57d4a634b86340fb154a38c30e2bcecc476e3",
+      "bytes": 1228
+    },
+    {
+      "path": "previews/video-store-entrance.png",
+      "batch": "02-App",
+      "sha256": "3202498c40242872d0082a4f449bb8405ce1d5419b3dac42bb77a13c39ea5573",
+      "bytes": 1648526
+    },
+    {
+      "path": "previews/video-store-night.png",
+      "batch": "02-App",
+      "sha256": "6dbd3bd4c6e5549e2320630d18da162ec13c938997f25df61644f2a4cda9c330",
+      "bytes": 407485
+    },
+    {
+      "path": "previews/video-store-phone.png",
+      "batch": "02-App",
+      "sha256": "279d7468a5d6f4703f2cf126c1afa067e77609b67c340453e6ee294d059fe0ed",
+      "bytes": 384831
+    },
+    {
+      "path": "previews/video-store-posters.png",
+      "batch": "02-App",
+      "sha256": "c6089e517d916727c11d4b28be94956fbb606066eea823d8b9a000b34d6a4555",
+      "bytes": 1050396
+    },
+    {
+      "path": "previews/video-store-rain.png",
+      "batch": "02-App",
+      "sha256": "6b96d2204c81d95a380f1208336d2438c488eb5eafbb786bdef44698a8aa1f38",
+      "bytes": 723043
+    },
+    {
+      "path": "previews/video-store-shelf.png",
+      "batch": "02-App",
+      "sha256": "bdf1b9c49a6ecbd9c5a7497058563495dc5764b5111ec30476f44b19bb78ffb4",
+      "bytes": 1103953
+    },
+    {
+      "path": "previews/video-store-tv.png",
+      "batch": "02-App",
+      "sha256": "bdcef2517e7a77d41e415e8f8c87dc0abd9b08eab95d8ef071e9ee9447b2882f",
+      "bytes": 886763
+    },
+    {
+      "path": "previews/video-store-windows.png",
+      "batch": "02-App",
+      "sha256": "9480107ba0679737d46abe1380af5b2fa288d796a3afa7638378af8c4b9430d3",
+      "bytes": 761206
+    },
+    {
+      "path": "sw.js",
+      "batch": "02-App",
+      "sha256": "c78bc03b17682e81376009de1629eabbfdd6ae822be96cec9d21bbc593d870a7",
+      "bytes": 8610
+    },
+    {
+      "path": "verification/app-smoke.test.mjs",
+      "batch": "02-App",
+      "sha256": "54864e6c498e8e6ce7b2b1d82db5a194ef9291a8cbdabd52aeba687a9e255e3a",
+      "bytes": 8738
+    },
+    {
+      "path": "verification/build-store-catalog.mjs",
+      "batch": "02-App",
+      "sha256": "4d7c8772bd4d4f25deb5efc6883cd18f23f1053250389b1f153dd9ca17eb3bac",
+      "bytes": 5530
+    },
+    {
+      "path": "verification/export-store-graphics.mjs",
+      "batch": "02-App",
+      "sha256": "d6da551caa8e9522e5ab96e8866e8e8fb7e692b0c23274ca8375b65148c69844",
+      "bytes": 3305
+    },
+    {
+      "path": "verification/render-store-graphics.py",
+      "batch": "02-App",
+      "sha256": "a27826823a5688cffdff299af55691c878147949b452b962f4040d08ed0f3ad0",
+      "bytes": 7900
+    },
+    {
+      "path": "verification/test-results-v1.12.0.txt",
+      "batch": "02-App",
+      "sha256": "a5704fdf7e69bf8ebe29459a24a33581fa24b5fe7fad7567e5778ba5cfea9a97",
+      "bytes": 7744
+    },
+    {
+      "path": "verification/video-store.test.mjs",
+      "batch": "02-App",
+      "sha256": "5fa76c9017bd2351f931a60103aafc129bbb3b9f4dc91e218de4610de8a269b0",
+      "bytes": 8633
+    },
+    {
+      "path": "video-store-catalog.mjs",
+      "batch": "02-App",
+      "sha256": "d859365152951b51c5630e75950e9c8e78f6465c6a103a550d09a8e43be732ed",
+      "bytes": 39035
+    },
+    {
+      "path": "video-store-materials.mjs",
+      "batch": "02-App",
+      "sha256": "569c11c4444fe097376eb8a726a8229bad15fe83b70734084314150795bcd49f",
+      "bytes": 10373
+    },
+    {
+      "path": "video-store-tv.mjs",
+      "batch": "02-App",
+      "sha256": "467baf2433a0073b45cc477b0611a34a26cb30cb69d522a2e38b6281effd29bd",
+      "bytes": 8041
+    },
+    {
+      "path": "video-store-world.mjs",
+      "batch": "02-App",
+      "sha256": "84b9d56ef1a95251b4f137b773e65d4d1ea7b7134179252fe320faea89d86b19",
+      "bytes": 14858
+    },
+    {
+      "path": "video-store.css",
+      "batch": "02-App",
+      "sha256": "a95e9422b3de20466974bb8f4b149248de9150631578ff4a2a407551674efae5",
+      "bytes": 4489
+    },
+    {
+      "path": "world-renderer.mjs",
+      "batch": "02-App",
+      "sha256": "c8304a85705c9a1fc96e581217868db494b9dfe91d4fb45d46b26c844f526107",
+      "bytes": 22025
+    }
+  ]
+}
