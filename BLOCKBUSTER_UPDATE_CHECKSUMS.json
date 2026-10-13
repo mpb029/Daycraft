@@ -1,0 +1,168 @@
+{
+  "version": "1.11.0",
+  "base_commit": "f439090",
+  "base_version": "1.10.1",
+  "mode": "Replace these files in the existing app folder; retain all other app files.",
+  "files": {
+    "UPDATE.md": {
+      "bytes": 5559,
+      "sha256": "57d8c578901add29e2b0d883d9da9d928bc08d065065b1e1bd469151b9baf11f"
+    },
+    "app.mjs": {
+      "bytes": 52120,
+      "sha256": "f3e77a4a6e858348ea397bbcb3ea276e3050e643346891dfe34f555cdc3c6e71"
+    },
+    "assets/video-store/adventure.svg": {
+      "bytes": 386,
+      "sha256": "a6dee378867d887034d74f99058fda33939c3d30461220585c0d9840facc0de0"
+    },
+    "assets/video-store/bttf-spine.jpg": {
+      "bytes": 106955,
+      "sha256": "c3b6e9e4b27d33e56a5f9e44ad028b68c78e8cb92fd686755369a0c0cf3fbf73"
+    },
+    "assets/video-store/comedy.svg": {
+      "bytes": 370,
+      "sha256": "8cfb13ee5ea153b31ffd720254c19d86071f18431afe422ff9715df2554d4939"
+    },
+    "assets/video-store/family.svg": {
+      "bytes": 370,
+      "sha256": "0a5186ae79ef0d2f2d606ee5f17f8782068a9265336430ff47986c980a3aa182"
+    },
+    "assets/video-store/gremlins-front.jpg": {
+      "bytes": 2348745,
+      "sha256": "83868748fb9d212ba61264a740c848c982d7ec3b2083289c9cd31be7de8a53a6"
+    },
+    "assets/video-store/gremlins-spine.jpg": {
+      "bytes": 367245,
+      "sha256": "be348588f818c5adac82a8c5160af6cc3e83f94d45e0d57fddfec5b88d89b4dd"
+    },
+    "assets/video-store/horror.svg": {
+      "bytes": 370,
+      "sha256": "ab687c836995317db009ab284b86f5e188a7989dd6c3292361db107c37f24a69"
+    },
+    "assets/video-store/logo.svg": {
+      "bytes": 672,
+      "sha256": "d121cf2cb2ff98396f0fc0aa897102339882e01c6fa78bbdc752494b1b758dbc"
+    },
+    "assets/video-store/membership.svg": {
+      "bytes": 426,
+      "sha256": "58b695c51abbcdec51b51ae4062578568e036775710bd4386b43af107d1deb94"
+    },
+    "assets/video-store/new-releases.svg": {
+      "bytes": 376,
+      "sha256": "c599e156db55407504dd48b1ce264dfc9f4a987fe561049655e90ed20f916fd2"
+    },
+    "assets/video-store/provenance.json": {
+      "bytes": 1162,
+      "sha256": "fe7e48576b95b014ad72a78fa094ded330d44b7865a7ad5d37f8706d2f53aa68"
+    },
+    "assets/video-store/rental-policy.svg": {
+      "bytes": 639,
+      "sha256": "282034d0cfbc19c54094719ead9e5226d97ad4bfdb1c402d708b995894dd31df"
+    },
+    "assets/video-store/returns.svg": {
+      "bytes": 423,
+      "sha256": "3ed82b29f261cb234910a61323139888588b841d2a614b2b598fa872524a6c57"
+    },
+    "assets/video-store/terminal.svg": {
+      "bytes": 530,
+      "sha256": "6acc566fa3c9509eb9b4f6e35af4df9684eb59c3431e2b6545152ec2b5ef1cbe"
+    },
+    "assets/video-store/thing-front.jpg": {
+      "bytes": 241972,
+      "sha256": "236c5035719aa7c4092c63073561deb1d6e64cd44ccbfa8420cda60f6430247a"
+    },
+    "assets/video-store/thing-spine.jpg": {
+      "bytes": 62174,
+      "sha256": "067b38fe2938a425a08f67c2d65fb45de742d4bf482d7a20ded090cfad910185"
+    },
+    "assets/video-store/tv-standby.svg": {
+      "bytes": 644,
+      "sha256": "4631158447f696120c5fb97517e32c0cf41ddbd8f4bca012eebbc2aa0a49e95a"
+    },
+    "backgrounds.mjs": {
+      "bytes": 722,
+      "sha256": "d4d76953ce9cc702188427269d1b874dd42ff51c41164b76ef7284832e07a96c"
+    },
+    "boot.mjs": {
+      "bytes": 2036,
+      "sha256": "7d4c957511092cf837efe9e8a740a8dcf8a51e7ea1e890336656c773e10d16ff"
+    },
+    "index.html": {
+      "bytes": 1228,
+      "sha256": "fc1bb619f304857efdefc96c13f6f5257c87925ba3bf53ff31c5abc806200a0b"
+    },
+    "previews/video-store-entrance.png": {
+      "bytes": 1242578,
+      "sha256": "6688e6967111412cd902a43d5e7a3bbd473241c2523803adc578ad7b03fb28b6"
+    },
+    "previews/video-store-phone.png": {
+      "bytes": 382439,
+      "sha256": "2119ec5ab14fb9e9dc6ad4996a2fe559fa671b208d16154b353a1987dac1005b"
+    },
+    "previews/video-store-shelf.png": {
+      "bytes": 1599663,
+      "sha256": "5dbfd0561cb0d3fd5ceb89479769a80022e8cdc584ea5b323a2e44a6000d6c2a"
+    },
+    "previews/video-store-tv.png": {
+      "bytes": 749137,
+      "sha256": "c61e4961779592fe152192c57631bdcfd64a54a77e1650781d13046467708220"
+    },
+    "sw.js": {
+      "bytes": 3069,
+      "sha256": "02d7a095d988fecaa59c212d3e6bf996b72d2d5bac96350ad1f68ffef3c777b7"
+    },
+    "verification/app-smoke.test.mjs": {
+      "bytes": 8148,
+      "sha256": "bcabf5e28ababea1d18625e13d865a9c056fdfdd3e64bc69ee053a7ebcf22703"
+    },
+    "verification/export-store-graphics.mjs": {
+      "bytes": 2596,
+      "sha256": "b914995cee875a4bf70a9d048f71ec2d19f3a804832ff26c53118da0d2a22674"
+    },
+    "verification/pages.test.mjs": {
+      "bytes": 4919,
+      "sha256": "b4ee0a3a1e406736df8880f111da8afae34092bb8148c50209dac9856e52812b"
+    },
+    "verification/render-store-graphics.py": {
+      "bytes": 7768,
+      "sha256": "3e8794b4ffc0618a8d52073606fad0b04fa5403970c9e10455cf92fb1815a3c0"
+    },
+    "verification/test-results-v1.11.0.txt": {
+      "bytes": 7647,
+      "sha256": "3a2e33eed8f16d3fbe55c75ce9bde59de33271a92a877401d4ff05815061da78"
+    },
+    "verification/video-store.test.mjs": {
+      "bytes": 6897,
+      "sha256": "2fed8ad9ed775a1ec0cef3b3f7b34f97fdd97c51476076b5d5d0f008c5e9f42e"
+    },
+    "verification/water.test.mjs": {
+      "bytes": 17117,
+      "sha256": "0f8381fbbda862a9308a05d2ded5b1cbddc5cb8f5d9ad790b4446bb4920ec841"
+    },
+    "video-store-catalog.mjs": {
+      "bytes": 2096,
+      "sha256": "70c2d7d7c8db208236f9e4c1919c5f1ff80a4d0a9d217c4d9ce7574dcfa1b8a4"
+    },
+    "video-store-reel.mjs": {
+      "bytes": 3617,
+      "sha256": "e2f2e3a76d045e903d1860b572a29bb5e52dcd2a0f5c121efd37a37dac996851"
+    },
+    "video-store-tv.mjs": {
+      "bytes": 6990,
+      "sha256": "8fbcca214e43ac1303d5f6e359e7c4713f49c0042db65a02243a505ed6094ecc"
+    },
+    "video-store-world.mjs": {
+      "bytes": 11022,
+      "sha256": "118583b92355f6d3c37b53959e713e59f02681b71790f24b0daab32fb6607777"
+    },
+    "video-store.css": {
+      "bytes": 3611,
+      "sha256": "1016073d92bd57f273faa245e97aa4c7948c08010c453a2e538beda86284b04e"
+    },
+    "world-renderer.mjs": {
+      "bytes": 21634,
+      "sha256": "e14e060ecfc21ec8d02162215b288b679906aaffe0ea813ab9029ed79740326f"
+    }
+  }
+}

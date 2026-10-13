@@ -1,0 +1,27 @@
+{
+  "scene": "An original 3D recreation inspired by late-1980s Blockbuster stores; not a measured historical reconstruction.",
+  "artwork": "Original VHSCollector scans; complete images and collector marks preserved. Only the listed editions are represented. Shelf duplicates are intentional.",
+  "scans": [
+    {
+      "file": "gremlins-front.jpg",
+      "source": "https://vhscollector.com/sites/default/files/vhsimages/25700_img442.jpg"
+    },
+    {
+      "file": "gremlins-spine.jpg",
+      "source": "https://vhscollector.com/sites/default/files/vhsimages/25700_img445.jpg"
+    },
+    {
+      "file": "thing-front.jpg",
+      "source": "https://vhscollector.com/sites/default/files/vhsimages/16610_THINGF.jpg"
+    },
+    {
+      "file": "thing-spine.jpg",
+      "source": "https://vhscollector.com/sites/default/files/vhsimages/16610_THINGS.jpg"
+    },
+    {
+      "file": "bttf-spine.jpg",
+      "source": "https://vhscollector.com/sites/default/files/vhsimages/28081_back%2520s_0.jpg"
+    }
+  ],
+  "trailers": "Streamed by the YouTube/Vimeo embedded players. No video downloads included. Toys (1992) is the user-requested exception to the 1980s theme."
+}

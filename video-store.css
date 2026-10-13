@@ -1,0 +1,36 @@
+.app-version{font:10px/1.2 ui-sans-serif,sans-serif;letter-spacing:0;padding:5px 7px;border-radius:6px;background:#eef4dfde;color:#31523d;text-shadow:none}
+.store-new{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 11px;margin-bottom:17px;border:1px solid #c7d4e6;border-radius:10px;background:#e7edf5;color:#25486c;font-size:11px}
+.store-new .btn{padding:5px 12px;background:#123f88;color:#fff4d2}
+.background-swatch.video-store{background:linear-gradient(#d8c9a8 0 19%,#063e8c 20% 36%,#e9c849 37% 40%,#d9ceb4 41% 49%,#183c70 50%);}
+.background-swatch.video-store:after{content:'BLOCKBUSTER VIDEO';position:absolute;inset:15px 8px auto;padding:10px 5px;text-align:center;color:#ffd249;background:#083c8d;border:2px solid #f6c738;font:bold 10px/1.2 ui-sans-serif,sans-serif}
+.video-store-world .meadow-header{max-width:calc(100% - 370px)}
+.video-store-world .meadow-header .brand,.video-store-world .meadow-name,.video-store-world .sky-clock{color:#fff0ce;text-shadow:0 1px 6px #122540,0 0 18px #122540}
+.video-store-world .meadow-name{border-color:#ffd04788}
+.store-controls{width:330px;grid-template-columns:1fr;justify-items:end;gap:6px}
+.store-controls .background-picker select{width:180px}
+.store-controls .sky-clock{grid-row:auto}
+.store-quick-controls{grid-column:1/-1;padding:10px 12px;border:1px solid #b4c2d16b;background:#142a43e8;backdrop-filter:blur(14px);border-radius:13px;display:grid;gap:8px;width:100%;box-shadow:0 6px 22px #06142333}
+.store-quick-controls>div{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end}
+.store-quick-controls .btn{min-height:36px;padding:6px 8px;font-size:10px}
+.store-quick-controls .glass-button[aria-pressed=true]{background:#f3d376;border-color:#ffd450}
+#trailer-status{display:block;color:#eef3f9;font-size:11px;line-height:1.45;text-align:right;overflow-wrap:anywhere}
+#trailer-source{color:#efcc7b;font-size:10px;text-align:right;pointer-events:auto}
+#store-tv-layer{position:fixed;inset:0;z-index:1;pointer-events:none;overflow:hidden}
+.store-tv-screen{position:absolute;left:0;top:0;width:640px;height:480px;transform-origin:0 0;backface-visibility:hidden;background:#06101c;pointer-events:auto}
+.store-tv-screen iframe{display:block;width:640px;height:480px;border:0}
+.vhs-scans{display:grid;gap:24px}.vhs-scans section{padding:16px;background:#e7eadf;border-radius:12px}.vhs-scans h3{margin:0 0 7px}
+.vhs-scan-pair{display:flex;align-items:flex-start;justify-content:center;gap:14px;margin:15px 0}
+.vhs-scan-pair>a{display:block;max-width:72%}.vhs-scan-pair img{height:auto;max-height:620px;max-width:100%;object-fit:contain}.vhs-scan-pair .vhs-spine{max-width:24%}
+.vhs-scans section>a{font-size:11px}.vhs-scan-pair>p{max-width:210px}
+.app-update{position:fixed;left:50%;bottom:100px;transform:translateX(-50%);z-index:40;background:#f4edcf;color:#183a62;padding:14px;border:1px solid #c3a64d;border-radius:12px;box-shadow:0 6px 30px #0004;max-width:calc(100vw - 28px);display:flex;align-items:center;gap:12px;font-size:12px}
+.app-update .btn{white-space:nowrap}
+@media(max-width:1100px){.video-store-world .meadow-name{display:none}}
+@media(max-width:720px){
+ .video-store-world .meadow-header{max-width:none}
+ .store-controls{width:min(330px,calc(100vw - 30px));top:64px;gap:4px}
+ .store-quick-controls{padding:8px;gap:6px}.store-quick-controls .btn{min-height:38px}
+ .store-controls .sky-clock{display:none}
+ .video-store-world .meadow-panel.content{max-height:calc(100dvh - 390px)}
+ .app-version{font-size:9px;padding:4px}.meadow-header .brand{gap:6px}
+ .app-update{bottom:92px;width:calc(100vw - 28px)}
+}

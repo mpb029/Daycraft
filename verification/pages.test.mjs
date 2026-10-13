@@ -9,7 +9,7 @@ const root=fileURLToPath(new URL('../',import.meta.url));
 const origin='https://mpb029.github.io/Daycraft/';
 async function worker(){
  const source=await readFile(path.join(root,'sw.js'),'utf8'),handlers={};
- const context=vm.createContext({URL,Request,Set,Promise,self:{registration:{scope:origin},clients:{claim:async()=>{}},addEventListener:(name,fn)=>handlers[name]=fn}});
+ const context=vm.createContext({URL,Request,Set,Promise,self:{registration:{scope:origin},clients:{claim:async()=>{}},skipWaiting:async()=>{},addEventListener:(name,fn)=>handlers[name]=fn}});
  vm.runInContext(source,context);
  return {handlers,context,...vm.runInContext('({PREFIX,VERSION,FILES})',context)};
 }
@@ -42,4 +42,9 @@ test('Offline cache stays inside Daycraft and retains other projects and user st
  assert.equal(await get(origin+'styles.css'),'network '+origin+'styles.css');assert.equal(network,1);
  for(const url of ['https://mpb029.github.io/OtherApp/app.mjs','https://mpb029.github.io/DaycraftExtra/app.mjs','https://example.com/Daycraft/app.mjs',origin+'api/state',origin+'private-backup.json'])assert.equal(await get(url),undefined);
  assert.equal(await get(origin+'app.mjs','POST'),undefined);assert.equal(network,1);
+});
+
+test('A failed update never activates a partially cached release',async()=>{
+ const {handlers,context}=await worker();let skips=0;context.self.skipWaiting=async()=>skips++;context.caches={open:async()=>({addAll:async()=>{throw Error('Missing uploaded asset');}})};let pending;handlers.install({waitUntil:p=>pending=p});await assert.rejects(pending,/Missing uploaded asset/);assert.equal(skips,0);
+ context.caches={open:async()=>({addAll:async()=>{}})};handlers.install({waitUntil:p=>pending=p});await pending;assert.equal(skips,1);
 });

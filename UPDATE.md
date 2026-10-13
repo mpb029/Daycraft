@@ -1,68 +1,54 @@
-# Daycraft — Forest bus stop, version 1.10.1
+# Daycraft — 1980s video store, version 1.11.0
 
-Refines the forest bus stop to more closely follow your supplied rainy-forest reference. This remains a stylised interactive 3D scene; the reference’s photographic level of detail is not fully reproduced. This package updates an existing Daycraft Water planet installation (1.9.0 or later, including 1.10.0). It includes the latest long-horizon wave behavior. It has not been uploaded to GitHub or deployed by the assistant.
+This update adds the video store to the actual Daycraft background selector. The earlier standalone TV-preview HTML did not update the app. This package is based on the published v1.10.1 files in mpb029/Daycraft (commit f439090). It has not been pushed to GitHub or deployed by the assistant.
 
-## Upload to your existing GitHub repository
+## Install in your existing repository
 
-1. Extract this ZIP on your computer.
-2. Open https://github.com/mpb029/Daycraft/upload/main .
-3. Upload the loose app files listed below alongside your existing index.html, replacing matching names. Drag in the included assets folder too; it adds assets/forest without replacing your other earned-item assets. Upload the extracted files and folder, not the ZIP.
-4. Commit to main. Keep your current GitHub Pages settings, index.html, vendor, icons and other assets. Wait for the Pages deployment to complete in Actions.
-5. Open https://mpb029.github.io/Daycraft/ . Reload so the updated offline files can download, then close all Daycraft tabs/windows and reopen the site. If you use the installed phone app, close both its browser tabs and the installed app before reopening. The new textures add about 7 MB to the first download.
-6. Choose **Forest bus stop** from the background dropdown above the scene or in Settings. At the bottom of Settings → Sky & location, check for **Daycraft 1.10.1**.
+1. Extract **Daycraft_Blockbuster_Update_v1.11.0.zip**.
+2. Open https://github.com/mpb029/Daycraft/upload/main . Drag the extracted files and folders into the upload area. Keep the `assets/video-store` folder structure. Replace matching filenames beside your existing `index.html`. Upload the contents, not the ZIP or its outer folder.
+3. Commit to `main` and wait for the GitHub Pages deployment to finish in **Actions**. Keep the existing Pages settings and all other app files.
+4. Open https://mpb029.github.io/Daycraft/ . Reload once to download the update, wait a few seconds, then reload again. If it still shows the old version, close every Daycraft browser tab and installed-app window, then reopen. **Do not clear site data**: that would remove your browser's saved progress.
+5. Look for **1.11.0 beside “daycraft”**. Choose **1980s video store** from the background dropdown, or press **Open** in the new-background notice.
+6. Press **Play trailers** once. Use **TV view** for a closer look; **Shelf view** moves to the VHS shelf; **Read VHS covers** opens the original scans. **Space / Hide panels** retains the existing overlay behavior.
 
-Your saved tasks, materials, earned items and placements are preserved. Do not clear site data to refresh the app. Settings → Export backup can save a separate copy of your progress.
+After updating, this link opens the store directly:
+https://mpb029.github.io/Daycraft/?scene=video-store
 
-## What changed in this revision
+The update ZIP contains changed files and new assets only. Keep the existing vendor, icons, meadow, water, forest and earned-item files. The verification and previews folders are optional supporting files.
 
-- A closer, lower viewpoint gives the stop and lamp the framing seen in the reference, including a portrait opening view.
-- The road bends left into blue haze. Irregular trunks, curved boughs, smaller canopy leaves and mid-height foliage replace the more open, evenly spaced forest.
-- Denser foreground planting, fern fans and climbing leaves soften the roots and frame the stop.
-- Bark has surface relief. The wet road has finer aggregate, irregular puddles and sharper reflections instead of broad blurred highlights.
-- A visible volume of warm lamplight and locally lit rain contrast with the cool forest. Low mist adds depth between the trees.
-- Day/night, rain controls, Calm mode, looking around, panel toggling and the existing meadow/water behavior are retained.
+## What changes
 
-## What the scene does
+- A selectable, interactive 3D video store: blue carpet, cream shelves, period-inspired ticket branding, ceiling lighting, CRT checkout terminals and an overhead television.
+- Original high-resolution VHS scans mapped onto the actual shelf cases. Shelf view and the scan viewer make the spines readable. Store signs use real text rather than generated lettering.
+- A four-trailer reel: **Back to the Future Part II (1989)**, **Gremlins (1984)**, **Toys (1992)** and **The Thing (1982)**. It advances on playback-end events and loops after the fourth trailer. Toys is the requested exception to the 1980s theme.
+- Play, pause, next, sound and camera controls. Playback starts muted, pauses when the tab is hidden, and stops when another scene is selected. Native player pauses are respected. The player survives task-panel rerenders and Space toggling.
+- Visible app version and an update notice for future releases. The offline worker activates only after all required files are cached. Failed or incomplete asset uploads do not replace the working offline version.
 
-- Look around a real 3D forest with large textured trunks and roots, layered foliage, a misty road, the bus stop sign and a warm lamp. There are no characters.
-- Daylight follows the current time and saved sky location. The lamp fades on at dusk. The wet road reflects the scene; rain creates animated puddle ripples.
-- Rain starts on for this scene and has its own saved on/off setting. The meadow and water retain their existing rain preference.
-- Drag to look around; scroll or pinch to zoom. **Face bus stop** returns to the opening view. The phone opening view aims slightly towards the lamp and sign so both fit the portrait screen.
-- **Space** or **Hide panels** toggles tasks and progress over the scene. Calm mode and reduced motion pause rain movement, foliage sway and puddle animation. The sky still follows real time.
-- Selecting Place or Move for an earned item returns to the meadow. All backgrounds share your existing tasks and progress.
+All backgrounds continue to share your existing tasks, materials, collection and placements. Indoor lights stay on; the store windows follow the time outside. Outdoor rain settings are retained when switching scenes. The store draws only when the camera or scene changes, apart from periodic daylight refreshes; the video player manages its own frames.
 
-This is the interactive 3D adaptation of the approved concept, rather than the concept image used as a flat background. The previews folder contains native renders of the actual scene geometry and materials.
+## Accuracy and playback limits
 
-## App files to upload
+This is a stylised 3D implementation, not a photographic reproduction of the concept image or a measured reconstruction of a particular store. Its shelf catalogue deliberately repeats three verified US editions: Gremlins (Warner 11388), The Thing (MCA 77009), and Back to the Future (MCA 80196). Gremlins and The Thing have original front and spine scans; Back to the Future has an original spine only. There is no invented front cover for that edition. Collector watermarks remain intact. The entire historical catalogue and every physical packaging surface are not 100% reproduced.
 
-- app.mjs
-- backgrounds.mjs
-- domain.mjs
-- forest-geometry.mjs
-- forest-materials.mjs
-- forest-world.mjs
-- meadow-layout.css
-- meadow-night.mjs
-- sw.js
-- water-controls.mjs
-- water-cycle.mjs
-- water-lighting.mjs
-- water-world.mjs
-- world-renderer.mjs
-- world-view.mjs
+Trailers stream through YouTube and Vimeo embeds; no downloaded film footage is included. They require internet access and may be unavailable if a provider blocks embedding, a browser blocks the player, or a video is removed. The source link and Next control remain available. Live browser playback has not been verified in this environment.
 
-Also upload the **assets/forest** folder containing bark.png, foliage.png and provenance.json. Keep the folder path exactly as supplied.
-
-UPDATE.md, FOREST_UPDATE_CHECKSUMS.json, previews/ and verification/ are supporting files; uploading them is optional.
+Sources are recorded in `assets/video-store/provenance.json` and `video-store-catalog.mjs`. Branding and movie artwork remain the property of their respective owners. This personal scene is not affiliated with Blockbuster or the film distributors.
 
 ## Verification
 
-65 automated checks pass: app task/focus/completion behavior; background and rain selection; saved-state migration; inventory placement; the full wave cycle; phone framing; reflection refresh after zoom; and graphics-resource disposal. Runtime file paths and the scoped offline cache are checked for the GitHub project URL.
+All 72 automated checks pass. The included Node suite checks task/focus/completion/build behavior; saved-state migration; placements; existing scenes and wave timing; store selection; the four-film playback state machine; stale callbacks; pause/visibility behavior; TV projection at desktop and phone dimensions; file paths; and cache-update safety.
 
-The forest shaders compile and render in native OpenGL ES 3.2. Day, night, portrait phone, reverse and upward views were rendered; desktop day/night and phone night were visually inspected. The native preview renders the forest’s own rain shader, bark relief, light volume, mist and reflected scene. Texture mipmaps and the runtime reflection sizes are reproduced. These are graphics checks, not browser screenshots. A full browser interaction check and measurements on your own phone/computer remain unverified.
+Run from the app folder:
 
-The existing wave geometry, wave timing, water lighting, meadow terrain, weather, astronomy and reward-rule source files are byte-identical to version 1.9.3. Mobile forest detail stays below 300,000 geometry vertices in the checked scene; reflection textures are capped at 384 pixels on phones and 768 on desktop and refreshed at a lower rate when the view is still. The renderer retains its existing animation frame limit and pauses when hidden. Device frame rate has not been measured.
+```sh
+node --test verification/*.test.mjs
+```
 
-To rerun the functional checks after applying the update, run `node --test verification/*.test.mjs` from the app folder. The optional native graphics helpers require Linux EGL/GLES, Python with Pillow, and Node. From the app folder, run `node verification/export-forest-graphics.mjs`, then `python3 verification/render-forest-graphics.py`.
+The 3D store's shaders were compiled and rendered with native OpenGL ES. Desktop, portrait, shelf and TV camera views were checked. Images in `previews/video-store-*.png` are native renders of the shipped geometry and materials with a standby TV screen. They are not browser screenshots or evidence of successful streamed playback. Browser layout, provider playback and device frame rate still need checking on your phone/computer.
 
-After upload, check the version, choose Forest bus stop, toggle rain and panels, drag and zoom, then switch back to Meadow and Water planet. Your tasks and earned items should remain present.
+Optional graphics checks require Linux EGL/GLES, Node, Python, Pillow and CairoSVG:
+
+```sh
+node verification/export-store-graphics.mjs
+python3 verification/render-store-graphics.py
+```

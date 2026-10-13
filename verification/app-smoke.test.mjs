@@ -4,7 +4,7 @@ import {dateKey} from '../domain.mjs';
 // Event-and-render harness. This is not a browser or a visual layout test.
 test('Task → focus → complete → build → undo works through app event handlers',async()=>{
  const listeners={},elements=new Map(),storage=new Map();
- function el(){return {innerHTML:'',textContent:'',open:false,dataset:{},classList:{add(){},remove(){}},addEventListener(){},querySelector:selector=>get(selector),showModal(){this.open=true;},close(){this.open=false;},getBoundingClientRect(){return {left:0,right:1000,top:0,bottom:1000}},focus(){},setSelectionRange(){},remove(){},click(){}};}
+ function el(){return {innerHTML:'',textContent:'',open:false,dataset:{},classList:{add(){},remove(){}},addEventListener(){},setAttribute(){},querySelector:selector=>get(selector),showModal(){this.open=true;},close(){this.open=false;},getBoundingClientRect(){return {left:0,right:1000,top:0,bottom:1000}},focus(){},setSelectionRange(){},remove(){},click(){}};}
  function get(id){if(!elements.has(id))elements.set(id,el());return elements.get(id);}
  globalThis.document={querySelector:get,addEventListener:(name,fn)=>{(listeners[name]??=[]).push(fn)},body:{appendChild(){}},hidden:false,createElement:el};
  globalThis.window={addEventListener(){},dispatchEvent(){},scrollTo(){}};
@@ -45,7 +45,10 @@ test('Task → focus → complete → build → undo works through app event han
   await act('background',{background:'forest'});assert.match(get('#app').innerHTML,/Rain off/);assert.equal(state().settings.rain,true);
   const forestBeforePanels=get('#app').innerHTML;await act('panels');assert.equal(get('#app').innerHTML,forestBeforePanels);await act('panels');
   assert.deepEqual(state().tasks,completed.tasks);assert.deepEqual(state().completions,completed.completions);
-  await act('nav',{view:'settings'});assert.match(get('#app').innerHTML,/A quiet stop in the forest/);assert.match(get('#app').innerHTML,/Daycraft 1\.10\.1/);
+  await act('nav',{view:'settings'});assert.match(get('#app').innerHTML,/A quiet stop in the forest/);assert.match(get('#app').innerHTML,/Daycraft 1\.11\.0/);
+  await act('background',{background:'video-store'});assert.equal(state().settings.background,'video-store');assert.match(get('#app').innerHTML,/Play trailers/);assert.match(get('#app').innerHTML,/Read VHS covers/);assert.doesNotMatch(get('#app').innerHTML,/data-action="rain"/);assert.doesNotMatch(get('#app').innerHTML,/data-action="breeze"/);
+  const storeBeforePanels=get('#app').innerHTML;await act('panels');assert.equal(get('#app').innerHTML,storeBeforePanels);await act('panels');assert.deepEqual(state().tasks,completed.tasks);assert.deepEqual(state().completions,completed.completions);
+  await act('store-inspect');assert.equal(get('#modal').open,true);assert.match(get('#modal').innerHTML,/gremlins-front.jpg/);await act('close');
   await act('background',{background:'meadow'});
   await act('world-after-win');assert.match(get('#app').innerHTML,/Kitchen garden/);
   await act('build',{id:'garden'});assert.equal(state().builds.length,1);
@@ -53,7 +56,7 @@ test('Task → focus → complete → build → undo works through app event han
   await act('nav',{view:'settings'});assert.match(get('#app').innerHTML,/not synced between devices/);
   assert.equal((get('#app').innerHTML.match(/data-world-scene/g)||[]).length,1,'Settings still overlays one meadow');
   submit('settings-form',{name:'Marty',worldName:'My place',zone:'Australia/Brisbane',calm:'on'});assert.equal(state().settings.calm,true);
-  assert.match(get('#app').innerHTML,/Sky & location/);assert.match(get('#app').innerHTML,/Daycraft 1\.10\.1/);
+  assert.match(get('#app').innerHTML,/Sky & location/);assert.match(get('#app').innerHTML,/Daycraft 1\.11\.0/);
   const beforeLocation=state();submit('sky-location-form',{latitude:'',longitude:'0',label:'Invalid'});assert.deepEqual(state(),beforeLocation);
   submit('sky-location-form',{latitude:'51.5',longitude:'-.1',label:'<b>London</b>'});assert.equal(state().settings.skyLocation.latitude,51.5);assert.equal(state().settings.skyLocation.longitude,-.1);assert.match(get('#app').innerHTML,/&lt;b&gt;London&lt;\/b&gt;/);assert.deepEqual(state().tasks,beforeLocation.tasks);
   submit('settings-form',{name:'Marty',worldName:'My place',zone:'Australia/Brisbane',calm:'on'});assert.equal(state().settings.skyLocation.latitude,51.5);
