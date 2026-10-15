@@ -1,0 +1,17 @@
+✔ Task → focus → complete → build → undo works through app event handlers (188.629508ms)
+✔ The updated restaurant preserves the previous scene selection, tasks, earned items and outdoor rain settings (18.135975ms)
+✔ Floor reflections match the real camera, avoid feedback loops and restore renderer state after failures (571.049424ms)
+✔ Restaurant resources fit a bounded scene, local images exist and textures release on scene changes (422.005716ms)
+✔ The restaurant loads no movie exhibits and keeps its sculptures and planters outside the central aisle (429.230713ms)
+✔ Uploaded character meshes retain their triangle counts, UVs and finite normals (17.765158ms)
+✔ GitHub project URL resolves every page, module, texture and install asset locally (89.095385ms)
+✔ Offline cache stays inside Daycraft and retains other projects and user storage (8.917351ms)
+✔ A failed update never activates a partially cached release (9.44219ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1654.24752

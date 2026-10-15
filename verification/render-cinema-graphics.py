@@ -33,8 +33,10 @@ def texture_for(v):
     if not file:im=Image.new('RGBA',(1,1),(0,0,0,255))
     elif file.endswith('.bin'):im=Image.frombytes('RGBA',(v['width'],v['height']),(root/file).read_bytes())
     elif file.endswith('.svg'):
-        import cairosvg,io
-        im=Image.open(io.BytesIO(cairosvg.svg2png(url=str(root/file)))).convert('RGBA')
+        import subprocess
+        png=root/(Path(file).stem+'-vector.png')
+        subprocess.run(['inkscape',str(root/file),'--export-type=png','--export-filename='+str(png)],check=True,capture_output=True)
+        im=Image.open(png).convert('RGBA')
     else:im=Image.open(root/file).convert('RGBA')
     if v.get('flipY'):im=im.transpose(Image.Transpose.FLIP_TOP_BOTTOM)
     handle=C.c_uint();gentextures(1,C.byref(handle));bindtexture(0x0DE1,handle.value)
@@ -100,8 +102,13 @@ for frame in data['frames']:
     frame_image=Image.frombytes('RGBA',(width,height),bytes(pixels)).transpose(Image.Transpose.FLIP_TOP_BOTTOM)
     frame_image=frame_image.resize((output_width,output_height),Image.Resampling.LANCZOS)
     assert frame_image.convert('L').getextrema()[1]>20,'Blank render'
-    filename='cinema-elephant-view' if frame['name']=='elephant' else frame['name']
-    frame_image.save(root/(filename+'.png'))
+    filename='maccas-ronald-view' if frame['name']=='ronald' else frame['name']
+    import os,tempfile
+    destination=root/(filename+'.png')
+    with tempfile.NamedTemporaryFile(dir=root,suffix='.tmp',delete=False) as output:
+        temporary=Path(output.name);frame_image.save(output,format='PNG');output.flush();os.fsync(output.fileno())
+    os.replace(temporary,destination)
+    with Image.open(destination) as verify:verify.verify()
     if frame['name']=='posters':frame_image.convert('RGB').save(root/(frame['name']+'.jpg'),quality=95)
     print('Rendered',frame['name'])
     egl('eglMakeCurrent',C.c_uint,[C.c_void_p,C.c_void_p,C.c_void_p,C.c_void_p])(display,surface,surface,context)

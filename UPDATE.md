@@ -1,39 +1,34 @@
-# Daycraft 1.13.0 — Cinema café
+# Daycraft 1.15.0 — textured 90s Macca’s mascots
 
-A new selectable scene based on your supplied “McDonald’s Movie Memorabilia Corridor” image: the stair entrance, polished chrome rails, dark mosaic tiles, burgundy booths, pale laminate tables, warm display cabinets and reflective central aisle.
+Ronald, Grimace, Hamburglar and Birdie now use your four uploaded Meshy models. The old procedural characters are completely replaced. All 42,022 source triangles and the original 2048 × 2048 PNG textures are retained. One zero-length Ronald normal was repaired; the geometry has not been simplified.
 
-## Install this update
+Ronald sits on a yellow perforated steel bench with a red frame. Grimace occupies the corner banquette. Hamburglar and Birdie stand on small timber mounts among the planted dividers, with foliage cleared around their feet. The restaurant layout, staircase, booths, lighting and other backgrounds retain their existing behaviour.
 
-This package updates the existing Daycraft 1.12 installation. It is not a replacement for the entire repository.
+## Upload to GitHub
 
-1. Extract `Daycraft_Cinema_Cafe_Update_v1.13.0.zip`.
-2. Open the **Code** tab in `mpb029/Daycraft`, with **main** selected.
-3. Choose **Add file → Upload files**. Drag the **contents inside** the extracted folder onto GitHub: the root files and the `assets`, `previews` and `verification` folders together. Keep their folder structure. Do not upload the enclosing ZIP folder.
-4. Commit the upload and let GitHub Pages finish deploying.
-5. Open your usual Daycraft address. If shown, press **Reload update**. Confirm **1.13.0** beside the Daycraft name.
-6. Choose **Cinema café** from the background selector. The new scene also opens at `https://mpb029.github.io/Daycraft/?scene=cinema` after deployment.
+This is an update for your existing Daycraft 1.13 or 1.14 repository, not a complete standalone app.
 
-`index.html`, `app.mjs`, `cinema-world.mjs` and the other root files sit beside each other. The new images must be at `assets/cinema/…`. Existing elephant, forest and video-store assets stay in their existing folders.
+1. Extract `Daycraft_90s_Maccas_Update_v1.15.0.zip`.
+2. Open the **Code** tab of **mpb029/Daycraft**, with **main** selected.
+3. Choose **Add file → Upload files** and upload the **contents inside** the extracted folder to the repository root, replacing matching files. Include the folders and preserve their structure. Do not upload the ZIP itself or add an extra enclosing folder.
+4. Commit and wait for GitHub Pages deployment to finish.
+5. Open Daycraft, use **Reload update** if offered, and check **1.15.0** beside the app name.
+6. Choose **90s Macca’s**, or open https://mpb029.github.io/Daycraft/?scene=cinema.
 
-## Scene controls
+Root modules such as `app.mjs`, `maccas-models.mjs` and `maccas-mascots.mjs` sit beside `index.html`. The eight model and texture files belong in **assets/cinema/models/**. Upload that entire folder.
 
-- **Stairway**, **Gallery**, **Elephant**, **Booths** change the viewing position.
-- Drag to look around; scroll or pinch to zoom.
-- **Space** or **Hide panels** toggles the existing task and progress overlay.
-- The indoor lighting stays warm at any time of day. Outdoor rain preferences remain saved for the other scenes.
+**Stairway**, **Dining room**, **Ronald’s bench** and **Booths** change the viewing position. Drag to look around; scroll or pinch to zoom. Space or Hide panels toggles tasks and progress.
 
-Your tasks, earned items, meadow placements, history and backups use the existing save format. The update does not clear or replace browser data.
+Your tasks, progress, earned items, meadow placements and saved settings retain the existing save format.
 
-## Fidelity and rendering
+## Rendering and verification
 
-The architecture, furniture, stair rails, cabinets and existing elephant are actual 3D geometry. The six other exhibits use detailed generated artwork recessed inside the 3D glass cabinets. These are visual interpretations of the supplied reference, not scans or authenticated replicas of screen-used props. No diners have been added.
+The character meshes total **42,022 triangles**. The complete restaurant has **248,876 indexed vertices, 343,114 triangles and 19 material batches**. The scene renders on demand and reuses its floor reflection until the camera or textures change. All model data and textures are local and included in the offline cache; no Meshy or other generation service is contacted by the app.
 
-The floor reflects the real scene from the current viewpoint. Rounded vinyl edges, small tile grout, metallic highlights, ceiling panels, exhibit labels, plants and table settings provide detail. The gallery is static and renders on demand; it does not run a continuous animation loop. Reflections are lower resolution on small screens and reused until the camera or artwork changes. No browser/device frame-rate measurement is claimed.
+The supplied textures add approximately 17 MB of assets, downloaded when updating and cached for offline use. They are deliberately retained unchanged.
 
-## Validation
+**9 focused checks passed** for application task/focus/build/undo handlers and scene switching, saved data, model counts and UVs, placement clear of the aisle, reflections, disposal, project-relative asset paths and offline updates. The final package was checked on the current public repository baseline (`d89b234`) with this update applied.
 
-76 automated checks pass, covering task completion, focus, undo, inventory, scene changes, saved data and offline file paths. Cinema checks also cover reflected camera alignment, render-target feedback prevention, failure recovery and resource disposal.
+The eight previews in **previews/** were rendered from the actual application geometry, materials and shaders using native OpenGL ES. They are not AI concept images or browser screenshots. Browser interaction and physical phone/computer performance were not directly tested in this environment.
 
-Five views were rendered from the actual geometry and shaders with native OpenGL ES, including the reflected floor and a portrait phone aspect ratio. The supplied PNGs are those renders. They are not browser screenshots; browser layout, live interaction and physical-device performance were not directly exercised in this environment.
-
-The package has not been deployed to your GitHub repository.
+This update has **not** been deployed to your GitHub repository.

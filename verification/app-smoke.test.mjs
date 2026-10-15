@@ -45,8 +45,8 @@ test('Task → focus → complete → build → undo works through app event han
   await act('background',{background:'forest'});assert.match(get('#app').innerHTML,/Rain off/);assert.equal(state().settings.rain,true);
   const forestBeforePanels=get('#app').innerHTML;await act('panels');assert.equal(get('#app').innerHTML,forestBeforePanels);await act('panels');
   assert.deepEqual(state().tasks,completed.tasks);assert.deepEqual(state().completions,completed.completions);
-  await act('nav',{view:'settings'});assert.match(get('#app').innerHTML,/A quiet stop in the forest/);assert.match(get('#app').innerHTML,/Daycraft 1\.13\.0/);
-  await act('background',{background:'cinema'});assert.equal(state().settings.background,'cinema');assert.match(get('#app').innerHTML,/Cinema café/);assert.match(get('#app').innerHTML,/cinema-elephant/);assert.doesNotMatch(get('#app').innerHTML,/data-action="(?:rain|breeze)"/);
+  await act('nav',{view:'settings'});assert.match(get('#app').innerHTML,/A quiet stop in the forest/);assert.match(get('#app').innerHTML,/Daycraft 1\.15\.0/);
+  await act('background',{background:'cinema'});assert.equal(state().settings.background,'cinema');assert.match(get('#app').innerHTML,/90s Macca’s/);assert.match(get('#app').innerHTML,/cinema-ronald/);assert.doesNotMatch(get('#app').innerHTML,/data-action="(?:rain|breeze)"/);
   await act('background',{background:'video-store'});assert.equal(state().settings.background,'video-store');assert.match(get('#app').innerHTML,/Play trailers/);assert.match(get('#app').innerHTML,/Browse films/);assert.match(get('#app').innerHTML,/data-action="rain"/);assert.doesNotMatch(get('#app').innerHTML,/data-action="breeze"/);
   await act('rain');assert.equal(state().settings.storeRain,true);assert.equal(state().settings.rain,true);await act('rain');assert.equal(state().settings.storeRain,false);await act('store-time');assert.equal(state().settings.storeLiveTime,true);assert.match(get('#app').innerHTML,/Local time/);await act('store-time');assert.equal(state().settings.storeLiveTime,false);
   const storeBeforePanels=get('#app').innerHTML;await act('panels');assert.equal(get('#app').innerHTML,storeBeforePanels);await act('panels');assert.deepEqual(state().tasks,completed.tasks);assert.deepEqual(state().completions,completed.completions);
@@ -58,7 +58,7 @@ test('Task → focus → complete → build → undo works through app event han
   await act('nav',{view:'settings'});assert.match(get('#app').innerHTML,/not synced between devices/);
   assert.equal((get('#app').innerHTML.match(/data-world-scene/g)||[]).length,1,'Settings still overlays one meadow');
   submit('settings-form',{name:'Marty',worldName:'My place',zone:'Australia/Brisbane',calm:'on'});assert.equal(state().settings.calm,true);
-  assert.match(get('#app').innerHTML,/Sky & location/);assert.match(get('#app').innerHTML,/Daycraft 1\.13\.0/);
+  assert.match(get('#app').innerHTML,/Sky & location/);assert.match(get('#app').innerHTML,/Daycraft 1\.15\.0/);
   const beforeLocation=state();submit('sky-location-form',{latitude:'',longitude:'0',label:'Invalid'});assert.deepEqual(state(),beforeLocation);
   submit('sky-location-form',{latitude:'51.5',longitude:'-.1',label:'<b>London</b>'});assert.equal(state().settings.skyLocation.latitude,51.5);assert.equal(state().settings.skyLocation.longitude,-.1);assert.match(get('#app').innerHTML,/&lt;b&gt;London&lt;\/b&gt;/);assert.deepEqual(state().tasks,beforeLocation.tasks);
   submit('settings-form',{name:'Marty',worldName:'My place',zone:'Australia/Brisbane',calm:'on'});assert.equal(state().settings.skyLocation.latitude,51.5);

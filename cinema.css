@@ -1,5 +1,5 @@
 .background-swatch.cinema{background:linear-gradient(#c8bca4 0 28%,#28231e 29% 42%,#713236 43% 73%,#b1aba0 74%)}
-.background-swatch.cinema:after{content:'CINEMA CAFÉ';position:absolute;inset:22px 8px auto;text-align:center;color:#edce87;font:600 11px/1.5 ui-sans-serif,sans-serif;letter-spacing:2px}
+.background-swatch.cinema:after{content:'90s MACCA’S';position:absolute;inset:22px 8px auto;text-align:center;color:#edce87;font:600 11px/1.5 ui-sans-serif,sans-serif;letter-spacing:2px}
 .cinema-world .meadow-header .brand,.cinema-world .meadow-name,.cinema-world .sky-clock{color:#fff1d2;text-shadow:0 2px 5px #201914,0 0 17px #201914}
 .cinema-world .meadow-name{border-color:#e3bc7580}
 .cinema-world .atmosphere-controls{max-width:310px;gap:8px;grid-template-columns:1fr;justify-items:end}

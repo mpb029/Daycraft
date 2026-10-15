@@ -1,5 +1,22 @@
 {
-  "reference": "User-provided McDonald\u2019s Movie Memorabilia Corridor(1).png",
-  "artwork": "exhibit-atlas.png is generated interpretive cabinet backing art based on the supplied image, not a scan of authenticated film props. The elephant uses the existing user-provided textured 3D model. Architecture, furniture and cabinets are procedural 3D.",
-  "generation": "Built-in image generation; six museum exhibit panels matching the reference subjects and warm case lighting. No claims of exact prop provenance."
+  "version": "1.15.0",
+  "scene": "90s Macca\u2019s",
+  "method": "User-supplied Meshy textured character meshes, procedural furniture and plants, and local vector signage",
+  "reference_date": "2026-10-15",
+  "runtime_images": [
+    "welcome.svg",
+    "mcdonalds.svg",
+    "facilities.svg",
+    "models/ronald-color.png",
+    "models/grimace-color.png",
+    "models/hamburglar-color.png",
+    "models/birdie-color.png"
+  ],
+  "characters": [
+    "Ronald McDonald",
+    "Grimace",
+    "Hamburglar",
+    "Birdie"
+  ],
+  "notes": "The four character OBJ/MTL/PNG archives were supplied by the user. Exact source hashes, geometry counts and texture paths are recorded in models/provenance.json. This is a visual reconstruction, not an authenticated exact-location replica."
 }

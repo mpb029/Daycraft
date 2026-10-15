@@ -1,0 +1,110 @@
+{
+  "source": "User-supplied Meshy OBJ exports, 15 October 2026",
+  "processing": "No remeshing. Valid source normals, UVs and original PNG textures retained. One zero Ronald normal repaired from neighbouring triangle normals. Geometry centered in X/Z with feet at Y=0 and normalized to height 1; runtime placement sets size.",
+  "models": [
+    {
+      "id": "ronald",
+      "sourceObj": "Meshy_AI_Ronald_McDonald_lowpo_1015080653_texture.obj",
+      "sourceObjSHA256": "8470c8d566bcfe6ee9f194cefba40e73ce5d930f839d5b5328adeff74a8d765d",
+      "texture": "./assets/cinema/models/ronald-color.png",
+      "textureSHA256": "e10f604b5a7eaf91edd6219bd0abca831ef2a3551107a96cb65f31cf583578d7",
+      "geometry": "./assets/cinema/models/ronald.mjs",
+      "geometrySHA256": "b6c76b8174040e6ecf6893e13d5537b319a7edfbcaade627f9c88139b0f22c1f",
+      "vertices": 10424,
+      "triangles": 10484,
+      "bounds": [
+        [
+          -0.37326828909484483,
+          0.37326828909484483
+        ],
+        [
+          0.0,
+          1.0
+        ],
+        [
+          -0.3199078452388458,
+          0.3199078452388458
+        ]
+      ],
+      "repairedZeroNormalVertices": 4
+    },
+    {
+      "id": "grimace",
+      "sourceObj": "Meshy_AI_Grimace_lowpoly_1015080659_texture.obj",
+      "sourceObjSHA256": "31922513e0af7c21b7ce6291c1325a3b574b96bab47bdd7ca8c6324c4ebd7983",
+      "texture": "./assets/cinema/models/grimace-color.png",
+      "textureSHA256": "11c76671c3abb7d4ccaf3613776521ac3c89b2dc4826f771cfbb156371a1f991",
+      "geometry": "./assets/cinema/models/grimace.mjs",
+      "geometrySHA256": "e00cae6ea75fa69d625bc602edd802d78948034cde791aec251a3e72e734ef96",
+      "vertices": 7481,
+      "triangles": 10534,
+      "bounds": [
+        [
+          -0.4060092522857227,
+          0.4060092522857227
+        ],
+        [
+          0.0,
+          1.0
+        ],
+        [
+          -0.43246020759789794,
+          0.43246020759789794
+        ]
+      ],
+      "repairedZeroNormalVertices": 0
+    },
+    {
+      "id": "hamburglar",
+      "sourceObj": "Meshy_AI_Hamburglar_lowpoly_1015080705_texture.obj",
+      "sourceObjSHA256": "d64423899e0c651190f2ae090a575f5efa11ef52f7f17d075a315565bad268ff",
+      "texture": "./assets/cinema/models/hamburglar-color.png",
+      "textureSHA256": "701e47d95f89e7098dec78e037411b980b0a6cb6e92127b2266e2cc0730a6254",
+      "geometry": "./assets/cinema/models/hamburglar.mjs",
+      "geometrySHA256": "63112f655f5a3eee34b0336cd92a227efb1ae134f99f6cd9ca8b56a3637b6d94",
+      "vertices": 8208,
+      "triangles": 10463,
+      "bounds": [
+        [
+          -0.28582420657126867,
+          0.28582420657126867
+        ],
+        [
+          0.0,
+          1.0
+        ],
+        [
+          -0.24036956549179325,
+          0.24036956549179325
+        ]
+      ],
+      "repairedZeroNormalVertices": 0
+    },
+    {
+      "id": "birdie",
+      "sourceObj": "Meshy_AI_Birdie_lowpoly_1015080827_texture.obj",
+      "sourceObjSHA256": "b0fa80f3220be29dbfdbbf937a96ea5e6ee137efd9c600248a722a19855cb8de",
+      "texture": "./assets/cinema/models/birdie-color.png",
+      "textureSHA256": "3821b09cbf4db8bcd632880caed3f4b414a95a4c33232696cdfa7da939b850c7",
+      "geometry": "./assets/cinema/models/birdie.mjs",
+      "geometrySHA256": "2d0b212b720fd33fcd9e0150bce20ef186478798e91755674270e6d27bceeb0f",
+      "vertices": 7824,
+      "triangles": 10541,
+      "bounds": [
+        [
+          -0.4704822051111682,
+          0.4704822051111682
+        ],
+        [
+          0.0,
+          1.0
+        ],
+        [
+          -0.2091887692236525,
+          0.2091887692236525
+        ]
+      ],
+      "repairedZeroNormalVertices": 0
+    }
+  ]
+}
