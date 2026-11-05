@@ -1,0 +1,8 @@
+Daycraft 1.16.0 | Poolrooms: Beyond the Bend
+Base: mpb029/Daycraft main acae0f0a10eeadd0303b72c9f911512fbdf7042e.
+
+9 focused checks passed: background persistence, closed station geometry and open passages, water render-target reuse and recovery, app task/progress flows, overlay keyboard/focus handling, GitHub Pages paths, scoped offline cache and safe cache activation.
+
+The actual shaders, geometry and render matrices were rendered with native OpenGL ES for three landscape stations and a 390 x 844 portrait frame. The 8-second preview is 144 frames of these shaders, not an animation of the concept image. Time-separated frames for each station showed changing water pixels.
+
+Chrome's available preview context disabled WebGL. The app's no-WebGL fallback was verified there under the /Daycraft/ project path: selecting Under the bridge changed the still, and hiding the panels left the selected view unobstructed. GPU-accelerated browser playback, physical-device frame rate and production deployment have not been verified.

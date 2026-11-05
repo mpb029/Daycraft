@@ -9,7 +9,8 @@ setup=setup.replace('(C.c_int*13)(0x3033,1,0x3040,4,0x3024,8,0x3023,8,0x3022,8,0
 exec(setup)
 vertex_prefix += "attribute vec3 normal;attribute vec3 color;\n"
 fragment_prefix += "#define texture2D texture\n"
-root=Path('cinema-graphics-check');data=json.loads((root/'frames.json').read_text())
+poolrooms='--poolrooms' in sys.argv
+root=Path('poolrooms-graphics-check' if poolrooms else 'cinema-graphics-check');data=json.loads((root/'frames.json').read_text())
 genbuffers=gl('glGenBuffers',None,[C.c_int,C.POINTER(C.c_uint)])
 bindbuffer=gl('glBindBuffer',None,[C.c_uint,C.c_uint])
 bufferdata=gl('glBufferData',None,[C.c_uint,C.c_ssize_t,C.c_void_p,C.c_uint])
@@ -62,12 +63,13 @@ def program_for(obj):
     for shader in handles:deleteshader(shader)
     programs[key]=program;return program
 for frame in data['frames']:
-    if len(sys.argv)>1 and frame['name'] not in [sys.argv[1],'reflection-'+sys.argv[1]]:continue
+    if not poolrooms and len(sys.argv)>1 and frame['name'] not in [sys.argv[1],'reflection-'+sys.argv[1]]:continue
     output_width,output_height=frame['width'],frame['height']
-    width,height=output_width*2,output_height*2
+    ss=1 if frame['name'].startswith('shot-') else 2
+    width,height=output_width*ss,output_height*ss
     target=egl('eglCreatePbufferSurface',C.c_void_p,[C.c_void_p,C.c_void_p,C.POINTER(C.c_int)])(display,config,(C.c_int*5)(0x3057,width,0x3056,height,0x3038));assert target
     assert egl('eglMakeCurrent',C.c_uint,[C.c_void_p,C.c_void_p,C.c_void_p,C.c_void_p])(display,target,target,context)
-    viewport(0,0,width,height);disable(0x0B44);enable(0x0B71);depthfunc(0x0203);depthmask(1);clearcolour(.4,.5,.6,1);clear(0x4000|0x0100)
+    viewport(0,0,width,height);disable(0x0B44);enable(0x0B71);depthfunc(0x0203);depthmask(1);clearcolour(*frame.get('clear',[.4,.5,.6,1.]));clear(0x4000|0x0100)
     for obj in frame['objects']:
         program=program_for(obj);use(program)
         texture_unit=0
@@ -110,7 +112,7 @@ for frame in data['frames']:
     os.replace(temporary,destination)
     with Image.open(destination) as verify:verify.verify()
     if frame['name']=='posters':frame_image.convert('RGB').save(root/(frame['name']+'.jpg'),quality=95)
-    print('Rendered',frame['name'])
+    if not frame['name'].startswith('shot-'):print('Rendered',frame['name'])
     egl('eglMakeCurrent',C.c_uint,[C.c_void_p,C.c_void_p,C.c_void_p,C.c_void_p])(display,surface,surface,context)
     egl('eglDestroySurface',C.c_uint,[C.c_void_p,C.c_void_p])(display,target)
 egl('eglTerminate',C.c_uint,[C.c_void_p])(display)
