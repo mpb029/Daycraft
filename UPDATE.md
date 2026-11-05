@@ -1,3 +1,17 @@
+# Daycraft 1.16.0 — Poolrooms: Beyond the Bend
+
+Extract the update ZIP and upload its **contents to the root of `main`** in `mpb029/Daycraft`, keeping the `assets/` and `verification/` folders in place. Replace matching files, leave all other repository files in place, and commit the upload. This update is built against the existing v1.15.0 app. Do not upload the ZIP itself.
+
+When GitHub Pages finishes publishing, open your ordinary Daycraft bookmark and use **Reload update** if shown. Check for **1.16.0** beside the logo, then choose **Poolrooms** in the background selector. The direct entry link after publishing is https://mpb029.github.io/Daycraft/?scene=poolrooms .
+
+- **The bend**, **Spillway**, and **Under the bridge** take you to three locations in the same windowless 3D scene. Drag to look around, scroll or pinch to zoom, and use **Space** or **Hide panels** to enjoy the room without task overlays.
+- The water ripples and the fibreglass manta feeds a small waterfall. Calm mode and reduced motion pause animation. If WebGL 2 is unavailable, the three viewpoints open as stills.
+- The scene and its textures are part of the Daycraft offline cache, ready after the update has finished installing online. The existing local data format stays the same.
+
+Developer reproduction: `node --test verification/poolrooms.test.mjs verification/app-smoke.test.mjs verification/overlay.test.mjs verification/pages.test.mjs`. For native graphics, run `node verification/export-poolrooms-graphics.mjs`, then `python3 verification/render-cinema-graphics.py --poolrooms` at the repository root. Regenerate the optional baked light atlas with Blender using the instructions in `verification/bake-poolrooms-light.py`. None of these developer tools is required to use Daycraft.
+
+---
+
 # Daycraft 1.15.0 — textured 90s Macca’s mascots
 
 Ronald, Grimace, Hamburglar and Birdie now use your four uploaded Meshy models. The old procedural characters are completely replaced. All 42,022 source triangles and the original 2048 × 2048 PNG textures are retained. One zero-length Ronald normal was repaired; the geometry has not been simplified.

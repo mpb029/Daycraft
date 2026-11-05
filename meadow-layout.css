@@ -184,3 +184,19 @@ html,body{height:100%;overflow:hidden;background:#b7ced2}
 .background-swatch.forest{background:radial-gradient(ellipse at 75% 35%,#e3b762 0%,#746d39 8%,transparent 30%),repeating-linear-gradient(87deg,transparent 0 18%,#27372b 19% 25%,transparent 26% 33%),linear-gradient(#233d43,#375849 57%,#343f32 58%,#253b3c)}
 .background-swatch.forest:after{content:"";position:absolute;left:69%;top:29%;height:46%;width:3px;background:#bcbca6;box-shadow:0 25px 15px 6px #daba6928}
 .background-swatch.forest:before{content:"";position:absolute;left:calc(69% - 7px);top:27%;width:17px;height:17px;border:2px solid #627f86;border-radius:50%;background:linear-gradient(#92aab1 32%,#dad6b9 33% 68%,#92aab1 69%)}
+
+/* Poolrooms: a swatch and a still view if WebGL isn't available. */
+.background-swatch.poolrooms,.world-scene[data-background="poolrooms"]{background:#678b7f url('./assets/poolrooms/beyond-the-bend.webp') center / cover no-repeat}
+.poolrooms-world .meadow-header .brand,.poolrooms-world .meadow-name,.poolrooms-world .sky-clock{color:#fcf9e9;text-shadow:0 1px 5px #182e28,0 0 14px #18392e}
+.poolrooms-world .meadow-name{border-color:#e2edd380}
+.poolrooms-world .atmosphere-controls{grid-template-columns:1fr;justify-items:end}
+.pool-views{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end;grid-column:1/-1}
+.pool-views .btn{min-height:38px;padding:8px 11px;font-size:11px}
+.poolrooms-world .atmosphere-controls .pool-views{padding:4px;background:#1c342f94;border:1px solid #cde0d466;border-radius:12px}
+@media(max-width:720px){.poolrooms-world .atmosphere-controls{top:64px;max-width:calc(100vw - 28px)}.poolrooms-world .sky-clock,.poolrooms-world .meadow-name{display:none}.poolrooms-world .meadow-panel.content{max-height:calc(100dvh - 278px)}.pool-views .btn{min-height:42px}}
+.world-scene[data-pool-still="spillway"]{background-image:url('./assets/poolrooms/spillway.webp')}
+.world-scene[data-pool-still="passage"]{background-image:url('./assets/poolrooms/passage.webp')}
+.pool-still-note{display:none}
+.pool-stills-on .atmosphere-controls .pool-views{max-width:275px}
+.pool-stills-on .atmosphere-controls .pool-still-note{display:block;flex:1 0 100%;font-size:10px;color:#f1f6eb;text-align:right;padding:2px 4px}
+.pool-stills-on .meadow-hint{display:none}
