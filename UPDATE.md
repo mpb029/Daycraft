@@ -1,3 +1,24 @@
+# Daycraft 1.17.0 — Problems
+
+**Problems** sits beside Tasks in the main navigation. Use it for work, health or life when you know something is wrong but do not yet know which task will help. It works in all six backgrounds, without ChatGPT, a sign-in or an internet connection after the app has been cached.
+
+1. Choose **Problems → Add problem**. Describe one thing that happened and what you would like to see instead. **Save & choose a first check** saves both answers, even if you choose **Decide later** on the next screen.
+2. Write a small check, or adapt a starter: **Observe once**, **Compare two cases**, **Ask someone**, or **Try one change**. Optionally record a prediction and separate observed facts from two possible explanations.
+3. Select **Add to Today** if you want to do it as a task. Its task options include **Open linked problem**. A completed check earns material under the existing daily rules; the problem stays open.
+4. **Record a finding** compares what happened with what you expected. Keep an inconclusive result, try a different check or **Mark solved** with evidence that your original outcome was reached. Optionally note what will keep it solved. Reopening keeps the history.
+
+Progress shows a count of open and solved problems and your latest finding. The notebook, checks, findings, resolutions and task links are included in Settings → Export backup. Existing v1 and v2 backups remain supported and open without sample records. As with tasks, each device keeps its own copy.
+
+## Install on your GitHub Pages site
+
+This is an update for the existing **v1.16.0** Daycraft repository, including Poolrooms. Extract the ZIP and upload **the files and the verification folder inside it** to the root of `mpb029/Daycraft` on `main`. Replace matching files, leave all other files in place, and commit. Do not upload the ZIP or an enclosing directory. Once Pages has finished, use **Reload update** if offered; confirm **1.17.0** beside the logo and open **Problems**.
+
+## Verification
+
+26 focused automated tests passed for the notebook workflow, migration and backups, task rewards, overlay controls, project-relative offline assets and the Poolrooms baseline. In a browser, a delivery example was entered, an editable starter became a Today task, and its task menu returned to the correct problem to record a finding that challenged the prediction.
+
+---
+
 # Daycraft 1.16.0 — Poolrooms: Beyond the Bend
 
 Extract the update ZIP and upload its **contents to the root of `main`** in `mpb029/Daycraft`, keeping the `assets/` and `verification/` folders in place. Replace matching files, leave all other repository files in place, and commit the upload. This update is built against the existing v1.15.0 app. Do not upload the ZIP itself.
