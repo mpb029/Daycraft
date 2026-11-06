@@ -84,7 +84,7 @@ for frame in data['frames']:
                 elif len(value)==3:three(loc,1,arr)
                 elif len(value)==2:two(loc,1,arr)
                 else:raise AssertionError((name,value))
-            else:one(loc,value)
+            else:one(loc,value*ss if name=='viewportHeight' else value)
         geometry=data['geometry'][obj['geometry']];storage=buffers[obj['geometry']];locations=[]
         for name,buffer in storage['attributes'].items():
             loc=attribute(program,name.encode())
