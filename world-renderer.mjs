@@ -15,6 +15,7 @@ import {createForest,forestCameraPose} from './forest-world.mjs';
 import {forestInitialView} from './forest-geometry.mjs';
 import {createCinema,CINEMA_VIEW,CINEMA_STATIONS,cinemaCameraPose} from './cinema-world.mjs';
 import {createPoolrooms,POOL_STATIONS,poolPose} from './poolrooms-world.mjs';
+import {createStormwatch,STORM_VIEWS,stormPose,stormView} from './stormwatch-world.mjs';
 import {createVideoStore} from './video-store-world.mjs';
 import {STORE_VIEW,storeCameraPose} from './video-store-catalog.mjs';
 import {setStoreTVActive,positionStoreTV} from './video-store-tv.mjs';
@@ -23,6 +24,10 @@ function showStillPool(host,station=stillView){
  stillHost=host;stillView=station;host.replaceChildren();host.dataset.poolStill=station;host.setAttribute('role','img');
  host.setAttribute('aria-label','Poolrooms, still view: '+POOL_STATIONS[station].label+'.');
  document.querySelector('#app')?.classList.add('pool-stills-on');markPoolStation(station);return true;
+}
+function showStillStorm(host){
+ host.replaceChildren();host.dataset.stormStill='true';host.setAttribute('role','img');host.setAttribute('aria-label','Stormwatch still view. A warm stone room looks out over stormy seas.');
+ document.querySelector('#app')?.classList.add('storm-still-on');return true;
 }
 function markPoolStation(station){
  for(const b of document.querySelectorAll?.('[data-camera^="pool-"]')||[])b.setAttribute('aria-pressed',String(b.dataset.camera==='pool-'+station));
@@ -63,7 +68,7 @@ function createMain(){
  const reduced=globalThis.matchMedia?.('(prefers-reduced-motion: reduce)');
  const visible=()=>state.host?.isConnected&&state.inView&&!document.hidden&&!state.lost;
  const moving=()=>!!state.config&&!state.config.state.settings.calm&&!reduced?.matches;
- state.refreshSky=()=>{if(!state.field||!state.config)return;if(state.background==='poolrooms'){state.skyField=null;return;}const sky=currentSky(state.config.state.settings.skyLocation),wet=backgroundRain(state.config.state.settings);if(state.sky!==sky||state.wet!==wet||state.skyField!==state.field){applySkyLighting(state,sky,wet);state.sky=sky;state.wet=wet;state.skyField=state.field;}};
+ state.refreshSky=()=>{if(!state.field||!state.config)return;if(['poolrooms','stormwatch'].includes(state.background)){state.skyField=null;return;}const sky=currentSky(state.config.state.settings.skyLocation),wet=backgroundRain(state.config.state.settings);if(state.sky!==sky||state.wet!==wet||state.skyField!==state.field){applySkyLighting(state,sky,wet);state.sky=sky;state.wet=wet;state.skyField=state.field;}};
  function tick(now){
   state.frame=0;if(!visible()){state.lastFrame=0;return;}
   const motion=moving()&&state.background!=='cinema'&&(state.background!=='video-store'||backgroundRain(state.config.state.settings));
@@ -72,7 +77,7 @@ function createMain(){
   // its lower update rate. Camera and water advance together on every draw.
   if(state.dirty||fastRide||now-state.lastFrame>=1000/24){
    state.refreshSky();
-   const delta=state.lastFrame?Math.max(0,(now-state.lastFrame)/1000):0,water=state.background==='water',forest=state.background==='forest',store=state.background==='video-store',cinema=state.background==='cinema',pool=state.background==='poolrooms',wet=backgroundRain(state.config.state.settings);
+   const delta=state.lastFrame?Math.max(0,(now-state.lastFrame)/1000):0,water=state.background==='water',forest=state.background==='forest',store=state.background==='video-store',cinema=state.background==='cinema',pool=state.background==='poolrooms',storm=state.background==='stormwatch',wet=backgroundRain(state.config.state.settings);
    if(motion)state.elapsed+=Math.min(.15,delta);
    if(water){
     state.waterMotion=motion;const running=motion&&state.config.state.settings.waterRide!==false,tide=state.tide.advance(Math.min(.1,delta),running&&!!state.tideRunning),view=state.waterLook.view;state.tideRunning=running;
@@ -81,6 +86,11 @@ function createMain(){
     if(camera.fov!==view.fov){camera.fov=view.fov;camera.updateProjectionMatrix();}
    }else if(forest){state.tideRunning=false;const view=state.forestLook.view,pose=forestCameraPose(view);camera.position.fromArray(pose.position);camera.up.set(0,1,0);camera.lookAt(camera.position.clone().add(new T.Vector3(...pose.direction)));if(camera.fov!==view.fov){camera.fov=view.fov;camera.updateProjectionMatrix();}state.field.update(state.elapsed,{camera,motion,breeze:state.config.breeze});}
    else if(store){state.field.update(state.elapsed);state.tideRunning=false;const view=state.storeLook.view,pose=storeCameraPose(view,state.storeStation);camera.position.fromArray(pose.position);camera.up.set(0,1,0);camera.lookAt(camera.position.clone().add(new T.Vector3(...pose.direction)));if(camera.fov!==view.fov){camera.fov=view.fov;camera.updateProjectionMatrix();}}
+   else if(storm){
+    state.tideRunning=false;const pose=stormPose(state.stormLook.view,camera.aspect);
+    camera.position.fromArray(pose.position);camera.up.set(0,1,0);camera.lookAt(new T.Vector3(...pose.direction));
+    if(camera.fov!==pose.fov){camera.fov=pose.fov;camera.updateProjectionMatrix();}state.field.update(state.elapsed);
+   }
    else if(pool){
     state.tideRunning=false;const view=state.poolLook.view,pose=poolPose(view,state.poolStation);
     camera.position.fromArray(pose.position);camera.up.set(0,1,0);camera.lookAt(camera.position.clone().add(new T.Vector3(...pose.direction)));
@@ -89,9 +99,9 @@ function createMain(){
    else if(cinema){state.tideRunning=false;const view=state.cinemaLook.view,pose=cinemaCameraPose(view,state.cinemaStation);camera.position.fromArray(pose.position);camera.up.set(0,1,0);camera.lookAt(camera.position.clone().add(new T.Vector3(...pose.direction)));if(camera.fov!==view.fov){camera.fov=view.fov;camera.updateProjectionMatrix();}}
    else{state.tideRunning=false;state.field?.grass?.update(state.elapsed,motion&&state.config.breeze,!!state.config?.draft);}
    state.field?.dome?.position.copy(camera.position);
-   state.atmosphere.root.visible=!store&&!cinema&&!pool;state.nightSky.root.visible=!store&&!cinema&&!pool;
-   if(!pool)state.atmosphere.update(state.elapsed,{camera,motion,breeze:state.config.breeze,raining:wet&&!forest,editing:!!state.config.draft,daytime:state.background==='meadow'&&state.sky.daytime});
-   if(!pool)state.nightSky.update(state.elapsed,{camera,sky:state.sky,motion,raining:wet,editing:!!state.config.draft,placed:state.placed,environment:state.background,skyScale:water?WATER_SKY_SCALE:1});
+   state.atmosphere.root.visible=!store&&!cinema&&!pool&&!storm;state.nightSky.root.visible=!store&&!cinema&&!pool&&!storm;
+   if(!pool&&!storm)state.atmosphere.update(state.elapsed,{camera,motion,breeze:state.config.breeze,raining:wet&&!forest,editing:!!state.config.draft,daytime:state.background==='meadow'&&state.sky.daytime});
+   if(!pool&&!storm)state.nightSky.update(state.elapsed,{camera,sky:state.sky,motion,raining:wet,editing:!!state.config.draft,placed:state.placed,environment:state.background,skyScale:water?WATER_SKY_SCALE:1});
    state.field.beforeRender?.(renderer,scene,camera);
    renderer.render(scene,camera);if(store){const size=renderer.getSize(new T.Vector2());positionStoreTV(camera,state.field.screenCorners(),state.field.root,size.x,size.y);}state.dirty=false;state.lastFrame=now;
   }
@@ -99,16 +109,17 @@ function createMain(){
  }
 
  state.draw=()=>{state.dirty=true;if(!state.frame&&visible())state.frame=requestAnimationFrame(tick);};
- state.stop=()=>{if(state.frame)cancelAnimationFrame(state.frame);state.frame=0;state.lastFrame=0;state.tideRunning=false;state.waterLook?.clear();state.forestLook?.clear();state.storeLook?.clear();state.cinemaLook?.clear();state.poolLook?.clear();};
+ state.stop=()=>{if(state.frame)cancelAnimationFrame(state.frame);state.frame=0;state.lastFrame=0;state.tideRunning=false;state.waterLook?.clear();state.forestLook?.clear();state.storeLook?.clear();state.cinemaLook?.clear();state.poolLook?.clear();state.stormLook?.clear();};
  // Real time is independent of animation time: Calm mode and reduced motion
  // still get changing sunlight, moon phase and star positions every 20 seconds.
- state.skyTimer=setInterval(()=>{if(visible()&&state.background!=='poolrooms')state.draw();},20000);
+ state.skyTimer=setInterval(()=>{if(visible()&&!['poolrooms','stormwatch'].includes(state.background))state.draw();},20000);
  onItemAssetsChanged(message=>{state.config?.onAssetStatus?.(message);state.draw();});
  controls.addEventListener('change',()=>{if(state.background!=='meadow')return;const floor=terrainHeight(camera.position.x,camera.position.z)+1.9;if(camera.position.y<floor){camera.position.y=floor;camera.lookAt(controls.target);}state.draw();});
  state.waterLook=createWaterLook(renderer.domElement,{active:()=>state.background==='water',draw:()=>state.draw()});
  state.forestLook=createWaterLook(renderer.domElement,{active:()=>state.background==='forest',draw:()=>state.draw(),initialView:forestInitialView(mobile)});
  state.cinemaStation='stairs';state.cinemaLook=createWaterLook(renderer.domElement,{active:()=>state.background==='cinema',draw:()=>state.draw(),initialView:CINEMA_VIEW});
  state.poolStation='bend';state.poolLook=createWaterLook(renderer.domElement,{active:()=>state.background==='poolrooms',draw:()=>state.draw(),initialView:POOL_STATIONS.bend});
+ state.stormLook=createWaterLook(renderer.domElement,{active:()=>state.background==='stormwatch',draw:()=>state.draw(),initialView:STORM_VIEWS.refuge,minFov:22,constrain:v=>stormView(v,camera.aspect)});
  state.storeStation='entrance';state.storeLook=createWaterLook(renderer.domElement,{active:()=>state.background==='video-store',draw:()=>state.draw(),initialView:STORE_VIEW});
  window.addEventListener('daycraft:tv-changed',()=>state.draw());
  preset(state);
@@ -117,7 +128,7 @@ function createMain(){
  if(typeof IntersectionObserver==='function')state.intersection=new IntersectionObserver(entries=>{state.inView=entries.some(e=>e.isIntersecting);if(state.inView)state.draw();else state.stop();});
  document.addEventListener('visibilitychange',()=>{if(document.hidden)state.stop();else state.draw();});reduced?.addEventListener?.('change',()=>state.draw());
  const canvas=renderer.domElement;canvas.setAttribute('aria-label','3D meadow with rolling hills and long grass, following the real time and saved location. At night, stars, the moon when above the horizon, and fireflies appear. Drag to look around, pinch or scroll to zoom. Use Arrange for placement.');canvas.setAttribute('role','img');
- renderer.debug.onShaderError=(gl,program,vertex,fragment)=>{console.error('Daycraft background shader:',gl.getProgramInfoLog(program),gl.getShaderInfoLog(vertex),gl.getShaderInfoLog(fragment));state.config?.onError(`The ${state.background==='water'?'water planet':state.background==='forest'?'forest bus stop':state.background==='video-store'?'video store':state.background==='cinema'?'90s restaurant':state.background==='poolrooms'?'poolrooms':'meadow'} could not be drawn. Your tasks and saved progress are still available.`);};
+ renderer.debug.onShaderError=(gl,program,vertex,fragment)=>{console.error('Daycraft background shader:',gl.getProgramInfoLog(program),gl.getShaderInfoLog(vertex),gl.getShaderInfoLog(fragment));state.config?.onError(`The ${state.background==='water'?'water planet':state.background==='forest'?'forest bus stop':state.background==='video-store'?'video store':state.background==='cinema'?'90s restaurant':state.background==='poolrooms'?'poolrooms':state.background==='stormwatch'?'Stormwatch':'meadow'} could not be drawn. Your tasks and saved progress are still available.`);};
  canvas.addEventListener('webglcontextlost',ev=>{ev.preventDefault();state.lost=true;state.stop();state.config?.onError('The 3D view paused. Reload to restore it. Your saved world is safe.');});
  canvas.addEventListener('webglcontextrestored',()=>{state.lost=false;state.field?.invalidate?.();state.draw();});
  canvas.addEventListener('pointerdown',ev=>{state.pointers.set(ev.pointerId,{x:ev.clientX,y:ev.clientY,moved:false});if(state.pointers.size>1)state.multi=true;},true);
@@ -132,18 +143,20 @@ function createMain(){
  return state;
 }
 export function mountScene(host,config){
- stillHost=null;globalThis.document?.querySelector?.('#app')?.classList?.remove?.('pool-stills-on');
+ stillHost=null;globalThis.document?.querySelector?.('#app')?.classList?.remove?.('pool-stills-on','storm-still-on');
  if(!host){setStoreTVActive(false);if(main){main.stop();main.host=null;main.observer.disconnect();main.intersection?.disconnect();}return;}
  if(!main&&unavailableContext&&normaliseBackground(config.state.settings.background)==='poolrooms')return showStillPool(host);
+ if(!main&&unavailableContext&&config.state.settings.background==='stormwatch')return showStillStorm(host);
  try{main??=createMain();const m=main;m.observer.disconnect();m.intersection?.disconnect();m.host=host;m.config=config;m.inView=true;host.replaceChildren(m.renderer.domElement);m.observer.observe(host);m.intersection?.observe(host);
-  const background=normaliseBackground(config.state.settings.background),water=background==='water',forest=background==='forest',store=background==='video-store',cinema=background==='cinema',pool=background==='poolrooms',scenery=water||forest||store||cinema||pool,changed=background!==m.background;
+  const background=normaliseBackground(config.state.settings.background),water=background==='water',forest=background==='forest',store=background==='video-store',cinema=background==='cinema',pool=background==='poolrooms',storm=background==='stormwatch',scenery=water||forest||store||cinema||pool||storm,changed=background!==m.background;
   if(changed){
    if(scenery&&m.background==='meadow')m.meadowPose={position:m.camera.position.clone(),target:m.controls.target.clone(),fov:m.camera.fov,polar:m.controls.maxPolarAngle,mode:m.mode};
-   m.background=background;m.waterLook.clear();m.forestLook.clear();m.storeLook.clear();m.cinemaLook.clear();m.poolLook.clear();m.tideRunning=false;
+   m.background=background;m.waterLook.clear();m.forestLook.clear();m.storeLook.clear();m.cinemaLook.clear();m.poolLook.clear();m.stormLook.clear();m.tideRunning=false;
    if(!scenery&&m.meadowPose){const p=m.meadowPose;m.camera.position.copy(p.position);m.controls.target.copy(p.target);m.camera.fov=p.fov;m.controls.maxPolarAngle=p.polar;m.mode=p.mode;m.controls.update();}
   }
-  m.controls.enabled=!scenery;m.renderer.shadowMap.enabled=!pool;m.camera.far=water?18000:1800;
+  m.controls.enabled=!scenery;m.renderer.shadowMap.enabled=!pool&&!storm;m.camera.far=water?18000:1800;
   if(water){m.mode='water';m.camera.zoom=1;m.camera.fov=m.waterLook.view.fov;}
+  if(storm){m.mode='stormwatch';m.camera.zoom=1;m.camera.fov=stormPose(m.stormLook.view,m.camera.aspect).fov;}
   if(pool){markPoolStation(m.poolStation);m.mode='poolrooms';m.camera.zoom=1;m.camera.fov=m.poolLook.view.fov;}
   if(cinema){m.mode='cinema';m.camera.zoom=1;m.camera.fov=m.cinemaLook.view.fov;}
   if(store){m.mode='video-store';m.camera.zoom=1;m.camera.fov=m.storeLook.view.fov;}
@@ -153,10 +166,12 @@ export function mountScene(host,config){
   m.placed=placed;
   if(forest)m.renderer.domElement.setAttribute('aria-label','3D forest bus stop. Rain falls between towering trees. A lamp lights the empty bus stop after dusk. Drag to look around; scroll or pinch to zoom.');
   if(store)m.renderer.domElement.setAttribute('aria-label','3D After Hours Video store. Timber checkout, film posters, varied VHS shelves, and clear windows overlooking a hedge and car park. Drag to look around. Rain and close-up views are available in the scene controls.');
+  if(storm)m.renderer.domElement.setAttribute('aria-label','Stormwatch. A sheltered seated view inside a warm stone room. Outside, clouds drift over moving surf, waves throw spray against distant rocks and rain streams down closed windows. Inside, fire and steam move gently. Drag to look around; pinch or scroll to zoom.');
   if(pool)m.renderer.domElement.setAttribute('aria-label','3D Poolrooms. Tiled steps lead into a windowless pool. A fibreglass manta feeds a spillway beside a low bridge. Drag to look around; pinch or scroll to zoom. Choose a viewpoint to explore.');
   if(cinema)m.renderer.domElement.setAttribute('aria-label','90s Macca’s. A 3D staircase leads to burgundy booths, lush planting and fibreglass Ronald, Grimace, Hamburglar and Birdie sculptures. Drag to look around. Choose Dining room, Ronald’s bench or Booths for another viewpoint.');
   const fieldKey=scenery?background:JSON.stringify(['meadow',config.island.id,config.island.theme,placed.map(b=>[b.id,b.placement])]);
-  if(m.fieldKey!==fieldKey){if(m.field){m.scene.remove(m.field.root);disposeGroup(m.field.root);}m.field=pool?createPoolrooms({mobile:(globalThis.innerWidth||1000)<720,onReady:()=>m.draw()}):cinema?createCinema({mobile:(globalThis.innerWidth||1000)<720,onReady:()=>m.draw(),onError:message=>m.config.onAssetStatus?.(message)}):store?createVideoStore({onReady:()=>m.draw(),onError:message=>config.onAssetStatus?.(message)}):water?createWaterPlanet({mobile:(globalThis.innerWidth||1000)<720}):forest?createForest({mobile:(globalThis.innerWidth||1000)<720,onReady:()=>m.draw()}):createMeadow({theme:config.island.theme,placed,grassCount:(globalThis.innerWidth||1000)<720?46000:78000});m.scene.add(m.field.root);m.fieldKey=fieldKey;const p=m.field.palette;m.scene.background=new T.Color(p.horizon);m.scene.fog=new T.Fog(p.fog,p.fogNear,p.fogFar);}
+  if(m.fieldKey!==fieldKey){if(m.field){m.scene.remove(m.field.root);disposeGroup(m.field.root);}m.field=storm?createStormwatch({mobile:(globalThis.innerWidth||1000)<720,elapsed:m.elapsed,onReady:()=>m.draw(),onError:message=>m.config.onAssetStatus?.(message)}):pool?createPoolrooms({mobile:(globalThis.innerWidth||1000)<720,onReady:()=>m.draw()}):cinema?createCinema({mobile:(globalThis.innerWidth||1000)<720,onReady:()=>m.draw(),onError:message=>m.config.onAssetStatus?.(message)}):store?createVideoStore({onReady:()=>m.draw(),onError:message=>config.onAssetStatus?.(message)}):water?createWaterPlanet({mobile:(globalThis.innerWidth||1000)<720}):forest?createForest({mobile:(globalThis.innerWidth||1000)<720,onReady:()=>m.draw()}):createMeadow({theme:config.island.theme,placed,grassCount:(globalThis.innerWidth||1000)<720?46000:78000});m.scene.add(m.field.root);m.fieldKey=fieldKey;const p=m.field.palette;m.scene.background=new T.Color(p.horizon);m.scene.fog=new T.Fog(p.fog,p.fogNear,p.fogFar);}
+  if(storm)m.field.configure(config.state.settings);
   if(store)m.field.setLiveTime(config.state.settings.storeLiveTime);setStoreTVActive(store);m.refreshSky();
   if(m.root){m.scene.remove(m.root);disposeGroup(m.root);}m.root=new T.Group();m.scene.add(m.root);
   if(!scenery&&m.lastIsland!==config.island.id)preset(m,'field');
@@ -164,7 +179,7 @@ export function mountScene(host,config){
   if(!scenery)for(const b of placed){if(b.instanceId===config.draft?.instanceId)continue;const item=createItem(b.id);item.position.set(b.placement.x,0,b.placement.z);item.rotation.y=b.placement.rotation*Math.PI/180;item.userData.instanceId=b.instanceId;m.root.add(item);}
   if(!scenery&&config.draft){m.root.add(grid());const b=config.state.builds.find(b=>b.instanceId===config.draft.instanceId);if(b){const p=config.draft.placement,item=createItem(b.id);item.position.set(p.x,.06,p.z);item.rotation.y=p.rotation*Math.PI/180;item.traverse(o=>{if(o.material){o.material.transparent=true;o.material.opacity=.72;o.material.depthWrite=false;o.castShadow=false;}});m.root.add(item);const [w,d]=footprint(b.id,p.rotation);const pad=new T.Mesh(new T.PlaneGeometry(w+.14,d+.14),new T.MeshBasicMaterial({color:config.error?'#d78466':'#bfd496',transparent:true,opacity:.5,depthWrite:false,side:T.DoubleSide}));pad.rotation.x=-Math.PI/2;pad.position.set(p.x,.04,p.z);m.root.add(pad);}}
   m.resize();m.draw();return true;
- }catch(error){if(config.state.settings.background==='poolrooms'){
+ }catch(error){if(config.state.settings.background==='stormwatch'){if(main){main.stop();main.host=null;}return showStillStorm(host);}if(config.state.settings.background==='poolrooms'){
    if(!unavailableContext)console.warn('Poolrooms opened in still view:',error);
    if(main){main.stop();main.host=null;}return showStillPool(host);
   }config.onError?.('The 3D background could not open on this device. Tasks and coordinate placement still work. Try an up-to-date browser with WebGL 2 and graphics acceleration.');return false;}
@@ -175,6 +190,11 @@ export function cameraAction(action){
   return Object.hasOwn(POOL_STATIONS,station)?showStillPool(stillHost,station):false;
  }
  if(!main)return false;const {controls,camera}=main;
+ if(main.background==='stormwatch'){
+  if(['left','right','in','out'].includes(action)){main.stormLook.action(action);return true;}
+  const id=['field','reset'].includes(action)?'refuge':action.replace('storm-','');
+  if(!Object.hasOwn(STORM_VIEWS,id))return false;main.stormLook.setView(STORM_VIEWS[id]);return true;
+ }
  if(main.background==='poolrooms'){
   if(['left','right','in','out'].includes(action)){main.poolLook.action(action);return true;}
   const station=['field','reset'].includes(action)?'bend':action.startsWith('pool-')?action.slice(5):'';

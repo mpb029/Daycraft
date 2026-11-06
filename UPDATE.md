@@ -1,3 +1,41 @@
+# Daycraft 1.18.0 — Stormwatch
+
+A warm lighthouse refuge above a violent coastal storm. The sea rolls and churns, clouds drift, gusts drive rain across closed windows, droplets descend in narrow rivulets, and waves send bursts of spray above the breakwater. Distant lightning appears briefly. The stove fire and mug steam move more gently inside; the room and camera stay steady.
+
+## Install
+
+Extract **Daycraft_Stormwatch_Update_v1.18.0.zip** and upload its **contents to the root of `main`** in `mpb029/Daycraft`. Replace matching files, preserve the `assets/stormwatch/` and `verification/` folders, and leave other files in place. This patch builds on the existing **v1.17.1** app. It has not been pushed or published automatically.
+
+After GitHub Pages publishes, choose **Reload update** if offered and check for **1.18.0** beside the logo. Select **Stormwatch** from the background menu, or use **New scene · Stormwatch → Open**. Your tasks, Problems, materials and meadow arrangement are preserved.
+
+## Controls
+
+- **Refuge**, **Storm window** and **Fireside** change where you look from the same safe seat. Drag to look around; scroll or pinch to zoom.
+- **Rain** and **Lightning** have separate saved switches for this scene.
+- **Pause scenery** freezes every animation layer using Calm mode. The device's reduced-motion preference also freezes the scene. Hidden tabs and an out-of-view canvas pause the viewing clock without catching up later.
+- **Space** or **Hide panels** clears the task overlay. The same button restores it on a phone.
+
+Stormwatch uses the approved artwork projected onto depth layers, with independent surface animation and spray/steam meshes. It is a stationary seated scene with bounded pan and zoom, rather than a freely walkable reconstruction. It keeps its own overcast storm light. No sound is included in this release.
+
+If WebGL is unavailable, an explicitly labelled still view keeps the room visible and the task app usable; the animation requires WebGL 2. The preview MP4 was rendered from the actual scene geometry, shaders and animation clock.
+
+## Validation
+
+22 focused checks passed: scene preferences and backup migration; lens coverage in portrait, landscape and ultrawide; a stationary camera and shared pause clock; task and Problems event flows; rain/lightning/pause controls; Space overlay behavior; project-relative assets; scoped offline updates; and existing water camera controls and tidal cycle.
+
+The scene's actual GLSL shaders compiled and rendered with native OpenGL ES. Opening, window, fireside and portrait views were inspected, and 288 frames were rendered for the 12-second preview. The browser check confirmed scene selection, the honest still fallback and Space toggling; WebGL was unavailable in that cloud browser. This is not a physical phone performance benchmark.
+
+The scene uses five draw calls, 14,344 triangles on desktop or 4,616 on mobile, and about 0.87 MB of new textures. It reuses the app's 24 fps scenery limit and allocates no new buffers per animation frame. No live external assets or new dependencies are required.
+
+Run checks:
+`node --test verification/stormwatch.test.mjs verification/app-smoke.test.mjs verification/pages.test.mjs verification/overlay.test.mjs verification/water.test.mjs`
+
+Render actual scene frames:
+`node verification/export-stormwatch-graphics.mjs --film`
+then `python3 verification/render-cinema-graphics.py --stormwatch`
+
+---
+
 # Daycraft 1.17.1 — more dynamic Poolrooms water
 
 The Poolrooms surface now has three crossing waves, finer ripples and stronger moving reflections. Light patterns move across the submerged tiles and lower walls, including the opening view. The manta spillway has faster flowing strands, expanding impact rings, a churning landing patch and a small spray of droplets.

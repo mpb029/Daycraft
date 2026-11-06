@@ -196,7 +196,23 @@ html,body{height:100%;overflow:hidden;background:#b7ced2}
 @media(max-width:720px){.poolrooms-world .atmosphere-controls{top:64px;max-width:calc(100vw - 28px)}.poolrooms-world .sky-clock,.poolrooms-world .meadow-name{display:none}.poolrooms-world .meadow-panel.content{max-height:calc(100dvh - 278px)}.pool-views .btn{min-height:42px}}
 .world-scene[data-pool-still="spillway"]{background-image:url('./assets/poolrooms/spillway.webp')}
 .world-scene[data-pool-still="passage"]{background-image:url('./assets/poolrooms/passage.webp')}
+.background-swatch.stormwatch,.world-scene[data-background="stormwatch"]{background:#3e3934 url('./assets/stormwatch/refuge.webp') center / cover no-repeat}
+.stormwatch-world .meadow-header .brand,.stormwatch-world .meadow-name,.stormwatch-world .sky-clock{color:#fff5df;text-shadow:0 1px 6px #211307,0 0 16px #211307}
+.stormwatch-world .meadow-name{border-color:#e8c79285}
+.stormwatch-world .atmosphere-controls{grid-template-columns:1fr;justify-items:end}
+.storm-controls{display:grid;gap:5px;justify-items:end}
+.storm-views,.storm-motion{display:flex;flex-wrap:wrap;gap:5px;justify-content:flex-end}
+.stormwatch-world .storm-controls{padding:6px;border-radius:13px;background:#251a13a8;border:1px solid #dbc2a255}
+.stormwatch-world .storm-controls .glass-button{background:#f6ecd9e8;color:#3a2d22}
+.storm-still-note{display:none;color:#fff3df;font-size:12px;padding:4px}
+.storm-still-on .storm-still-note{display:block}
+.storm-still-on .storm-views,.storm-still-on .storm-motion{display:none}
+.stormwatch-world .meadow-hint{color:#fff0d8;text-shadow:0 1px 4px #211307}
+@media(max-width:720px){.stormwatch-world .atmosphere-controls{top:64px;max-width:calc(100vw - 28px);gap:5px}.stormwatch-world .sky-clock,.stormwatch-world .meadow-name{display:none}.stormwatch-world .meadow-panel.content{max-height:calc(100dvh - 320px)}.storm-controls .btn{min-height:40px}.stormwatch-world .storm-controls{gap:3px;padding:4px}}
 .pool-still-note{display:none}
 .pool-stills-on .atmosphere-controls .pool-views{max-width:275px}
 .pool-stills-on .atmosphere-controls .pool-still-note{display:block;flex:1 0 100%;font-size:10px;color:#f1f6eb;text-align:right;padding:2px 4px}
 .pool-stills-on .meadow-hint{display:none}
+
+.storm-still-on [data-action="rain"],.storm-still-on .meadow-hint{display:none}
+.world-scene[data-storm-still="true"]{background-image:url('./assets/stormwatch/firelight.webp')}
