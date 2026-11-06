@@ -1,0 +1,7 @@
+Stormwatch v1.18.0 verification — 7 November 2026 (Australia/Brisbane)
+22 focused Node checks passed (0 failed).
+Native GLSL: OpenGL ES 3.2 Mesa 25.0.7-2+deb13u1.
+Actual mesh/material renders: refuge, window, fireside, phone, phone-fire, rain-off; 288 animated frames at 960x540 / 24 fps.
+MP4: 12 seconds, H.264, yuv420p, faststart.
+Cloud browser: v1.18.0 loads; Stormwatch opens; still fallback labelled; Space hides panels. WebGL unavailable in that browser.
+Not tested: physical phone GPU frame rate, audible ambience (not included), live GitHub deployment (manual ZIP upload).
