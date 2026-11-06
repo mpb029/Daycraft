@@ -14,15 +14,26 @@ export function poolMirror(camera){
  const m=camera.clone(),d=camera.getWorldDirection(new T.Vector3());m.position.y=-camera.position.y;d.y=-d.y;m.up.set(0,-1,0);
  m.lookAt(m.position.clone().add(d));m.updateMatrixWorld();return m;
 }
+function poolSpray(material,mobile){
+ const count=mobile?28:48,positions=new Float32Array(count*3),seeds=new Float32Array(count*3);
+ const rand=n=>{const x=Math.sin(n*127.13+31.71)*43758.5453;return x-Math.floor(x);};
+ for(let i=0;i<count;i++){
+  const a=rand(i+1),b=rand(i+81),c=rand(i+170);
+  positions.set([RAY.dropX+(a-.5)*RAY.width,.009,RAY.dropZ+(b-.5)*.12],i*3);seeds.set([a,b,c],i*3);
+ }
+ const g=new T.BufferGeometry();g.setAttribute('position',new T.BufferAttribute(positions,3));g.setAttribute('seed',new T.BufferAttribute(seeds,3));
+ const spray=new T.Points(g,material);spray.name='Spillway droplets';spray.frustumCulled=false;spray.renderOrder=5;return spray;
+}
 export function createPoolrooms({mobile=false,onReady=()=>{},loadArt=true}={}){
  const root=new T.Group();root.name='Poolrooms · Beyond the Bend';
  const reference=poolReferenceCamera();
- const U={lightReady:{value:0},irradiance:{value:null},t:{value:0},impact:{value:new T.Vector2(RAY.dropX,RAY.dropZ)},photoMatrix:{value:viewMatrix(reference)},plateReady:{value:0},photograph:{value:null},reflectPass:{value:0},mirrorMatrix:{value:new T.Matrix4()},reflected:{value:null},refracted:{value:null}};
+ const U={lightReady:{value:0},irradiance:{value:null},t:{value:0},viewportHeight:{value:941},impact:{value:new T.Vector2(RAY.dropX,RAY.dropZ)},photoMatrix:{value:viewMatrix(reference)},plateReady:{value:0},photograph:{value:null},reflectPass:{value:0},mirrorMatrix:{value:new T.Matrix4()},reflected:{value:null},refracted:{value:null}};
  const mat=poolMaterials(U),room=buildPoolArchitecture(mat.room),ray=buildManta(mat.room),fall=buildCurtain(mat.fall);
  const surface=new T.PlaneGeometry(21.17,33.25,mobile?28:48,mobile?40:68);
  surface.rotateX(-Math.PI/2);surface.translate(.42,0,-7.52);
  const water=new T.Mesh(surface,mat.water);water.name='Refracting pool surface';water.renderOrder=2;
- root.add(room,ray,water,fall);
+ const spray=poolSpray(mat.spray,mobile);
+ root.add(room,ray,water,fall,spray);
  const makeRT=()=>new T.WebGLRenderTarget(1,1,{minFilter:T.LinearFilter,magFilter:T.LinearFilter,generateMipmaps:false,depthBuffer:true,stencilBuffer:false});
  const reflection=makeRT(),transmission=makeRT(),signature=new T.Matrix4(),previousProjection=new T.Matrix4(),size=new T.Vector2();
  let valid=false,disposed=false,art=null,artReady=false,lighting=null;
@@ -48,6 +59,7 @@ export function createPoolrooms({mobile=false,onReady=()=>{},loadArt=true}={}){
   const weight=artReady?1-T.MathUtils.smoothstep(distance,.12,1.1):0;
   U.plateReady.value=weight;
   renderer.getDrawingBufferSize(size);
+  U.viewportHeight.value=size.y;
   const maxSide=mobile?416:704,scale=Math.min(1,maxSide/Math.max(1,size.x,size.y));
   const w=Math.max(1,Math.round(size.x*scale)),h=Math.max(1,Math.round(size.y*scale));
   if(w!==reflection.width||h!==reflection.height){reflection.setSize(w,h);transmission.setSize(w,h);valid=false;}
@@ -55,8 +67,8 @@ export function createPoolrooms({mobile=false,onReady=()=>{},loadArt=true}={}){
   // The architecture is stationary. Capture the two water buffers only when
   // the camera/lens changes. Ripples, sheet and surface caustics run in the final pass.
   const target=renderer.getRenderTarget(),oldShadows=renderer.shadowMap.enabled;
-  const wasWater=water.visible,wasFall=fall.visible;valid=false;
-  water.visible=false;fall.visible=false;U.plateReady.value=0;renderer.shadowMap.enabled=false;
+  const wasWater=water.visible,wasFall=fall.visible,wasSpray=spray.visible;valid=false;
+  water.visible=false;fall.visible=false;spray.visible=false;U.plateReady.value=0;renderer.shadowMap.enabled=false;
   try{
    const mirror=poolMirror(camera);
    U.reflectPass.value=1;renderer.setRenderTarget(reflection);renderer.render(scene,mirror);
@@ -64,9 +76,9 @@ export function createPoolrooms({mobile=false,onReady=()=>{},loadArt=true}={}){
    U.reflectPass.value=0;renderer.setRenderTarget(transmission);renderer.render(scene,camera);
    U.refracted.value=transmission.texture;signature.copy(camera.matrixWorld);previousProjection.copy(camera.projectionMatrix);valid=true;
   }finally{
-   U.reflectPass.value=0;U.plateReady.value=weight;water.visible=wasWater;fall.visible=wasFall;renderer.setRenderTarget(target);renderer.shadowMap.enabled=oldShadows;
+   U.reflectPass.value=0;U.plateReady.value=weight;water.visible=wasWater;fall.visible=wasFall;spray.visible=wasSpray;renderer.setRenderTarget(target);renderer.shadowMap.enabled=oldShadows;
   }
  }
  mat.water.addEventListener('dispose',()=>{disposed=true;reflection.dispose();transmission.dispose();art?.dispose();lighting?.dispose();});
- return {root,water,fall,uniforms:U,palette:{horizon:'#8b9e8d',fog:'#889a8b',fogNear:85,fogFar:145},dome:null,setSky(){},setRain(){},update(elapsed){U.t.value=elapsed;},beforeRender,invalidate};
+ return {root,water,fall,spray,uniforms:U,palette:{horizon:'#8b9e8d',fog:'#889a8b',fogNear:85,fogFar:145},dome:null,setSky(){},setRain(){},update(elapsed){if(Number.isFinite(elapsed)&&elapsed>=0)U.t.value=elapsed;},beforeRender,invalidate};
 }

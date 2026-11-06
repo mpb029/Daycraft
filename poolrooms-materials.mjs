@@ -1,6 +1,7 @@
 // Display-referred indoor lighting. The reference photograph and both offscreen
 // buffers use the same display encoding; these materials bypass outdoor tone mapping.
 import * as T from './vendor/three.module.js';
+import {POOL_SWELL_GLSL} from './poolrooms-water-motion.mjs';
 const shared=`
 uniform float t, plateReady;
 uniform mat4 photoMatrix;
@@ -43,7 +44,7 @@ void main(){
  if(reflectPass>.5&&wp.y<-.002)discard;
  vec3 viewDir=normalize(cameraPosition-wp),n=normalize(wn);
  if(dot(viewDir,n)<0.)n=-n;
- vec3 col=base;
+ vec3 col=base;float dancingLight=0.;
  float sideCh=smoothstep(2.4,4.9,wp.x)*smoothstep(2.48,3.60,-wp.z);
  float back=smoothstep(8.,19.,-wp.z);
  float low=1.-smoothstep(.45,2.8,wp.y),deep=smoothstep(.10,1.40,-wp.y);
@@ -71,9 +72,12 @@ void main(){
    vec3 R=reflect(-viewDir,n);
    float sheen=pow(1.-max(0.,dot(viewDir,n)),3.)*.068;
    col=col*light+sheen*vec3(.73,.86,.80)+.032*pow(max(0.,R.y),7.)*face;
-   float under=1.-smoothstep(.0,1.12,wp.y);
-   float c=.64*folds(wp.xz*2.2+vec2(wp.y*.72,wp.y*.51),t*.48)+.36*folds(wp.xz*3.8+wp.y*.32,-t*.25);
-   col+=vec3(.068,.108,.063)*c*under;
+   // Light ripples remain visible over the registered opening artwork.
+   // Map onto each wall/floor, rather than stretching world-XZ into stripes.
+   vec2 cp=abs(n.y)>.65?wp.xz:abs(n.x)>abs(n.z)?vec2(wp.z,wp.y*1.2):vec2(wp.x,wp.y*1.2);
+   float under=1.-smoothstep(.35,1.85,wp.y);
+   dancingLight=(.68*folds(cp*1.78+vec2(t*.05,-t*.07),t*.82)+.32*folds(cp*2.72,-t*.56))*under;
+   col+=vec3(.018,.025,.015)*dancingLight;
    col=mix(col,col*vec3(.65,.91,.85)+vec3(.015,.033,.033),deep*.57);
  }else if(code<2.5){
    col*=light*(.94+.018*hash(floor(wp.xz*56.)));
@@ -90,60 +94,92 @@ void main(){
  }
  col*=mix(vec3(1.),vec3(.78,1.02,.98),sideCh*.65);
  col=mix(col,vec3(.32,.39,.34),smoothstep(17.,42.,distance(wp,cameraPosition))*.16);
- gl_FragColor=vec4(art(col,wp,vec2(0.),.953),1.);
+ col=art(col,wp,vec2(0.),.953);
+ col+=vec3(.082,.112,.072)*dancingLight;
+ gl_FragColor=vec4(col,1.);
 }`;
 const waterV=`
 uniform float t;varying vec3 wp;varying vec4 eyeClip,mirrorClip;
 uniform mat4 mirrorMatrix;
+`+POOL_SWELL_GLSL+`
 void main(){vec4 w=modelMatrix*vec4(position,1.);
- w.y+=.0017*sin(w.x*2.8+w.z*1.74+t*.63)+.0012*sin(w.z*3.3-w.x*.75-t*.54);
+ w.y+=poolSwell(w.xz,t).x;
  wp=w.xyz;eyeClip=projectionMatrix*viewMatrix*w;mirrorClip=mirrorMatrix*w;gl_Position=eyeClip;}`;
-const waterF=shared+`
+const waterF=shared+POOL_SWELL_GLSL+`
 uniform sampler2D reflected,refracted;
 uniform vec2 impact;
 varying vec4 eyeClip,mirrorClip;
 void main(){
  vec2 p=wp.xz;
- float h1=p.x*2.60+p.y*1.71+t*.62+.34*sin(p.y*1.43-t*.30);
- float h2=p.y*3.45-p.x*.73-t*.49+.36*sin(p.x*2.14+t*.27);
- float h3=p.y*6.20+p.x*1.05+t*.81;
- vec2 off=p-impact;float r=length(off);
- float ring=sin(22.*r-t*3.3)*exp(-r*.95)*smoothstep(.07,.42,r);
- vec2 normal=vec2(.011*cos(h1)-.008*cos(h2),.013*cos(h2)+.006*cos(h1))+.003*cos(h3)+off/max(.08,r)*ring*.027;
+ vec3 swell=poolSwell(p,t);
+ float h1=dot(p,vec2(3.9,2.1))-t*2.05+.36*sin(p.y*1.7-t*.64);
+ float h2=dot(p,vec2(-2.1,5.2))-t*2.67+.41*sin(p.x*1.4+t*.51);
+ vec2 off=p-impact;float r=length(off),decay=exp(-r*.68)*smoothstep(.035,.26,r);
+ float ring=(sin(13.*r-t*5.8)+.34*sin(21.*r-t*8.1+.7))*decay;
+ vec2 normal=swell.yz+vec2(.014*cos(h1)-.010*cos(h2),.011*cos(h1)+.016*cos(h2));
+ normal+=off/max(.08,r)*ring*.063;
  vec3 n=normalize(vec3(-normal.x,1.,-normal.y)),v=normalize(cameraPosition-wp);
  float grazing=pow(1.-sat(dot(n,v)),3.7);
  vec2 ruv=mirrorClip.xy/mirrorClip.w*.5+.5,tuv=eyeClip.xy/eyeClip.w*.5+.5;
- float distort=.25+.87*smoothstep(.2,5.,distance(wp,cameraPosition));
- vec2 disp=normal*distort*.66;
+ float distort=.22+.64*smoothstep(.2,5.,distance(wp,cameraPosition));
+ vec2 disp=normal*distort*.39;
  vec3 ref=texture2D(reflected,clamp(ruv+disp,.001,.999)).rgb;
- vec3 trans=texture2D(refracted,clamp(tuv+disp*.84,.001,.999)).rgb;
+ vec3 trans=texture2D(refracted,clamp(tuv+disp*.76,.001,.999)).rgb;
  float depth=wp.z<1.4?1.42:max(.22,.96-floor(clamp((wp.z-1.4)/.68,0.,4.))*.178);
  vec3 water=mix(trans*vec3(.78,.95,.88),vec3(.12,.39,.35),(.18+.27*depth)*(1.-.26*grazing));
- float focusing=.69*folds(p*2.25+normal*1.6,t*.65)+.31*folds(p*3.65,-t*.32);
- water+=vec3(.058,.080,.048)*focusing*(1.-grazing);
+ float focusing=.67*folds(p*1.72+normal*2.3,t*1.02)+.33*folds(p*2.87,-t*.61);
+ water+=vec3(.066,.090,.053)*focusing*(1.-grazing);
  vec3 col=mix(water,ref,.13+.79*grazing);
- vec2 drift=normal*vec2(.115,.078)*smoothstep(.1,2.,distance(wp,cameraPosition));
- col=art(col,wp,drift,.89);
- col+=vec3(.022,.032,.022)*(focusing-.24)*(1.-.8*grazing);
- float splash=exp(-pow(abs(off.x)/.52,2.)-pow(abs(off.y)/.13,2.));
- float sparkle=.5+.5*sin(off.x*107.+sin(t*2.3+off.y*33.)*3.+t*4.);
- col+=vec3(.12,.15,.14)*splash*(.36+.64*sparkle)+max(ring,0.)*.016;
+ // Preserve the approved composition while moving the water/reflections within it.
+ vec2 drift=normal*vec2(.132,.088)*smoothstep(.1,1.7,distance(wp,cameraPosition));
+ col=art(col,wp,drift,.84);
+ col+=vec3(.066,.084,.059)*(focusing-.20)*(1.-.7*grazing);
+ vec3 lamp=normalize(vec3(-.28,.79,.53)),halfway=normalize(lamp+v);
+ float shimmer=pow(max(0.,dot(n,halfway)),90.)*.09;
+ col+=vec3(.93,.98,.83)*shimmer;
+ // An irregular impact patch and dispersing rings, not uniform stripes.
+ float churn=exp(-pow(off.x/.62,2.)-pow(off.y/.24,2.));
+ float bubbles=folds(off*8.+vec2(t*.14,-t*.24),t*1.8);
+ float crest=pow(max(0.,sin(13.*r-t*5.8)),12.)*decay;
+ col+=vec3(.19,.22,.20)*churn*(.25+.75*bubbles)+vec3(.043,.060,.048)*crest;
  gl_FragColor=vec4(col,1.);
 }`;
 const fallV=`varying vec3 wp;varying vec2 st;uniform float t;
  void main(){vec4 w=modelMatrix*vec4(position,1.);st=uv;
- w.z+=.010*sin(st.x*32.+t*.94+st.y*9.)*st.y;
+ float free=st.y*st.y;
+ w.z+=.021*sin(st.x*26.-t*3.1+st.y*12.)*free;
+ w.x+=.008*sin(st.y*21.-t*5.2+st.x*12.)*free;
  wp=w.xyz;gl_Position=projectionMatrix*viewMatrix*w;}`;
 const fallF=`varying vec3 wp;varying vec2 st;uniform float t,plateReady;
  void main(){float s=st.x,v=st.y;
- float seam=sin(s*138.+3.2*sin(s*29.-v*4.+t*.78)+sin(19.*v-t*2.5));
- float glint=pow(.5+.5*seam,9.);
- float breakup=.6+.4*sin(36.*v-t*4.3+s*27.);
+ float flow=18.*v-t*8.4;
+ float seam=sin(s*137.+2.3*sin(s*31.-v*5.+t*1.35)+.8*sin(flow+s*8.));
+ float glint=pow(.5+.5*seam,6.);
+ float breakup=.58+.42*sin(37.*v-t*12.6+s*24.);
  float rim=pow(abs(s*2.-1.),11.);
- vec3 tint=mix(vec3(.48,.66,.61),vec3(.91,.95,.86),.29+.57*glint+.13*rim);
- gl_FragColor=vec4(tint,clamp(.145+(.35+.20*v)*glint*breakup+.23*rim+.16*v*v,.11,.83)*(1.-.45*plateReady));
+ float streak=pow(.5+.5*sin(flow+s*18.),7.);
+ vec3 tint=mix(vec3(.48,.66,.61),vec3(.91,.95,.86),.25+.53*glint+.12*rim+.10*streak);
+ gl_FragColor=vec4(tint,clamp(.18+(.38+.17*v)*glint*breakup+.21*rim+.16*v*v+.08*streak,.13,.86)*(1.-.18*plateReady));
+ }`;
+const sprayV=`attribute vec3 seed;uniform float t,viewportHeight;
+ varying float opacity;
+ void main(){
+ float speed=1.38+seed.z*.78,life=2.*speed/9.8;
+ float age=mod(t+seed.x*7.3,life+.16),a=min(age,life);
+ vec4 w=modelMatrix*vec4(position,1.);
+ w.x+=(seed.y-.5)*a*.68;w.z+=(.15+seed.x*.56)*a;
+ w.y+=speed*a-4.9*a*a;
+ opacity=(1.-step(life,age))*smoothstep(0.,.035,a)*(1.-smoothstep(life*.65,life,a));
+ vec4 eye=viewMatrix*w;gl_Position=projectionMatrix*eye;
+ gl_PointSize=clamp(viewportHeight*.012/max(.1,-eye.z),1.2,4.6);
+ }`;
+const sprayF=`varying float opacity;
+ void main(){
+ vec2 q=(gl_PointCoord-.5)*2.;q.x*=1.35;
+ float edge=1.-smoothstep(.15,1.,dot(q,q));
+ gl_FragColor=vec4(.77,.91,.85,opacity*edge*.58);
  }`;
 function shader(vertexShader,fragmentShader,uniforms,params={}){return new T.ShaderMaterial({vertexShader,fragmentShader,uniforms,side:T.DoubleSide,toneMapped:false,...params});}
 export function poolMaterials(U){
- return {room:shader(opaqueV,opaqueF,U),water:shader(waterV,waterF,U),fall:shader(fallV,fallF,U,{transparent:true,depthWrite:false,forceSinglePass:true})};
+ return {room:shader(opaqueV,opaqueF,U),water:shader(waterV,waterF,U),fall:shader(fallV,fallF,U,{transparent:true,depthWrite:false,forceSinglePass:true}),spray:shader(sprayV,sprayF,U,{transparent:true,depthWrite:false})};
 }

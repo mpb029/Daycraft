@@ -1,3 +1,32 @@
+# Daycraft 1.17.1 — more dynamic Poolrooms water
+
+The Poolrooms surface now has three crossing waves, finer ripples and stronger moving reflections. Light patterns move across the submerged tiles and lower walls, including the opening view. The manta spillway has faster flowing strands, expanding impact rings, a churning landing patch and a small spray of droplets.
+
+The waves stay small: their combined maximum rise is 3.8 cm above the resting waterline. The room and camera positions are unchanged. Calm mode and the device's reduced-motion preference freeze all the effects. The animation clock still pauses when the scene is out of view or the tab is hidden.
+
+## Install
+
+Extract the update ZIP and upload its **contents to the root of `main`** in `mpb029/Daycraft`, replacing matching files and keeping the `verification/` folder. Leave other files in place. This update builds on **v1.17.0**, including Problems and Poolrooms. When Pages finishes, choose **Reload update** if offered and check for **1.17.1** beside the logo.
+
+If you see “Still views · 3D unavailable”, the browser is showing the existing still fallback. The animated effects require the 3D scene. If the scene is paused, check Calm mode and your device’s reduced-motion preference.
+
+## Validation and rendering cost
+
+11 focused checks passed for the wave height and normals, shared animation clock, mobile droplet limit, reflection-buffer reuse and restoration, app/Problems actions, Space overlay and scoped offline updates. The actual GLSL shaders compiled and rendered under OpenGL ES at all three viewpoints and portrait framing. These are native scene checks, not a physical phone/GPU performance benchmark.
+
+The room still uses 28,314 triangles. The droplet spray adds one draw call with 48 points on desktop or 28 on mobile. Reflection and refraction targets continue to be reused until the camera, lens, viewport or scene resources change; the water animation does not trigger fresh captures. No simulation, network assets or new high-resolution textures are added.
+
+Reproduce the focused checks with:
+`node --test verification/poolrooms.test.mjs verification/app-smoke.test.mjs verification/pages.test.mjs verification/overlay.test.mjs`
+
+Render the scene preview with:
+`node verification/export-poolrooms-graphics.mjs --film`
+then
+`python3 verification/render-cinema-graphics.py --poolrooms`.
+The film has 240 frames at 24 fps: 4 seconds at The bend, then 3 seconds each at Spillway and Under the bridge.
+
+---
+
 # Daycraft 1.17.0 — Problems
 
 **Problems** sits beside Tasks in the main navigation. Use it for work, health or life when you know something is wrong but do not yet know which task will help. It works in all six backgrounds, without ChatGPT, a sign-in or an internet connection after the app has been cached.
