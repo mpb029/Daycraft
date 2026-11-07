@@ -1,0 +1,9 @@
+Stormwatch v1.18.1 verification — 7 November 2026 (Australia/Brisbane)
+11 focused Node checks passed (0 failed): wave geometry and derivative normals, saved settings, fixed camera bounds, pause/lightning clock, procedural water/fire materials, mobile resource limits, app actions, overlay input and scoped offline updates.
+Native GLSL: OpenGL ES 3.2 Mesa 25.0.7-2+deb13u1 compiled and rendered the runtime meshes/materials.
+Actual scene renders: refuge, window, fire, phone, phone-fire, rain-off, refuge-later and wave-mesh; also phone-quality with the mobile resource configuration.
+Animation: 384 frames at 960x540 / 24 fps; refuge, window with rain off, then fire close-up.
+MP4: 16 seconds, H.264, yuv420p, faststart.
+Scene resources: desktop 214,488 triangles / 11 draw calls; mobile 90,072 triangles / 11 draw calls, reduced spray and flame samples.
+Water uses displaced vertices and geometric normals; flame uses a raymarched three-dimensional procedural volume with modelled logs/coals. Neither shader animates a photographic texture.
+Not benchmarked: physical phone/GPU frame rate. No live GitHub deployment was performed; deliverable is a manual root-relative update ZIP.

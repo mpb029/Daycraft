@@ -1,0 +1,8 @@
+Stormwatch v1.18.2 verification — 7 November 2026 (Australia/Brisbane)
+13 focused Node checks passed, 0 failed: actual wave displacement, independent finite-difference normals, bounded camera, saved settings, shared pause clock, procedural water/fire, mobile resource limits, directional crest alignment, irregular spacing, continuous motion, distant wavelength filtering, app actions and offline update behavior.
+Additional geometry sample: 6,000 positions/times; 0 inverted surfaces; minimum up-normal component 0.66284; cross/forward RMS slope ratio 0.17239; maximum height change over 1/120 second 0.06127 m.
+Native GLSL: OpenGL ES 3.2 Mesa 25.0.7-2+deb13u1 compiled and rendered the runtime materials.
+Native stills: window at t=4, 12 and 24 seconds, refuge, and mobile-quality portrait configuration.
+Native animation: all 384 frames rendered at 960x540 / 24 fps; window for 12 seconds with rain off, then refuge for 4 seconds. Point-particle export uses the actual non-indexed vertex count.
+Resources unchanged from v1.18.1: desktop 214,488 triangles / 11 draw calls; mobile 90,072 triangles / 11 draw calls. Added shader noise work; no physical phone/GPU frame-rate benchmark.
+No browser takeover or live GitHub deployment. Deliverable is a cumulative root-relative ZIP over the fetched v1.18.0 public baseline; it also applies over v1.18.1.

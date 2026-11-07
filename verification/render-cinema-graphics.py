@@ -91,6 +91,7 @@ for frame in data['frames']:
             loc=attribute(program,name.encode())
             if loc<0:continue
             bindbuffer(0x8892,buffer);enableattribute(loc);attributepointer(loc,geometry['attributes'][name]['size'],0x1406,0,0,None);locations.append(loc)
+        (enable if obj.get('depthTest',True) else disable)(0x0B71)
         depthmask(1 if obj['depthWrite'] else 0)
         if obj['transparent']:
             enable(0x0BE2)
