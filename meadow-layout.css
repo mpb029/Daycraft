@@ -216,3 +216,20 @@ html,body{height:100%;overflow:hidden;background:#b7ced2}
 
 .storm-still-on [data-action="rain"],.storm-still-on .meadow-hint{display:none}
 .world-scene[data-storm-still="true"]{background-image:url('./assets/stormwatch/firelight.webp')}
+
+.background-swatch.mall,.world-scene[data-background="mall"]{background:#afa797 url('./assets/mall/still.webp') center / cover no-repeat}
+.mall-world .meadow-header .brand,.mall-world .meadow-name,.mall-world .sky-clock{color:#fff9eb;text-shadow:0 1px 4px #33291eee,0 0 12px #33291e99}
+.mall-world .atmosphere-controls{grid-template-columns:1fr;justify-items:end}
+.mall-controls{display:grid;gap:5px;justify-items:end}
+.mall-views,.mall-motion{display:flex;flex-wrap:wrap;gap:5px;justify-content:flex-end}
+.mall-world .mall-controls{padding:6px;border-radius:15px;background:#f8f0df36;backdrop-filter:blur(8px)}
+.mall-still-note{display:none;color:#fff9eb;text-shadow:0 1px 3px #33291e;font-size:11px;padding:4px 8px}
+.mall-still-on .mall-still-note{display:block}
+.mall-still-on .mall-views,.mall-still-on .mall-motion{display:none}
+@media(max-width:720px){
+ .mall-world .atmosphere-controls{top:64px;max-width:calc(100vw - 28px);gap:5px}
+ .mall-world .sky-clock,.mall-world .meadow-name{display:none}
+ .mall-world .meadow-panel.content{max-height:calc(100dvh - 295px)}
+ .mall-world .mall-controls .glass-button.small{padding:7px 9px;font-size:11px}
+ .world-scene[data-mall-still="true"]{background-position:68% center}
+}

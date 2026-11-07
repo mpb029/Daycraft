@@ -1,3 +1,77 @@
+# Daycraft 1.19.3 — working mall escalators
+
+Both escalators now have moving three-dimensional tread and riser faces. The left flight goes up, the right flight goes down, and the steps flatten near the landings. Handrail grain and belt joints travel with the corresponding flight. The rail surrounds, plants and photographed architecture remain stationary. Pause scenery, Calm mode and reduced-motion preferences pause the shared animation clock.
+
+## Install
+
+Extract **Daycraft_Mall_Escalators_Update_v1.19.3.zip** and upload its **contents to the root of `main`** in `mpb029/Daycraft`, replacing matching files and preserving folders. This cumulative update includes the accepted v1.19.2 water and applies over v1.18.3 through v1.19.2. Include `mall-escalators.mjs` and `assets/mall/escalators.png`.
+
+After GitHub Pages publishes, use **Reload update** if offered and check for **1.19.3**. Choose **Mall atrium**; drag upward or zoom toward the escalators for a closer view. The update has not been pushed or published automatically.
+
+## Verification
+
+Eleven focused checks passed, including opposing travel, repeat continuity, level landings, shared pause timing, resource reuse, existing task/Problem actions, saved backgrounds and atomic offline updates. Native OpenGL ES rendered the actual materials and moving geometry for the 10-second preview. Paused frames were pixel-identical; the step region visibly changed between running frames. The fountain code and water atlas are unchanged from v1.19.2.
+
+The escalators add 234 triangles and two draw calls. The full desktop mall scene has 27,914 triangles and seven draw calls. It retains the fixed seated viewpoint; this is scenery, not a rideable escalator. Physical phone frame rates have not been benchmarked.
+
+---
+
+# Daycraft 1.19.2 — animated water surfaces
+
+The mall fountain no longer warps a single plume photograph. Its five jets now play distinct frames rendered from changing 3D water meshes. Pressure variation, falling water and short splash trajectories are prepared offline, with separate timing for each jet. The extra glitter-like particle spray is gone. Basin waves now use more varied directions and wavelengths, and the jets cast synchronized moving reflections.
+
+## Install
+
+Extract **Daycraft_Mall_Water_Update_v1.19.2.zip** and upload its **contents to the root of `main`** in `mpb029/Daycraft`. Replace matching files and preserve the folders. This cumulative update applies over **v1.18.3, v1.19.0 or v1.19.1**. Include the new `assets/mall/liquid-flow.webp` file. The old `frothy-plume.webp` file is unused and can remain if already uploaded.
+
+After GitHub Pages publishes, use **Reload update** if offered. Check for **1.19.2**, then choose **Mall atrium → Fountain**. The scene has not been pushed or published automatically.
+
+## Preview and verification
+
+The preview renders the actual app geometry, shaders, atlas timing and camera views in native OpenGL ES. Nine focused checks passed for camera bounds, animation wrapping, shared pause timing, saved backgrounds, task/Problem actions and atomic offline updates. A repeated paused frame was pixel-identical. All 144 atlas frames are distinct, and the loop boundary changes less than a typical adjacent frame.
+
+This is a baked ballistic water animation from a fixed viewpoint, not filmed water or a full fluid solver. The water atlas is about 1.47 MB and uses 13.5 MiB of texture memory; the scene uses five draw calls. Physical phone frame rates have not been benchmarked. See `assets/mall/ARTWORK.md` for provenance and the reproducible bake recipe.
+
+---
+
+# Daycraft 1.19.1 — fuller mall fountain
+
+The fountain now follows the original render's five-jet arrangement: one broad, frothy central plume and four shorter jets. Fine aerated-water detail replaces the thin clear streams. Falling spray, low splashes, larger foam patches and moving reflections give the basin more activity.
+
+The plume surfaces deform and their fine detail flows; droplets follow independent 3D trajectories. The basin remains a displaced water mesh. The surrounding mall and its seated views stay as before.
+
+## Install
+
+Extract **Daycraft_Mall_Fountain_Update_v1.19.1.zip** and upload its **contents to the root of `main`** in `mpb029/Daycraft`. Replace matching files and preserve the folders. This cumulative update works over **v1.18.3 or v1.19.0**, and includes the new `assets/mall/frothy-plume.webp` file. It has not been pushed or published automatically.
+
+After Pages publishes, use **Reload update** if offered. Check for **1.19.1**, then choose **Mall atrium → Fountain**. Pause scenery, Space, tasks, Problems and saved progress continue to work.
+
+Ten focused checks passed, and the actual runtime shaders and geometry were rendered for the preview. See `verification/mall-v1.19.1.txt` for verification scope. Fine froth is carried on deforming textured plume surfaces; this is not a volumetric fluid simulation.
+
+---
+
+# Daycraft 1.19.0 — Mall atrium
+
+A quiet afternoon in a late-80s/early-90s mall: Side A Records, Rewind Video, The Book Nook, Galaxy Arcade, a bakery and an ice-cream shop. The approved layout, palms, brass and tiled fountain stay central.
+
+The fountain is live: seven varying jets, falling droplets, moving water geometry, spreading ripples and small impact splashes. Escalator treads and shop CRT screens move subtly. Choose **Atrium**, **Fountain**, **Shopfronts** or **Arcade**, then drag or pinch to adjust the seated view.
+
+## Install
+
+Extract **Daycraft_Mall_Update_v1.19.0.zip** and upload its **contents to the root of `main`** in `mpb029/Daycraft`. Replace matching files and preserve the folders. This update applies over the current **v1.18.3** repository (public commit `2bb9230`). Leave the other files in place. It has not been pushed or published automatically.
+
+After GitHub Pages publishes, use **Reload update** if offered and check for **1.19.0** beside the logo. Select **Mall atrium** from the background menu, or choose **New scene · Mall atrium → Open**.
+
+**Pause scenery** stills all movement; it uses the saved Calm mode preference. Reduced motion, hidden tabs and an off-screen scene also stop animation. **Space** hides or shows the panels. Tasks, Problems, rewards, progress and the meadow arrangement remain available across backgrounds.
+
+## Scene and verification notes
+
+The architecture uses the approved artwork from a fixed seated eye. The fountain has live geometry; the surrounding shopfronts preserve their detailed appearance through projected artwork. Pan and zoom are bounded to that composition. This version keeps an afternoon skylight and has no sound. A device without WebGL receives an explicitly labelled still view.
+
+Twelve focused interaction, camera, animation, storage and offline-update checks passed. The actual runtime geometry and shaders were rendered in native EGL/GLES for the preview, including portrait framing. Physical phone performance has not been benchmarked. See `verification/mall-v1.19.0.txt` for the scope of verification.
+
+---
+
 # Daycraft 1.18.3 — wilder Stormwatch sea
 
 The long, irregular horizon swells are now taller and steeper, with more persistent whitewater, stronger wind texture and higher spray. A matched 6,000-point comparison against v1.18.2 measured about **69% greater RMS wave height** and **67% greater RMS forward slope**. The prevailing direction and curved, uneven crests are retained.
@@ -70,7 +144,7 @@ After Pages publishes, use **Reload update** if offered, check for **1.18.1** be
 
 The 16-second preview comes from the actual runtime meshes and shaders: six seconds in the refuge, six seconds at the window with rain off to expose the water geometry, and four seconds by the fire. A wireframe diagnostic and portrait views were also rendered during verification.
 
-11 focused Node checks passed, covering wave displacement and normals against finite differences, the saved settings, fixed camera and lens bounds, shared pause clock, actual procedural water/fire materials, mobile resource limits, app actions and scoped offline updates. Native OpenGL ES compiled and rendered the actual materials. No browser takeover was needed for the unchanged controls.
+12 focused Node checks passed, covering wave displacement and normals against finite differences, the saved settings, fixed camera and lens bounds, shared pause clock, actual procedural water/fire materials, mobile resource limits, app actions and scoped offline updates. Native OpenGL ES compiled and rendered the actual materials. No browser takeover was needed for the unchanged controls.
 
 This is a procedural wave and fire model, not a CFD simulation. The scene uses 214,488 triangles and 11 draw calls on desktop; phones use 90,072 triangles, fewer spray particles and 28 flame samples per ray rather than 44. It retains the app's 24 fps scenery limit. Real geometry costs more than the previous image effect; physical phone/GPU frame rates have not been benchmarked.
 

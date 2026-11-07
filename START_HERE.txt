@@ -1,9 +1,11 @@
-Daycraft 1.13.0 — Cinema café
+Daycraft 1.19.3 — working mall escalators
 
-This updates your existing Daycraft repository.
-Extract this ZIP, then upload its CONTENTS to the root of the main branch.
-Keep the assets, previews and verification folders intact.
-Do not upload an outer cinema-v113-release folder.
-Do not delete existing repository files.
-After GitHub Pages deploys, reload Daycraft and choose Cinema café.
-UPDATE.md contains the full instructions and fidelity/verification notes.
+Extract this ZIP and upload its CONTENTS to the root of the main branch
+in mpb029/Daycraft. Replace matching files and preserve folders.
+Keep other existing repository files.
+
+After GitHub Pages deploys, reload Daycraft, check for 1.19.3 beside the
+logo, and choose Mall atrium. Drag upward or zoom toward the escalators.
+
+This cumulative update includes the accepted v1.19.2 water animation.
+UPDATE.md contains installation and verification details.
