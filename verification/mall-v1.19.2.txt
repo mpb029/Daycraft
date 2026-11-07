@@ -1,0 +1,22 @@
+✔ Task → focus → complete → build → undo works through app event handlers (313.687545ms)
+✔ All view corners stay on the artwork on portrait, landscape and ultrawide screens (5.725319ms)
+✔ All five nozzles meet the basin and their animation wraps continuously (0.501175ms)
+✔ One elapsed clock freezes every animated layer and survives resumed updates (44.194503ms)
+✔ Mobile reduces basin geometry without losing water frames; saved backgrounds remain valid (34.848028ms)
+✔ A device without WebGL receives a clearly labelled mall still (35.19538ms)
+✔ GitHub project URL resolves every page, module, texture and install asset locally (83.541659ms)
+✔ Offline cache stays inside Daycraft and retains other projects and user storage (8.094436ms)
+✔ A failed update never activates a partially cached release (8.007134ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 438.20284
+
+Visual verification: actual runtime shaders/geometry rendered with native EGL/GLES (not a browser UI or physical-phone benchmark).
+Seven still views rendered, including portrait framing. The same clock produced pixel-identical paused frames.
+The atlas contains 144 unique 128 x 192 frames. Adjacent premultiplied-image mean difference: median 0.089091; loop seam 0.083874; maximum 0.108675.
+The mall uses 27,680 desktop triangles and five draw calls. Offline water geometry is baked; the app does not run a fluid solver.

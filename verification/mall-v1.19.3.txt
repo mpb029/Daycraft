@@ -1,0 +1,25 @@
+✔ Task → focus → complete → build → undo works through app event handlers (210.657142ms)
+✔ All view corners stay on the artwork on portrait, landscape and ultrawide screens (5.350886ms)
+✔ All five nozzles meet the basin and their animation wraps continuously (0.489107ms)
+✔ One elapsed clock freezes every animated layer and survives resumed updates (47.903313ms)
+✔ Mobile reduces basin geometry without losing water frames; saved backgrounds remain valid (34.386084ms)
+✔ A device without WebGL receives a clearly labelled mall still (29.560098ms)
+✔ Escalators run in opposite directions, wrap continuously, and flatten at landings (0.387503ms)
+✔ Escalator meshes retain resources while sharing the pause clock with the water (9.561958ms)
+✔ GitHub project URL resolves every page, module, texture and install asset locally (122.640367ms)
+✔ Offline cache stays inside Daycraft and retains other projects and user storage (9.851063ms)
+✔ A failed update never activates a partially cached release (9.585132ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 11
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 335.956138
+
+Visual verification: native EGL/GLES rendered the actual app shaders, geometry, shared clock, camera, and masks. This was not browser UI or physical-device benchmarking.
+Running stair-region comparison: 5,014 pixels changed by more than 3/255 between t=2 and t=2.35 in the clear 115 x 280 pixel main-flight region.
+Paused t=2.35 frames were pixel-identical.
+Desktop mall: 27,914 triangles; seven draw calls. Escalators add 234 triangles and two draw calls.
+Fountain code and liquid-flow.webp are unchanged from v1.19.2.

@@ -11,7 +11,8 @@ vertex_prefix += "attribute vec3 normal;attribute vec3 color;\n"
 fragment_prefix += "#define texture2D texture\n"
 poolrooms='--poolrooms' in sys.argv
 stormwatch='--stormwatch' in sys.argv
-root=Path('stormwatch-graphics-check' if stormwatch else 'poolrooms-graphics-check' if poolrooms else 'cinema-graphics-check');data=json.loads((root/'frames.json').read_text())
+mall='--mall' in sys.argv
+root=Path('mall-graphics-check' if mall else 'stormwatch-graphics-check' if stormwatch else 'poolrooms-graphics-check' if poolrooms else 'cinema-graphics-check');data=json.loads((root/'frames.json').read_text())
 genbuffers=gl('glGenBuffers',None,[C.c_int,C.POINTER(C.c_uint)])
 bindbuffer=gl('glBindBuffer',None,[C.c_uint,C.c_uint])
 bufferdata=gl('glBufferData',None,[C.c_uint,C.c_ssize_t,C.c_void_p,C.c_uint])
@@ -64,9 +65,9 @@ def program_for(obj):
     for shader in handles:deleteshader(shader)
     programs[key]=program;return program
 for frame in data['frames']:
-    if not (poolrooms or stormwatch) and len(sys.argv)>1 and frame['name'] not in [sys.argv[1],'reflection-'+sys.argv[1]]:continue
+    if not (poolrooms or stormwatch or mall) and len(sys.argv)>1 and frame['name'] not in [sys.argv[1],'reflection-'+sys.argv[1]]:continue
     output_width,output_height=frame['width'],frame['height']
-    ss=1 if frame['name'].startswith('shot-') else 2
+    ss=1 if frame['name'].startswith(('shot-','froth-')) else 2
     width,height=output_width*ss,output_height*ss
     target=egl('eglCreatePbufferSurface',C.c_void_p,[C.c_void_p,C.c_void_p,C.POINTER(C.c_int)])(display,config,(C.c_int*5)(0x3057,width,0x3056,height,0x3038));assert target
     assert egl('eglMakeCurrent',C.c_uint,[C.c_void_p,C.c_void_p,C.c_void_p,C.c_void_p])(display,target,target,context)

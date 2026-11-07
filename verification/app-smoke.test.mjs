@@ -45,7 +45,7 @@ test('Task → focus → complete → build → undo works through app event han
   await act('background',{background:'forest'});assert.match(get('#app').innerHTML,/Rain off/);assert.equal(state().settings.rain,true);
   const forestBeforePanels=get('#app').innerHTML;await act('panels');assert.equal(get('#app').innerHTML,forestBeforePanels);await act('panels');
   assert.deepEqual(state().tasks,completed.tasks);assert.deepEqual(state().completions,completed.completions);
-  await act('nav',{view:'settings'});assert.match(get('#app').innerHTML,/A quiet stop in the forest/);assert.match(get('#app').innerHTML,/Daycraft 1\.18\.3/);
+  await act('nav',{view:'settings'});assert.match(get('#app').innerHTML,/A quiet stop in the forest/);assert.match(get('#app').innerHTML,/Daycraft 1\.19\.3/);
   await act('background',{background:'poolrooms'});assert.equal(state().settings.background,'poolrooms');assert.match(get('#app').innerHTML,/Beyond the Bend/);assert.match(get('#app').innerHTML,/data-camera="pool-passage"/);assert.doesNotMatch(get('#app').innerHTML,/data-action="(?:rain|breeze|water-ride)"/);assert.deepEqual(state().tasks,completed.tasks);assert.deepEqual(state().completions,completed.completions);
   await act('background',{background:'stormwatch'});assert.equal(state().settings.background,'stormwatch');assert.match(get('#app').innerHTML,/Safe above the storm/);assert.match(get('#app').innerHTML,/data-camera="storm-fire"/);assert.doesNotMatch(get('#app').innerHTML,/data-action="breeze"/);
   const priorRain=state().settings.rain,priorCalm=state().settings.calm;
@@ -53,6 +53,9 @@ test('Task → focus → complete → build → undo works through app event han
   await act('storm-lightning');assert.equal(state().settings.stormLightning,false);assert.match(get('#app').innerHTML,/Lightning off/);
   await act('storm-pause');assert.equal(state().settings.calm,!priorCalm);await act('storm-pause');assert.equal(state().settings.calm,priorCalm);
   assert.deepEqual(state().tasks,completed.tasks);assert.deepEqual(state().completions,completed.completions);
+  await act('background',{background:'mall'});assert.equal(state().settings.background,'mall');assert.match(get('#app').innerHTML,/A quiet afternoon, circa 1990/);assert.match(get('#app').innerHTML,/data-camera="mall-fountain"/);assert.match(get('#app').innerHTML,/data-camera="mall-arcade"/);assert.doesNotMatch(get('#app').innerHTML,/data-action="(?:rain|breeze|water-ride)"/);
+  await act('mall-pause');assert.equal(state().settings.calm,!priorCalm);assert.match(get('#app').innerHTML,/Resume scenery/);await act('mall-pause');assert.equal(state().settings.calm,priorCalm);
+  const mallBeforePanels=get('#app').innerHTML;await act('panels');assert.equal(get('#app').innerHTML,mallBeforePanels);await act('panels');assert.deepEqual(state().tasks,completed.tasks);assert.deepEqual(state().completions,completed.completions);
   await act('background',{background:'cinema'});assert.equal(state().settings.background,'cinema');assert.match(get('#app').innerHTML,/90s Macca’s/);assert.match(get('#app').innerHTML,/cinema-ronald/);assert.doesNotMatch(get('#app').innerHTML,/data-action="(?:rain|breeze)"/);
   await act('background',{background:'video-store'});assert.equal(state().settings.background,'video-store');assert.match(get('#app').innerHTML,/Play trailers/);assert.match(get('#app').innerHTML,/Browse films/);assert.match(get('#app').innerHTML,/data-action="rain"/);assert.doesNotMatch(get('#app').innerHTML,/data-action="breeze"/);
   await act('rain');assert.equal(state().settings.storeRain,true);assert.equal(state().settings.rain,true);await act('rain');assert.equal(state().settings.storeRain,false);await act('store-time');assert.equal(state().settings.storeLiveTime,true);assert.match(get('#app').innerHTML,/Local time/);await act('store-time');assert.equal(state().settings.storeLiveTime,false);
@@ -65,7 +68,7 @@ test('Task → focus → complete → build → undo works through app event han
   await act('nav',{view:'settings'});assert.match(get('#app').innerHTML,/not synced between devices/);
   assert.equal((get('#app').innerHTML.match(/data-world-scene/g)||[]).length,1,'Settings still overlays one meadow');
   submit('settings-form',{name:'Marty',worldName:'My place',zone:'Australia/Brisbane',calm:'on'});assert.equal(state().settings.calm,true);
-  assert.match(get('#app').innerHTML,/Sky & location/);assert.match(get('#app').innerHTML,/Daycraft 1\.18\.3/);
+  assert.match(get('#app').innerHTML,/Sky & location/);assert.match(get('#app').innerHTML,/Daycraft 1\.19\.3/);
   const beforeLocation=state();submit('sky-location-form',{latitude:'',longitude:'0',label:'Invalid'});assert.deepEqual(state(),beforeLocation);
   submit('sky-location-form',{latitude:'51.5',longitude:'-.1',label:'<b>London</b>'});assert.equal(state().settings.skyLocation.latitude,51.5);assert.equal(state().settings.skyLocation.longitude,-.1);assert.match(get('#app').innerHTML,/&lt;b&gt;London&lt;\/b&gt;/);assert.deepEqual(state().tasks,beforeLocation.tasks);
   submit('settings-form',{name:'Marty',worldName:'My place',zone:'Australia/Brisbane',calm:'on'});assert.equal(state().settings.skyLocation.latitude,51.5);

@@ -1,0 +1,39 @@
+Daycraft 1.19.0 — Mall atrium
+
+Implementation
+- New saved background: mall. Distinctive shops retain the approved composition.
+- Live displaced water mesh, seven varying water jets, 1,400 ballistic droplets
+  (560 on phones), impact foam and concentric surface waves.
+- Restrained escalator tread travel and CRT display glow.
+- Four seated view presets with bounded perspective pan/zoom.
+- One viewing clock for all effects; existing Calm mode, reduced motion,
+  hidden-tab and off-screen pause apply. Space retains its existing behavior.
+- Vendored artwork and modules included in the project-scoped offline cache.
+- WebGL startup failure uses a labelled still; no fake animation claim.
+
+Validation
+- 12 focused Node checks passed: mall camera corners across portrait/landscape/
+  ultrawide, smooth jet heights and gravity, shared pause clock, disposal and
+  lower phone detail, app task/progress/Problems flow and background switching,
+  Space/focus behavior, collection interactions, GitHub subpath assets,
+  scoped cache updates and safe failure of incomplete updates.
+- Runtime meshes and shaders compiled and rendered with native EGL/GLES 3.2.
+- Inspected Atrium, Fountain, Shopfronts, Arcade and portrait framing.
+- Identical clock values produce identical rendered images. Different clock
+  values change the fountain and masked moving surfaces.
+- Desktop: 33,040 triangles plus 1,400 points, five draw calls.
+- Phone: fewer water segments and 560 points; pixel ratio cap and 24 fps
+  background loop remain under the app's existing renderer policy.
+
+Limits
+- Native visual checks render the actual scene modules, not the whole browser UI.
+- Browser launch in this execution environment was blocked by its socket policy;
+  app interaction checks use the existing event/render harness.
+- No physical phone GPU or sustained frame-rate benchmark was performed.
+- Architecture is projected artwork from a fixed seated eye, not free walking.
+- This release has its own fixed afternoon skylight and no sound.
+
+Delivery
+- Root-relative update ZIP against origin/main 2bb9230 (v1.18.3).
+- Preview video renders the runtime meshes/shaders; it is not the static concept.
+- Prepared locally; GitHub publication is by the user's established upload flow.

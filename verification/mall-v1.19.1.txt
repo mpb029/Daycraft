@@ -1,0 +1,36 @@
+Daycraft 1.19.1 — fuller mall fountain
+
+Reference: the exact approved mall render, image-edit-target-7ff352ef9cac7234.png.
+The reference has one broad central plume and four shorter jets, rather than
+the seven thin clear streams in v1.19.0.
+
+Changes
+- Five reference-aligned plumes with fine aerated-water detail on continuously
+  deforming textured meshes; varying height and surface flow.
+- Independently seeded 3D droplets and low impact spray: 6,000 on desktop,
+  2,400 on phones. Emission age and direction are independent, preventing
+  dense particles from forming helical bands.
+- Broader irregular foam patches, more disturbed basin geometry, small
+  skylight glints and moving plume reflections clipped to the basin.
+- Photograph, surface mask and plume texture load/dispose together. The new
+  texture is included in the project-scoped offline cache.
+- Native preview harness now applies its point-size supersampling once.
+
+Validation
+- 10 focused checks passed: camera bounds, smooth height/gravity, shared pause
+  clock, shared-resource disposal, phone detail, spray distribution, saved
+  backgrounds, labelled fallback, task/Problems/progress flow, project paths,
+  offline cache isolation and incomplete-update rejection.
+- Actual runtime shaders compiled and rendered in native EGL/GLES 3.2.
+- Atrium, Fountain, Shopfronts, Arcade and portrait framing inspected.
+- Shared clock still freezes all layers. The preview uses the runtime meshes
+  and shaders, with no added video-only effects.
+- Desktop: 33,260 triangles including reflections, 6,000 points, six draw calls.
+
+Scope
+- The plumes are deforming textured surfaces, not volumetric fluid simulation.
+- Architecture and seated camera composition are preserved.
+- Browser interaction uses the existing event/render harness. No physical
+  phone performance benchmark or new desktop takeover was performed.
+- Root-relative cumulative update against public main 2bb9230; applies over
+  v1.18.3 or v1.19.0. Prepared locally for the established GitHub upload flow.
