@@ -1,3 +1,44 @@
+# Daycraft 1.20.0 — drive the full workload
+
+Today now centres on the complete workload, deadlines and the next result. The three-action suggestion and daily reward cap are removed. Every newly confirmed task earns one material, including the fourth, tenth and subsequent tasks.
+
+- Capture up to 100 tasks at once, then adjust their priorities, estimates and finished results.
+- Set Critical, High, Normal or Low priority, and flag must-do outcomes. Ready work is ordered by overdue deadlines, today's deadlines, must-do status and priority.
+- Incomplete one-off tasks carry forward. Blockers require a follow-up action and date; due follow-ups appear in Today even when the original task was planned for later.
+- The default target is 480 minutes of estimated task work, with 25-minute focus blocks. Shorter tasks use their shorter estimate. Change the target, block length, work hours and prompts in **Set daily target**.
+- Completed task estimates count toward the target. These are estimates of task size, not measured hours worked. The target does not clear or hide remaining commitments.
+- Completing a task offers the next priority immediately. Timers never complete tasks automatically. The focus block can be paused, extended or ended without marking the task done.
+- By default, Daycraft prompts for the next task after ten minutes without an open focus block, between 08:00 and 17:00 in the saved timezone. Prompts work while the app is open and visible, and wait until an open form is closed. Set the interval to zero to disable them.
+- The end-of-day review asks what shipped, what slipped and what will change tomorrow.
+
+## Install
+
+Extract **Daycraft_Productivity_Update_v1.20.0.zip** and upload its **contents to the root of `main`** in `mpb029/Daycraft`, replacing matching files and preserving folders. Keep the other files already in your repository. Include the new `productivity.mjs` and `productivity.css` files.
+
+This is a cumulative update for the existing Daycraft repository. It includes the delivered Stormwatch and mall updates, including the accepted fountain water and working escalators. It has not been pushed or published automatically.
+
+After GitHub Pages publishes, use **Reload update** if offered and check for **1.20.0** beside the logo. Open **Today → Add list**, capture the workload, then use **Set daily target** to match your workday.
+
+## Saved progress
+
+Existing version 1 and 2 saves upgrade to schema version 3 automatically. Tasks, Problems, completed history, earned materials, inventory, placements, meadows and background preferences are preserved. Where browser storage permits, the pre-upgrade save is retained for **Settings → Export recovery copy**. New backups retain the extra execution fields.
+
+Historical completions keep their existing reward allocation. Completions without a recorded estimate still count as tasks; the update does not invent past working time. All new confirmed completions use the uncapped reward rule. A new backup should be restored using v1.20.0 or later.
+
+## Verification
+
+43 focused checks passed. Coverage includes full queues, carry-forward and recurring schedules, priority ordering, due blocker follow-ups, unlimited rewards, legacy migration and placements, task/form event flows, timer expiry without automatic completion, bulk input escaping, invalid settings, backup round trips, existing Problem actions, background controls and atomic offline updates.
+
+The new form and completion flows were exercised through the app's event-and-render harness. A full browser visual check could not run because Chromium was blocked by this environment's socket restrictions. Desktop and phone layout have not been visually verified for this release. All environment geometry, materials and assets are byte-identical to the delivered v1.19.3 source.
+
+Run the focused checks:
+
+```sh
+node --test verification/productivity.test.mjs verification/domain.test.mjs verification/world.test.mjs verification/problems.test.mjs verification/app-smoke.test.mjs verification/pages.test.mjs verification/overlay.test.mjs
+```
+
+---
+
 # Daycraft 1.19.3 — working mall escalators
 
 Both escalators now have moving three-dimensional tread and riser faces. The left flight goes up, the right flight goes down, and the steps flatten near the landings. Handrail grain and belt joints travel with the corresponding flight. The rail surrounds, plants and photographed architecture remain stationary. Pause scenery, Calm mode and reduced-motion preferences pause the shared animation clock.

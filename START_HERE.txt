@@ -1,11 +1,18 @@
-Daycraft 1.19.3 — working mall escalators
+Daycraft 1.20.0 — drive the full workload
 
 Extract this ZIP and upload its CONTENTS to the root of the main branch
 in mpb029/Daycraft. Replace matching files and preserve folders.
-Keep other existing repository files.
+Keep the other existing repository files.
 
-After GitHub Pages deploys, reload Daycraft, check for 1.19.3 beside the
-logo, and choose Mall atrium. Drag upward or zoom toward the escalators.
+After GitHub Pages deploys, use Reload update if offered, then check
+for 1.20.0 beside the logo. Open Today > Add list to capture the workload.
+Use Set daily target to change the eight-hour estimated workload target,
+25-minute focus blocks, work hours and in-app prompts.
 
-This cumulative update includes the accepted v1.19.2 water animation.
-UPDATE.md contains installation and verification details.
+No three-task suggestion or daily reward cap. Priorities, must-do tasks,
+overdue work, carry-forward and blocker follow-ups drive the queue.
+Every confirmed completion earns a material and offers the next task.
+
+Existing progress upgrades automatically. This cumulative update keeps
+the accepted fountain water and working mall escalators.
+UPDATE.md contains installation details and verification scope.

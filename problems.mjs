@@ -73,7 +73,7 @@ export function planCheck(state,p,id,day,makeId,at=now()){
   if(status==='done'||status==='today')return c.taskId;
   if(status==='task'){state.tasks.find(t=>t.id===c.taskId).planned=day;p.updatedAt=at;return c.taskId;}
   if(state.tasks.length>=10000)throw Error('Your task list has reached its limit.');
-  const task={id:makeId(),title:c.action,area:p.area,step:c.action,doneMeans:'I made the check and can describe what I found.',reason:('Understand: '+p.observed).slice(0,250),minutes:5,repeat:'none',weekday:new Date(day+'T12:00:00Z').getUTCDay(),planned:day,due:'',blocked:'',createdAt:at};
+  const task={id:makeId(),title:c.action,area:p.area,step:c.action,doneMeans:'I made the check and can describe what I found.',reason:('Understand: '+p.observed).slice(0,250),minutes:5,repeat:'none',weekday:new Date(day+'T12:00:00Z').getUTCDay(),planned:day,due:'',blocked:'',blockAction:'',followUp:'',priority:3,mustDo:false,createdAt:at};
   state.tasks.push(task);c.taskId=task.id;p.updatedAt=at;return task.id;
 }
 
