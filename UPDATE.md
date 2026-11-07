@@ -1,3 +1,88 @@
+# Daycraft 1.18.3 — wilder Stormwatch sea
+
+The long, irregular horizon swells are now taller and steeper, with more persistent whitewater, stronger wind texture and higher spray. A matched 6,000-point comparison against v1.18.2 measured about **69% greater RMS wave height** and **67% greater RMS forward slope**. The prevailing direction and curved, uneven crests are retained.
+
+Foam now has its own particle system: 1,200 surface-following fragments on desktop and 480 on phones. Individual fragments are born on crests, drift, spread and fade, with ragged edges and gaps. Their corners follow the same three-dimensional sea as the water mesh.
+
+Airborne splash and spray use 720 particles on desktop and 300 on phones. Coastal impacts throw droplets higher; offshore whitecaps shed lower windblown spray. Gusts push the droplets sideways as gravity brings them back down. The room, viewing controls and seated camera are unchanged.
+
+## Install
+
+Extract **Daycraft_Stormwatch_Wilder_Sea_Update_v1.18.3.zip** and upload its **contents to the root of `main`** in `mpb029/Daycraft`, replacing matching files and preserving folders. Leave other files in place. This cumulative patch includes the v1.18.1 modelled water/fire and v1.18.2 irregular swells, so it applies over **v1.18.0, v1.18.1 or v1.18.2**. It has not been pushed or published automatically.
+
+After Pages publishes, use **Reload update** if offered and check for **1.18.3** beside the logo. Choose **Stormwatch → Storm window** to see the rougher water clearly.
+
+## Preview and checks
+
+The 12-second preview uses the actual runtime meshes and shaders: nine seconds at the window with rain off, followed by three seconds in the refuge. The additional foam geometry brings the scene to 216,888 triangles / 12 draw calls on desktop and 91,032 triangles / 12 draw calls on phones. Physical device frame rates have not been benchmarked.
+
+13 focused Node checks passed, covering wave normals, smooth motion, irregular spacing, dominant crest direction, distant filtering, particle resource reuse, saved settings, app actions and offline updates. The 6,000-point comparison found no inverted surfaces. The maximum theoretical wave rise remains more than eight metres below the fixed eye position.
+
+Run checks:
+`node --test verification/stormwatch.test.mjs verification/app-smoke.test.mjs verification/pages.test.mjs verification/overlay.test.mjs`
+
+Render the preview:
+`node verification/export-stormwatch-graphics.mjs --wild`
+then `python3 verification/render-cinema-graphics.py --stormwatch`
+
+---
+
+# Daycraft 1.18.2 — irregular horizon swells
+
+Stormwatch's waves now form long, curved swells across the visible horizon. A prevailing direction replaces the strongly crossing wave sets. Seeded fields continuously vary crest height, curvature and spacing as the water travels, so the surface neither forms a regular waffle pattern nor jumps randomly between frames. Foam breaks into uneven patches, and spray responds to the crest at each impact point.
+
+Each wavelength fades before it becomes too small for the distant mesh to resolve. This prevents a second source of grid artefacts near the horizon. The water still moves as actual three-dimensional geometry.
+
+## Install
+
+Extract **Daycraft_Stormwatch_Irregular_Swells_Update_v1.18.2.zip** and upload its **contents to the root of `main`** in `mpb029/Daycraft`, replacing matching files and preserving folders. Leave other files in place. This cumulative patch works over **v1.18.0 or v1.18.1** and includes the modelled sea/fire work from v1.18.1. It has not been pushed or published automatically.
+
+After Pages publishes, use **Reload update** if offered and check for **1.18.2** beside the logo. Select **Stormwatch → Storm window**; rain can be turned off to inspect the swells clearly.
+
+## Preview and checks
+
+The 16-second preview uses the actual runtime meshes and materials: 12 seconds at the window with rain off, followed by four seconds in the refuge. The scene uses the same 214,488 triangles / 11 draw calls on desktop and 90,072 triangles / 11 draw calls on phones as v1.18.1. The new shader performs additional noise calculations; physical device frame rates have not been benchmarked.
+
+13 focused Node checks passed, including independent finite-difference normals, smooth temporal motion, irregular crest spacing, predominant crest direction, distant wavelength filtering, existing app actions, saved settings and offline updates. Native OpenGL ES rendered the desktop and mobile materials. An additional 6,000-point geometry sample found no inverted surfaces.
+
+Run checks:
+`node --test verification/stormwatch.test.mjs verification/app-smoke.test.mjs verification/pages.test.mjs verification/overlay.test.mjs`
+
+Render this preview:
+`node verification/export-stormwatch-graphics.mjs --swells`
+then `python3 verification/render-cinema-graphics.py --stormwatch`
+
+---
+
+# Daycraft 1.18.1 — modelled Stormwatch waves and fire
+
+Stormwatch now has an actual displaced ocean mesh. Six crossing travelling waves move vertices vertically and horizontally, with bending crests, geometry-derived normals, reflected storm light, whitecaps and fading foam. The concrete breakwater and its beacon have thickness and depth; passing waves can hide their lower faces. Spray follows three-dimensional ballistic paths timed to approaching crests.
+
+The stove contains modelled charred logs and an ember bed, plus a turbulent three-dimensional flame volume rendered through its closed doors. Water and flame shaders do not sample an animated photograph. The room retains the approved fixed-view artwork, with its existing pan/zoom controls, rain, lightning, steam and steady camera.
+
+## Install
+
+Extract **Daycraft_Stormwatch_Modelled_Waves_Update_v1.18.1.zip** and upload its **contents to the root of `main`** in `mpb029/Daycraft`, replacing matching files and preserving folders. Leave other files in place. This patch builds on **v1.18.0**; it has not been pushed or published automatically.
+
+After Pages publishes, use **Reload update** if offered, check for **1.18.1** beside the logo, and select **Stormwatch**. Rain, lightning and Pause scenery work as before. Calm mode, reduced motion and hidden tabs pause the shared viewing clock. Your tasks, Problems and saved progress are unchanged.
+
+## Preview and checks
+
+The 16-second preview comes from the actual runtime meshes and shaders: six seconds in the refuge, six seconds at the window with rain off to expose the water geometry, and four seconds by the fire. A wireframe diagnostic and portrait views were also rendered during verification.
+
+11 focused Node checks passed, covering wave displacement and normals against finite differences, the saved settings, fixed camera and lens bounds, shared pause clock, actual procedural water/fire materials, mobile resource limits, app actions and scoped offline updates. Native OpenGL ES compiled and rendered the actual materials. No browser takeover was needed for the unchanged controls.
+
+This is a procedural wave and fire model, not a CFD simulation. The scene uses 214,488 triangles and 11 draw calls on desktop; phones use 90,072 triangles, fewer spray particles and 28 flame samples per ray rather than 44. It retains the app's 24 fps scenery limit. Real geometry costs more than the previous image effect; physical phone/GPU frame rates have not been benchmarked.
+
+Run focused checks:
+`node --test verification/stormwatch.test.mjs verification/app-smoke.test.mjs verification/pages.test.mjs verification/overlay.test.mjs`
+
+Render the preview:
+`node verification/export-stormwatch-graphics.mjs --film`
+then `python3 verification/render-cinema-graphics.py --stormwatch`
+
+---
+
 # Daycraft 1.18.0 — Stormwatch
 
 A warm lighthouse refuge above a violent coastal storm. The sea rolls and churns, clouds drift, gusts drive rain across closed windows, droplets descend in narrow rivulets, and waves send bursts of spray above the breakwater. Distant lightning appears briefly. The stove fire and mug steam move more gently inside; the room and camera stay steady.

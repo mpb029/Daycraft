@@ -1,9 +1,10 @@
 import * as T from './vendor/three.module.js';
-import {stormVertex,stormFragment,veilFragment} from './stormwatch-materials.mjs';
+import {stormVertex,stormFragment,veilFragment,glassFragment} from './stormwatch-materials.mjs';
+import {createStormOcean} from './stormwatch-ocean.mjs';
+import {createStormFire} from './stormwatch-fire.mjs';
 
 export const STORM_ART='./assets/stormwatch/refuge.webp';
 export const STORM_MASK='./assets/stormwatch/surfaces.png';
-export const STORM_HEARTH='./assets/stormwatch/firelight.webp';
 export const STORM_SIZE=[1672,941];
 export const STORM_VIEWS=Object.freeze({
  refuge:{label:'Refuge',yaw:0,pitch:0,fov:54},
@@ -54,34 +55,36 @@ function panel(rect,depth,cols=1,rows=1){
 }
 export function createStormwatch({mobile=false,loadArt=true,onReady=()=>{},onError=()=>{},elapsed=0}={}){
  const root=new T.Group();root.name='Stormwatch — the sheltered room';
- const uniforms={t:{value:0},photograph:{value:null},hearth:{value:null},surfaces:{value:null},ready:{value:0},rain:{value:1},flash:{value:0},detail:{value:mobile?0:1}};
+ const uniforms={t:{value:0},photograph:{value:null},surfaces:{value:null},ready:{value:0},rain:{value:1},flash:{value:0},detail:{value:mobile?0:1},viewportHeight:{value:941}};
  let lightning=true,disposed=false,loaded=0;
- const material=new T.ShaderMaterial({uniforms,vertexShader:stormVertex,fragmentShader:stormFragment,toneMapped:false,side:T.DoubleSide});
+ const material=new T.ShaderMaterial({uniforms,vertexShader:stormVertex,fragmentShader:stormFragment,transparent:true,depthTest:false,depthWrite:false,toneMapped:false,side:T.DoubleSide});
  // Registered depth layers: solid room, closer stove/chair/table, deep windows.
  // Projection preserves the approved composition; all live effects are attached
  // to surfaces rather than to screen coordinates, including when zooming.
  const depth=(x,y)=>x<510&&y>340?3.1:y>690?3.5:x>570&&x<1590&&y<600?8:5.8;
- const shell=new T.Mesh(panel([0,0,1672,941],depth,mobile?64:112,mobile?36:64),material);shell.name='projected-room';shell.frustumCulled=false;root.add(shell);
+ const shell=new T.Mesh(panel([0,0,1672,941],depth,mobile?64:112,mobile?36:64),material);shell.name='projected-room';shell.renderOrder=10;shell.frustumCulled=false;root.add(shell);
+ const ocean=createStormOcean(uniforms,{mobile}),fire=createStormFire(uniforms,{mobile,projectPanel:panel});root.add(ocean.root,fire.root);
+ const glass=new T.Mesh(panel([589,0,1580,601],5),new T.ShaderMaterial({uniforms,vertexShader:stormVertex,fragmentShader:glassFragment,transparent:true,depthTest:false,depthWrite:false,toneMapped:false,side:T.DoubleSide}));
+ glass.name='closed-rain-glass';glass.renderOrder=20;glass.frustumCulled=false;root.add(glass);
  const effects=[
-  {name:'cup-steam',rect:[910,535,1030,682],depth:2.9,kind:0,seed:0},
-  {name:'breakwater-spray',rect:[1300,384,1445,485],depth:6.9,kind:1,seed:.13},
-  {name:'outer-surf-spray',rect:[1442,464,1557,559],depth:6.9,kind:1,seed:.53},
-  {name:'cliff-spray',rect:[1004,447,1096,529],depth:6.9,kind:1,seed:.81}
+  {name:'cup-steam',rect:[910,535,1030,682],depth:2.9,kind:0,seed:0}
  ];
  for(const e of effects){
   const u={...uniforms,kind:{value:e.kind},seed:{value:e.seed},boundsA:{value:new T.Vector2(e.rect[0],e.rect[1])},boundsB:{value:new T.Vector2(e.rect[2],e.rect[3])}};
   const m=new T.ShaderMaterial({uniforms:u,vertexShader:stormVertex,fragmentShader:veilFragment,transparent:true,depthWrite:false,depthTest:false,toneMapped:false,side:T.DoubleSide});
-  const mesh=new T.Mesh(panel(e.rect,e.depth),m);mesh.name=e.name;mesh.renderOrder=2;mesh.frustumCulled=false;root.add(mesh);
+  const mesh=new T.Mesh(panel(e.rect,e.depth),m);mesh.name=e.name;mesh.renderOrder=25;mesh.frustumCulled=false;root.add(mesh);
  }
  const textures=[];
  material.addEventListener('dispose',()=>{disposed=true;for(const tex of textures)tex.dispose();});
  if(loadArt){const loader=new T.TextureLoader();
-  for(const [key,url] of [['photograph',STORM_ART],['surfaces',STORM_MASK],['hearth',STORM_HEARTH]]){
-   const tex=loader.load(url,()=>{if(disposed){tex.dispose();return;}loaded++;uniforms.ready.value=loaded===3?1:0;onReady();},undefined,()=>{if(!disposed)onError('Stormwatch could not load its scenery. Reconnect and reload to try again.');});
+  for(const [key,url] of [['photograph',STORM_ART],['surfaces',STORM_MASK]]){
+   const tex=loader.load(url,()=>{if(disposed){tex.dispose();return;}loaded++;uniforms.ready.value=loaded===2?1:0;onReady();},undefined,()=>{if(!disposed)onError('Stormwatch could not load its scenery. Reconnect and reload to try again.');});
    tex.colorSpace=T.NoColorSpace;tex.minFilter=T.LinearMipmapLinearFilter;tex.magFilter=T.LinearFilter;uniforms[key].value=tex;textures.push(tex);
   }
  }
- return {root,uniforms,palette:{horizon:'#3b3530',fog:'#3b3530',fogNear:1000,fogFar:1800},
+ const screenSize=new T.Vector2();
+ return {root,uniforms,ocean,fire,palette:{horizon:'#334a54',fog:'#334a54',fogNear:2000,fogFar:18000},
+  beforeRender(renderer){uniforms.viewportHeight.value=renderer.getDrawingBufferSize(screenSize).y;},
   setRain(value){uniforms.rain.value=value?1:0;},setSky(){},
   configure(settings){uniforms.rain.value=settings.stormRain===false?0:1;lightning=settings.stormLightning!==false;},
   update(clock){const t=Math.max(0,clock-elapsed);uniforms.t.value=t;uniforms.flash.value=stormFlash(t,lightning);}

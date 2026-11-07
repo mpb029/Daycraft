@@ -154,7 +154,7 @@ export function mountScene(host,config){
    m.background=background;m.waterLook.clear();m.forestLook.clear();m.storeLook.clear();m.cinemaLook.clear();m.poolLook.clear();m.stormLook.clear();m.tideRunning=false;
    if(!scenery&&m.meadowPose){const p=m.meadowPose;m.camera.position.copy(p.position);m.controls.target.copy(p.target);m.camera.fov=p.fov;m.controls.maxPolarAngle=p.polar;m.mode=p.mode;m.controls.update();}
   }
-  m.controls.enabled=!scenery;m.renderer.shadowMap.enabled=!pool&&!storm;m.camera.far=water?18000:1800;
+  m.controls.enabled=!scenery;m.renderer.shadowMap.enabled=!pool&&!storm;m.camera.far=water||storm?18000:1800;
   if(water){m.mode='water';m.camera.zoom=1;m.camera.fov=m.waterLook.view.fov;}
   if(storm){m.mode='stormwatch';m.camera.zoom=1;m.camera.fov=stormPose(m.stormLook.view,m.camera.aspect).fov;}
   if(pool){markPoolStation(m.poolStation);m.mode='poolrooms';m.camera.zoom=1;m.camera.fov=m.poolLook.view.fov;}
