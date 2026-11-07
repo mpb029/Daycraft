@@ -1,0 +1,268 @@
+TAP version 13
+# Subtest: Task → focus → complete → build → undo works through app event handlers
+ok 1 - Task → focus → complete → build → undo works through app event handlers
+  ---
+  duration_ms: 220.606196
+  type: 'test'
+  ...
+# Subtest: Brisbane midnight resets on the local day, not UTC midnight
+ok 2 - Brisbane midnight resets on the local day, not UTC midnight
+  ---
+  duration_ms: 13.910278
+  type: 'test'
+  ...
+# Subtest: Daily, weekdays and weekly routines have separate schedules
+ok 3 - Daily, weekdays and weekly routines have separate schedules
+  ---
+  duration_ms: 0.215189
+  type: 'test'
+  ...
+# Subtest: Starting is recorded once per day and never earns building material
+ok 4 - Starting is recorded once per day and never earns building material
+  ---
+  duration_ms: 0.505549
+  type: 'test'
+  ...
+# Subtest: Blockers prevent completion; duplicate clicks cannot earn twice
+ok 5 - Blockers prevent completion; duplicate clicks cannot earn twice
+  ---
+  duration_ms: 1.257043
+  type: 'test'
+  ...
+# Subtest: Every new completion earns material after the third task too
+ok 6 - Every new completion earns material after the third task too
+  ---
+  duration_ms: 0.247617
+  type: 'test'
+  ...
+# Subtest: A one-off task stays complete on future days; a routine can repeat
+ok 7 - A one-off task stays complete on future days; a routine can repeat
+  ---
+  duration_ms: 0.214868
+  type: 'test'
+  ...
+# Subtest: Building spends exact material costs and refuses unaffordable purchases
+ok 8 - Building spends exact material costs and refuses unaffordable purchases
+  ---
+  duration_ms: 0.390639
+  type: 'test'
+  ...
+# Subtest: Undo reverses mistaken progress without allowing a negative balance
+ok 9 - Undo reverses mistaken progress without allowing a negative balance
+  ---
+  duration_ms: 0.951941
+  type: 'test'
+  ...
+# Subtest: Undo retains credits for the other completed tasks
+ok 10 - Undo retains credits for the other completed tasks
+  ---
+  duration_ms: 0.235239
+  type: 'test'
+  ...
+# Subtest: Round-trip backup preserves real progress and world purchases
+ok 11 - Round-trip backup preserves real progress and world purchases
+  ---
+  duration_ms: 1.635043
+  type: 'test'
+  ...
+# Subtest: Import refuses unsupported and duplicate data, caps invalid credit claims
+ok 12 - Import refuses unsupported and duplicate data, caps invalid credit claims
+  ---
+  duration_ms: 1.683455
+  type: 'test'
+  ...
+# Subtest: A week away never changes saved buildings or earned progress
+ok 13 - A week away never changes saved buildings or earned progress
+  ---
+  duration_ms: 0.273555
+  type: 'test'
+  ...
+# Subtest: Space never steals typing, native control activation, modified keys or open dialogs
+ok 14 - Space never steals typing, native control activation, modified keys or open dialogs
+  ---
+  duration_ms: 1.498932
+  type: 'test'
+  ...
+# Subtest: Hiding panels preserves the actual form and scroll position, removes hidden controls from focus and restores focus
+ok 15 - Hiding panels preserves the actual form and scroll position, removes hidden controls from focus and restores focus
+  ---
+  duration_ms: 0.410338
+  type: 'test'
+  ...
+# Subtest: GitHub project URL resolves every page, module, texture and install asset locally
+ok 16 - GitHub project URL resolves every page, module, texture and install asset locally
+  ---
+  duration_ms: 91.776478
+  type: 'test'
+  ...
+# Subtest: Offline cache stays inside Daycraft and retains other projects and user storage
+ok 17 - Offline cache stays inside Daycraft and retains other projects and user storage
+  ---
+  duration_ms: 8.359185
+  type: 'test'
+  ...
+# Subtest: A failed update never activates a partially cached release
+ok 18 - A failed update never activates a partially cached release
+  ---
+  duration_ms: 7.29986
+  type: 'test'
+  ...
+# Subtest: Older backups open with an empty notebook; framing alone changes neither the task list nor the world
+ok 19 - Older backups open with an empty notebook; framing alone changes neither the task list nor the world
+  ---
+  duration_ms: 21.816477
+  type: 'test'
+  ...
+# Subtest: A check can be inconclusive, revisited or ruled out; evidence and the original prediction survive a revised explanation
+ok 20 - A check can be inconclusive, revisited or ruled out; evidence and the original prediction survive a revised explanation
+  ---
+  duration_ms: 1.010178
+  type: 'test'
+  ...
+# Subtest: Scheduling a check is idempotent and uses regular task credit; completing or undoing it never solves the problem
+ok 21 - Scheduling a check is idempotent and uses regular task credit; completing or undoing it never solves the problem
+  ---
+  duration_ms: 2.200011
+  type: 'test'
+  ...
+# Subtest: An accidentally deleted task can be replaced; an already-completed one never earns duplicate credit
+ok 22 - An accidentally deleted task can be replaced; an already-completed one never earns duplicate credit
+  ---
+  duration_ms: 0.293435
+  type: 'test'
+  ...
+# Subtest: Import rejects malformed or ambiguous notebooks without mutating the original save
+ok 23 - Import rejects malformed or ambiguous notebooks without mutating the original save
+  ---
+  duration_ms: 1.753098
+  type: 'test'
+  ...
+# Subtest: A full workload stays scheduled; one-off work carries forward while off-day routines do not pile up
+ok 24 - A full workload stays scheduled; one-off work carries forward while off-day routines do not pile up
+  ---
+  duration_ms: 12.780113
+  type: 'test'
+  ...
+# Subtest: Deadline risk, must-do status and priority determine the next unblocked result
+ok 25 - Deadline risk, must-do status and priority determine the next unblocked result
+  ---
+  duration_ms: 0.233787
+  type: 'test'
+  ...
+# Subtest: A blocker follow-up appears on its due day even when the task was planned for later
+ok 26 - A blocker follow-up appears on its due day even when the task was planned for later
+  ---
+  duration_ms: 9.683723
+  type: 'test'
+  ...
+# Subtest: Reward cap is removed, completed effort is snapshotted, and reload/undo preserve the new ledger
+ok 27 - Reward cap is removed, completed effort is snapshotted, and reload/undo preserve the new ledger
+  ---
+  duration_ms: 2.723577
+  type: 'test'
+  ...
+# Subtest: Legacy saves keep earned buildings, old capped credits and task data during migration
+ok 28 - Legacy saves keep earned buildings, old capped credits and task data during migration
+  ---
+  duration_ms: 1.382889
+  type: 'test'
+  ...
+# Subtest: Workload uses local hours and honest estimates; hitting the target does not clear the remaining queue
+ok 29 - Workload uses local hours and honest estimates; hitting the target does not clear the remaining queue
+  ---
+  duration_ms: 0.575794
+  type: 'test'
+  ...
+# Subtest: Focus duration follows the configured block and short jobs; invalid settings cannot break pacing
+ok 30 - Focus duration follows the configured block and short jobs; invalid settings cannot break pacing
+  ---
+  duration_ms: 1.460064
+  type: 'test'
+  ...
+# Subtest: Accountability prompts respect the configured window, active focus, open forms and visibility
+ok 31 - Accountability prompts respect the configured window, active focus, open forms and visibility
+  ---
+  duration_ms: 0.482986
+  type: 'test'
+  ...
+# Subtest: Bulk capture accepts realistic lists and rejects oversized or empty submissions
+ok 32 - Bulk capture accepts realistic lists and rejects oversized or empty submissions
+  ---
+  duration_ms: 0.848527
+  type: 'test'
+  ...
+# Subtest: Each earned copy has an identity, starts in inventory, and moving or storing costs nothing
+ok 33 - Each earned copy has an identity, starts in inventory, and moving or storing costs nothing
+  ---
+  duration_ms: 2.886819
+  type: 'test'
+  ...
+# Subtest: Placement prevents overlap, off-island positions, invalid rotation and fractional coordinates
+ok 34 - Placement prevents overlap, off-island positions, invalid rotation and fractional coordinates
+  ---
+  duration_ms: 1.174531
+  type: 'test'
+  ...
+# Subtest: A quarter-turn changes collision bounds; a move ignores the item’s previous footprint
+ok 35 - A quarter-turn changes collision bounds; a move ignores the item’s previous footprint
+  ---
+  duration_ms: 1.290843
+  type: 'test'
+  ...
+# Subtest: A completed collection opens optional islands and decorations without resetting earlier progress
+ok 36 - A completed collection opens optional islands and decorations without resetting earlier progress
+  ---
+  duration_ms: 4.720477
+  type: 'test'
+  ...
+# Subtest: Version 1 migration preserves every earned place and produces deterministic valid 3D positions
+ok 37 - Version 1 migration preserves every earned place and produces deterministic valid 3D positions
+  ---
+  duration_ms: 25.695266
+  type: 'test'
+  ...
+# Subtest: New-world backups preserve duplicates, placement, rotation, inventory and island theme
+ok 38 - New-world backups preserve duplicates, placement, rotation, inventory and island theme
+  ---
+  duration_ms: 2.069747
+  type: 'test'
+  ...
+# Subtest: Invalid imported placement becomes stored inventory; duplicate identities are rejected
+ok 39 - Invalid imported placement becomes stored inventory; duplicate identities are rejected
+  ---
+  duration_ms: 1.59903
+  type: 'test'
+  ...
+# Subtest: Undoing a spent material reverses the latest island and stores its existing items safely
+ok 40 - Undoing a spent material reverses the latest island and stores its existing items safely
+  ---
+  duration_ms: 0.552869
+  type: 'test'
+  ...
+# Subtest: A crowded island reports no space and keeps an unplaced item owned
+ok 41 - A crowded island reports no space and keeps an unplaced item owned
+  ---
+  duration_ms: 19.018209
+  type: 'test'
+  ...
+# Subtest: Every design is a solid 3D model and fits its promised placement footprint
+ok 42 - Every design is a solid 3D model and fits its promised placement footprint
+  ---
+  duration_ms: 79.002759
+  type: 'test'
+  ...
+# Subtest: Perspective camera projection and ground picking recover placement coordinates at desktop and phone aspect ratios
+ok 43 - Perspective camera projection and ground picking recover placement coordinates at desktop and phone aspect ratios
+  ---
+  duration_ms: 1.616526
+  type: 'test'
+  ...
+1..43
+# tests 43
+# suites 0
+# pass 43
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 341.512571

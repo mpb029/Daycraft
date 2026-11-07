@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {dateKey} from '../domain.mjs';
+import {dateKey,shiftDate,validateState} from '../domain.mjs';
 // Event-and-render harness. This is not a browser or a visual layout test.
 test('Task → focus → complete → build → undo works through app event handlers',async()=>{
  const listeners={},elements=new Map(),storage=new Map();
@@ -14,7 +14,7 @@ test('Task → focus → complete → build → undo works through app event han
  globalThis.setInterval=()=>0;globalThis.setTimeout=()=>0;
  try{
   await import('../app.mjs?integration=1');
-  assert.match(get('#app').innerHTML,/Choose my first task/);
+  assert.match(get('#app').innerHTML,/Execute today’s plan/);
   assert.equal((get('#app').innerHTML.match(/data-world-scene/g)||[]).length,1);
   assert.match(get('#app').innerHTML,/id="meadow-interface"/);
   const act=async(action,data={})=>{const button={dataset:{action,...data}};for(const f of listeners.click||[])f({target:{closest:()=>button}});await Promise.resolve();};
@@ -45,7 +45,7 @@ test('Task → focus → complete → build → undo works through app event han
   await act('background',{background:'forest'});assert.match(get('#app').innerHTML,/Rain off/);assert.equal(state().settings.rain,true);
   const forestBeforePanels=get('#app').innerHTML;await act('panels');assert.equal(get('#app').innerHTML,forestBeforePanels);await act('panels');
   assert.deepEqual(state().tasks,completed.tasks);assert.deepEqual(state().completions,completed.completions);
-  await act('nav',{view:'settings'});assert.match(get('#app').innerHTML,/A quiet stop in the forest/);assert.match(get('#app').innerHTML,/Daycraft 1\.19\.3/);
+  await act('nav',{view:'settings'});assert.match(get('#app').innerHTML,/A quiet stop in the forest/);assert.match(get('#app').innerHTML,/Daycraft 1\.20\.0/);
   await act('background',{background:'poolrooms'});assert.equal(state().settings.background,'poolrooms');assert.match(get('#app').innerHTML,/Beyond the Bend/);assert.match(get('#app').innerHTML,/data-camera="pool-passage"/);assert.doesNotMatch(get('#app').innerHTML,/data-action="(?:rain|breeze|water-ride)"/);assert.deepEqual(state().tasks,completed.tasks);assert.deepEqual(state().completions,completed.completions);
   await act('background',{background:'stormwatch'});assert.equal(state().settings.background,'stormwatch');assert.match(get('#app').innerHTML,/Safe above the storm/);assert.match(get('#app').innerHTML,/data-camera="storm-fire"/);assert.doesNotMatch(get('#app').innerHTML,/data-action="breeze"/);
   const priorRain=state().settings.rain,priorCalm=state().settings.calm;
@@ -68,13 +68,13 @@ test('Task → focus → complete → build → undo works through app event han
   await act('nav',{view:'settings'});assert.match(get('#app').innerHTML,/not synced between devices/);
   assert.equal((get('#app').innerHTML.match(/data-world-scene/g)||[]).length,1,'Settings still overlays one meadow');
   submit('settings-form',{name:'Marty',worldName:'My place',zone:'Australia/Brisbane',calm:'on'});assert.equal(state().settings.calm,true);
-  assert.match(get('#app').innerHTML,/Sky & location/);assert.match(get('#app').innerHTML,/Daycraft 1\.19\.3/);
+  assert.match(get('#app').innerHTML,/Sky & location/);assert.match(get('#app').innerHTML,/Daycraft 1\.20\.0/);
   const beforeLocation=state();submit('sky-location-form',{latitude:'',longitude:'0',label:'Invalid'});assert.deepEqual(state(),beforeLocation);
   submit('sky-location-form',{latitude:'51.5',longitude:'-.1',label:'<b>London</b>'});assert.equal(state().settings.skyLocation.latitude,51.5);assert.equal(state().settings.skyLocation.longitude,-.1);assert.match(get('#app').innerHTML,/&lt;b&gt;London&lt;\/b&gt;/);assert.deepEqual(state().tasks,beforeLocation.tasks);
   submit('settings-form',{name:'Marty',worldName:'My place',zone:'Australia/Brisbane',calm:'on'});assert.equal(state().settings.skyLocation.latitude,51.5);
   await act('sky-location-reset');assert.equal(state().settings.skyLocation.source,'default');assert.equal(state().settings.skyLocation.latitude,-26.2);
   await act('nav',{view:'progress'});submit('review-form',{feeling:'easier',pressure:'okay',note:'The small step helped.'});assert.equal(state().reviews[0].day,dateKey());
-  await act('nav',{view:'tasks'});assert.match(get('#app').innerHTML,/A place for everything/);
+  await act('nav',{view:'tasks'});assert.match(get('#app').innerHTML,/Full task list/);
   const taskCount=state().tasks.length,creditBefore=state().completions.length;
   await act('nav',{view:'problems'});assert.match(get('#app').innerHTML,/What keeps getting in the way/);
   await act('pb-new');assert.match(get('#modal').innerHTML,/What actually happened/);
@@ -98,5 +98,45 @@ test('Task → focus → complete → build → undo works through app event han
   await act('pb-open',{id:problemId});await act('pb-reopen',{id:problemId});assert.match(get('#app').innerHTML,/Previous resolution/);
   await act('pb-delete',{id:problemId});await act('pb-confirm-delete',{id:problemId});
   assert.equal(state().problems.length,0);assert.equal(state().tasks.length,taskCount+1);assert.equal(state().completions.length,creditBefore+1);
+  // Full-day execution through the actual forms and click handlers.
+  await act('back-to-work');await act('daily-target');
+  assert.match(get('#modal').innerHTML,/value="480"/);assert.match(get('#modal').innerHTML,/value="25"/);
+  assert.match(get('#modal').innerHTML,/<button type="button"[^>]*data-action="close"/,'Cancel must not submit a form');
+  const targetBefore=state();
+  submit('workload-form',{targetMinutes:'600',focusMinutes:'25',start:'17:00',end:'08:00',nudgeMinutes:'5'});
+  assert.deepEqual(state(),targetBefore,'Invalid work hours must not mutate saved settings');
+  submit('workload-form',{targetMinutes:'600',focusMinutes:'25',start:'07:00',end:'18:00',nudgeMinutes:'5'});
+  assert.deepEqual(state().settings.drive,{targetMinutes:600,focusMinutes:25,startMinutes:420,endMinutes:1080,nudgeMinutes:5});
+  await act('bulk-add');const baseTasks=state().tasks.length;
+  const titles=['Review approvals','Confirm logistics','Close inspection','Issue work pack','Submit claim','<img src=x onerror=alert(1)>'];
+  submit('bulk-form',{titles:titles.join('\n'),area:'work',minutes:'45',priority:'2',planned:'on'});
+  assert.equal(state().tasks.length,baseTasks+6);assert.equal(state().tasks.at(-1).planned,dateKey());
+  assert.ok(!get('#app').innerHTML.includes('<img src=x'));assert.match(get('#app').innerHTML,/&lt;img/);
+  const batch=state().tasks.slice(-6),first=batch[0].id,day=dateKey();
+  const bulkBefore=state();submit('bulk-form',{titles:'',area:'work',minutes:'45',priority:'2',planned:'on'});assert.deepEqual(state(),bulkBefore);
+  await act('must-do',{id:first});assert.equal(state().tasks.find(t=>t.id===first).mustDo,true);
+  await act('plan',{id:first});assert.equal(state().tasks.find(t=>t.id===first).planned,day,'Must-do cannot be silently dropped from Today');
+  submit('task-form',{title:titles[0],area:'work',step:'Check outstanding approvals',doneMeans:'Approval register reconciled',minutes:'45',priority:'1',mustDo:'on',repeat:'none',planned:'on',due:shiftDate(day,-1),reason:''},{id:first});
+  assert.match(get('#app').innerHTML,/Overdue · Due/);assert.equal(state().tasks.find(t=>t.id===first).priority,1);
+  await act('block',{id:first});const blockBefore=state();
+  submit('block-form',{reason:'Awaiting response',blockAction:'',followUp:day},{id:first});assert.deepEqual(state(),blockBefore);
+  submit('block-form',{reason:'Awaiting response',blockAction:'Call reviewer',followUp:'2026-02-31'},{id:first});assert.deepEqual(state(),blockBefore);
+  submit('block-form',{reason:'Awaiting <review>',blockAction:'Call reviewer',followUp:day},{id:first});
+  assert.equal(state().tasks.find(t=>t.id===first).blockAction,'Call reviewer');assert.match(get('#app').innerHTML,/blocker follow-up is due/);
+  assert.match(get('#app').innerHTML,/Awaiting &lt;review&gt;/);const blockedCount=state().completions.length;
+  await act('confirm-finish',{id:first});assert.equal(state().completions.length,blockedCount);
+  await act('unblock',{id:first});assert.equal(state().tasks.find(t=>t.id===first).followUp,'');
+  await act('start',{id:first});assert.equal(state().focus.duration,1500);assert.equal(get('#clock').textContent,'25:00');
+  const realNow=Date.now;
+  try{const expiredAt=state().focus.end+1000;Date.now=()=>expiredAt;await act('resume');assert.equal(get('#clock').textContent,'00:00');assert.equal(state().completions.length,blockedCount,'Timer expiry must never complete the task');await act('extend');assert.equal(state().focus.remaining,600);}finally{Date.now=realNow;}
+  await act('stop-focus');assert.equal(state().focus,null);
+  for(const t of batch.slice(0,5)){await act('finish',{id:t.id});assert.match(get('#modal').innerHTML,/Confirm the completed result/);await act('confirm-finish',{id:t.id});}
+  assert.equal(state().completions.length,blockedCount+5);assert.equal(state().completions.slice(-5).filter(c=>c.credit).length,5);
+  assert.equal(state().completions.at(-1).estimatedMinutes,45);assert.match(get('#modal').innerHTML,/Start next task/);
+  const saved=state();assert.deepEqual(validateState(JSON.parse(JSON.stringify(saved))),saved,'New settings, tasks and rewards must round-trip');
+  const backup=JSON.stringify(saved);
+  for(const f of listeners.change||[])await f({target:{id:'import-file',files:[{size:backup.length,text:async()=>backup}],value:'backup.json'}});
+  assert.match(get('#modal').innerHTML,/Restore this backup/);await act('confirm-import');assert.deepEqual(state(),saved);
+  await act('nav',{view:'world'});assert.match(get('#app').innerHTML,/no daily reward cap/);assert.doesNotMatch(get('#app').innerHTML,/first three completed actions/);
  }finally{globalThis.FormData=realFormData;globalThis.setInterval=realInterval;globalThis.setTimeout=realTimeout;}
 });
